@@ -82,10 +82,11 @@ GAcc.preprocess(column_index, row_pointers, num_nodes, num_row_windows,  \
 build_neighbor_parts = time.perf_counter() - start
 print("Preprocess : {:.3f}s ".format(build_neighbor_parts))
 
-sys.exit(0)
-
 column_index = column_index.cuda()
 row_pointers = row_pointers.cuda()
+blockPartition = blockPartition.cuda()
+edgeToColumn = edgeToColumn.cuda()
+edgeToRow = edgeToRow.cuda()
 
 if GCN:
     class Net(torch.nn.Module):
@@ -96,9 +97,9 @@ if GCN:
 
         def forward(self):
             x = data.x
-            x = F.relu(self.conv1(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock))
+            x = F.relu(self.conv1(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow))
             x = F.dropout(x, training=self.training)
-            x = self.conv2(x, row_pointers, column_index, degrees, partPtr, part2Node, threadPerBlock)
+            x = self.conv2(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
             return F.log_softmax(x, dim=1)
 else:
     class Net(torch.nn.Module):
@@ -152,10 +153,10 @@ def test(profile=False):
     return accs
 
 for epoch in range(1, 41):
-    start_train = time.perf_counter()
-    train()
-    train_time = time.perf_counter() - start_train
-    time_avg.append(train_time)
+    # start_train = time.perf_counter()
+    # train()
+    # train_time = time.perf_counter() - start_train
+    # time_avg.append(train_time)
     # if epoch == 10:
     #     # break
     #     train_acc, val_acc, tmp_test_acc = test(profile=True)
@@ -166,10 +167,12 @@ for epoch in range(1, 41):
     train_acc, val_acc, tmp_test_acc = test()
     test_time = time.perf_counter() - start_test
     test_time_avg.append(test_time)
+
+    print("Test Time: {:.3f}ms".format(test_time * 1e3))
     
-    if val_acc > best_val_acc:
-        best_val_acc = val_acc
-        test_acc = tmp_test_acc
-    log = 'Epoch: {:03d}, Train: {:.4f}, Train-Time: {:.3f} ms, Test-Time: {:.3f} ms, Val: {:.4f}, Test: {:.4f}'
-    print(log.format(epoch, train_acc, sum(time_avg)/len(time_avg) * 1e3, sum(test_time_avg)/len(test_time_avg) * 1e3, best_val_acc, test_acc))
+    # if val_acc > best_val_acc:
+    #     best_val_acc = val_acc
+    #     test_acc = tmp_test_acc
+    # log = 'Epoch: {:03d}, Train: {:.4f}, Train-Time: {:.3f} ms, Test-Time: {:.3f} ms, Val: {:.4f}, Test: {:.4f}'
+    # print(log.format(epoch, train_acc, sum(time_avg)/len(time_avg) * 1e3, sum(test_time_avg)/len(test_time_avg) * 1e3, best_val_acc, test_acc))
     # break

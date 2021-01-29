@@ -11,14 +11,16 @@
 #define min(x, y) (((x) < (y))? (x) : (y))
 
 std::vector<torch::Tensor> spmm_forward_cuda(
-    int threadPerBlock,
-    torch::Tensor input,
-    torch::Tensor row_pointers,
-    torch::Tensor column_index,
-    torch::Tensor degrees,
-    torch::Tensor part_pointers,
-    torch::Tensor part2Node
-);
+      torch::Tensor nodePointer,
+    torch::Tensor edgeList,
+    torch::Tensor blockPartition, 
+    torch::Tensor edgeToColumn,
+    torch::Tensor edgeToRow,
+              int num_nodes,
+              int num_edges,
+              int embedding_dim,
+    torch::Tensor input
+  );
 
 std::vector<torch::Tensor> spmm_backward_cuda(
     int threadPerBlock,
@@ -36,21 +38,27 @@ std::vector<torch::Tensor> spmm_backward_cuda(
 
 std::vector<torch::Tensor> spmm_forward(
     torch::Tensor input,
-    torch::Tensor row_pointers,
-    torch::Tensor column_index, 
-    torch::Tensor degrees,
-    torch::Tensor part_pointers,
-    torch::Tensor part2Node,
-    int threadPerBlock
+    torch::Tensor nodePointer,
+    torch::Tensor edgeList,
+    torch::Tensor blockPartition, 
+    torch::Tensor edgeToColumn,
+    torch::Tensor edgeToRow
 ) {
+  CHECK_INPUT(nodePointer);
+  CHECK_INPUT(edgeList);
+  CHECK_INPUT(blockPartition);
+  CHECK_INPUT(edgeToColumn);
+  CHECK_INPUT(edgeToRow);
   CHECK_INPUT(input);
-  CHECK_INPUT(row_pointers);
-  CHECK_INPUT(column_index);
-  CHECK_INPUT(degrees);
-  CHECK_INPUT(part_pointers);
-  CHECK_INPUT(part2Node);
 
-  return spmm_forward_cuda(threadPerBlock, input, row_pointers, column_index, degrees, part_pointers, part2Node);
+  int num_nodes = nodePointer.size(0) - 1;
+  int num_edges = nodePointer.size(0);
+  int embedding_dim = input.size(1);
+
+  return spmm_forward_cuda(nodePointer, edgeList, 
+                            blockPartition, edgeToColumn, edgeToRow, 
+                            num_nodes, num_edges, embedding_dim,
+                            input);
 }
 
 std::vector<torch::Tensor> spmm_backward(
@@ -71,50 +79,6 @@ std::vector<torch::Tensor> spmm_backward(
   CHECK_INPUT(part2Node);
 
   return spmm_backward_cuda(threadPerBlock, d_output, row_pointers, column_index, degrees, part_pointers, part2Node);
-}
-
-std::vector<torch::Tensor> build_part(
-    int partSize, 
-    torch::Tensor indptr
-  ) 
-  {
-  // CHECK_INPUT(indptr);
-  auto indptr_acc = indptr.accessor<int, 1>();
-  int num_nodes = indptr.size(0) - 1;
-  int degree, thisNumParts, numParts = 0;
-
-	for(int i = 0; i < num_nodes; i++)
-	{
-    degree = indptr_acc[i + 1] - indptr_acc[i];
-	  if(degree % partSize == 0)
-			thisNumParts = degree / partSize;
-    else
-			thisNumParts = degree / partSize + 1;
-    numParts += thisNumParts;
-	}
-
-  auto partPtr = torch::zeros(numParts + 1);
-  auto part2Node = torch::zeros(numParts);
-	
-  int part_counter = 0;
-	for(int i = 0; i < num_nodes; i++)
-	{
-    int degree = indptr_acc[i + 1] - indptr_acc[i];
-    if(degree % partSize == 0)
-			thisNumParts = degree / partSize ;
-    else
-			thisNumParts = degree / partSize + 1;
-
-    for (int pid = 0; pid < thisNumParts; pid++){
-      int partBeg = indptr_acc[i] + pid * partSize;
-      int partEnd = partBeg + partSize < indptr_acc[i  + 1]? partBeg + partSize: indptr_acc[i + 1];
-      partPtr[part_counter] = partBeg;
-      part2Node[part_counter++] = i;
-      if (i == num_nodes - 1 &&  partEnd == indptr_acc[i + 1])
-        partPtr[part_counter] = partEnd;
-    }
-	}
-  return {partPtr, part2Node};
 }
 
 
@@ -193,8 +157,6 @@ void preprocess(torch::Tensor edgeList_tensor,
     }
     printf("Total Blocks:\t%d\nExpected Edges:\t%d\n", block_counter, block_counter * 8 * 16);
 }
-
-
 
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
