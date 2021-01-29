@@ -1,5 +1,14 @@
 #include <torch/extension.h>
 #include <vector>
+#include <string.h>
+#include <cstdlib>
+#include <map>
+
+#include <thrust/sort.h>
+#include <thrust/execution_policy.h>
+
+
+#define min(x, y) (((x) < (y))? (x) : (y))
 
 std::vector<torch::Tensor> spmm_forward_cuda(
     int threadPerBlock,
@@ -108,8 +117,90 @@ std::vector<torch::Tensor> build_part(
   return {partPtr, part2Node};
 }
 
+
+// condense an sorted array with duplication: [1,2,2,3,4,5,5]
+// after condense, it becomes: [1,2,3,4,5].
+// Also, mapping the origin value to the corresponding new location in the new array.
+// 1->[0], 2->[1], 3->[2], 4->[3], 5->[4]. 
+std::map<unsigned, unsigned> inplace_deduplication(unsigned* array, unsigned length){
+    int loc=0, cur=1;
+    std::map<unsigned, unsigned> nb2col;
+    nb2col[array[0]] = 0;
+    while (cur < length){
+        if(array[cur] != array[cur - 1]){
+            loc++;
+            array[loc] = array[cur];
+            nb2col[array[cur]] = loc;       // mapping from eid to TC_block column index.[]
+        }
+        cur++;
+    }
+    return nb2col;
+}
+
+void preprocess(torch::Tensor edgeList_tensor, 
+                torch::Tensor nodePointer_tensor, 
+                int num_nodes, 
+                int num_row_windows,
+                int blockSize_h,
+                int blockSize_w,
+                torch::Tensor blockPartition_tensor, 
+                torch::Tensor edgeToColumn_tensor,
+                torch::Tensor edgeToRow_tensor
+                ){
+
+    // input tensors.
+    auto edgeList = edgeList_tensor.accessor<int, 1>();
+    auto nodePointer = nodePointer_tensor.accessor<int, 1>();
+
+    // output tensors.
+    auto blockPartition = blockPartition_tensor.accessor<int, 1>();
+    auto edgeToColumn = edgeToColumn_tensor.accessor<int, 1>();
+    auto edgeToRow = edgeToRow_tensor.accessor<int, 1>();
+
+    unsigned block_counter = 0;
+
+    #pragma omp parallel for 
+    for (unsigned nid = 0; nid < num_nodes; nid++){
+        for (unsigned eid = nodePointer[nid]; eid < nodePointer[nid+1]; eid++)
+            edgeToRow[eid] = nid;
+    }
+
+    #pragma omp parallel for reduction(+:block_counter)
+    for (unsigned iter = 0; iter < num_nodes + 1; iter +=  blockSize_h){
+        unsigned windowId = iter / blockSize_h;
+        unsigned block_start = nodePointer[iter];
+        unsigned block_end = nodePointer[min(iter + blockSize_h, num_nodes)];
+        unsigned num_window_edges = block_end - block_start;
+        unsigned *neighbor_window = (unsigned *) malloc (num_window_edges * sizeof(unsigned));
+        memcpy(neighbor_window, &edgeList[block_start], num_window_edges * sizeof(unsigned));
+
+        // Step-1: Sort the neighbor id array of a row window.
+        thrust::sort(neighbor_window, neighbor_window + num_window_edges);
+
+        // Step-2: Deduplication of the edge id array.
+        // printf("Before dedupblication: %d\n", num_window_edges);
+        std::map<unsigned, unsigned> clean_edges2col = inplace_deduplication(neighbor_window, num_window_edges);
+
+        // generate blockPartition --> number of TC_blcok in each row window.
+        blockPartition[windowId] = (clean_edges2col.size() + blockSize_w - 1) /blockSize_w;
+        block_counter += blockPartition[windowId];
+
+        // scan the array and generate edge to column mapping. --> edge_id to compressed_column_id of TC_block.
+        for (unsigned e_index = block_start; e_index < block_end; e_index++){
+            unsigned eid = edgeList[e_index];
+            edgeToColumn[e_index] = clean_edges2col[eid];
+        }
+    }
+    printf("Total Blocks:\t%d\nExpected Edges:\t%d\n", block_counter, block_counter * 8 * 16);
+}
+
+
+
+
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
-  m.def("forward", &spmm_forward, "GAcc forward (CUDA)");
-  m.def("backward", &spmm_backward, "GAcc backward (CUDA)");
-  m.def("build_part", &build_part, "GAcc backward (CPU)");
+  m.def("forward", &spmm_forward, "TC-GNN forward (CUDA)");
+  m.def("backward", &spmm_backward, "TC-GNN backward (CUDA)");
+
+  m.def("preprocess", &preprocess, "Preprocess Step (CUDA)");
+
   }

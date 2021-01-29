@@ -49,7 +49,5 @@ for partsize in partsize_li:
 		print("### hidden: {}".format(hid))
 		for data, d, c in dataset:
 			print("=> {}".format(data))
-			# prof = 'nvprof --metrics all  --log-file kernel_metrics --csv --print-gpu-trace '
-			command = "python gcn.py --dataset {} --dim {} --hidden {} --classes {} --partsize {}".format(data, d, hid, c, partsize)		
+			command = "python main_gcn.py --dataset {} --dim {} --hidden {} --classes {} --partsize {}".format(data, d, hid, c, partsize)		
 			os.system(command)
-			# os.system(prof + command)
