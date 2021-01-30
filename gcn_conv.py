@@ -2,12 +2,14 @@
 import torch
 import torch.nn as nn
 import GAcc
+import sys
 
 class GAccFunction(torch.autograd.Function):
     @staticmethod
     def forward(ctx, X, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow):
         # X = torch.sparse.mm(edge_coo, X)
         ctx.save_for_backward(X, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
+        # edge_feature = GAcc.forward_ef(X, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
         X_prime = torch.mm(X, weights)
         X_prime = GAcc.forward(X_prime, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
         return X_prime

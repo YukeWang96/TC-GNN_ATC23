@@ -139,11 +139,12 @@ std::vector<torch::Tensor> sddmm_forward_cuda(
 	torch::Tensor input				    // input feature matrix.
 ) 
 {
-    auto output = torch::zeros_like(edgeList);
+    auto output = torch::zeros_like(edgeList).to(torch::kFloat);
     const int num_row_windows = blockPartition.size(0);
 
 	dim3 grid(num_row_windows, 1, 1);
 	dim3 block(WARP_SIZE, 1, 1);
+    // printf("at sddmm_forward_cuda\n");
 
     sddmm_forward_cuda_kernel<<< grid, block>>>(
                                                 nodePointer.data<int>(), 
@@ -311,6 +312,7 @@ __global__ void sddmm_forward_cuda_kernel(
 	float *edgeFeature							// aggregated output feature matrix.
 )
 {
+    // printf("at sddmm_forward_cuda_kernel\n");
     unsigned bid = blockIdx.x;										// block_index == row_window_index
     unsigned wid = threadIdx.y;										// warp_index handling multi-dimension > 16.
     unsigned laneid = threadIdx.x;									// lanid of each warp.

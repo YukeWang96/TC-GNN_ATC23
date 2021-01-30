@@ -69,7 +69,7 @@ std::vector<torch::Tensor> spmm_forward(
   CHECK_INPUT(edgeToRow);
 
   int num_nodes = nodePointer.size(0) - 1;
-  int num_edges = nodePointer.size(0);
+  int num_edges = edgeList.size(0);
   int embedding_dim = input.size(1);
 
   return spmm_forward_cuda(nodePointer, edgeList, 
@@ -99,9 +99,10 @@ std::vector<torch::Tensor> sddmm_forward(
   CHECK_INPUT(edgeToRow);
 
   int num_nodes = nodePointer.size(0) - 1;
-  int num_edges = nodePointer.size(0);
+  int num_edges = edgeList.size(0);
   int embedding_dim = input.size(1);
 
+//   printf("at sddmm_forward\n");
   return sddmm_forward_cuda(nodePointer, edgeList, 
                             blockPartition, edgeToColumn, edgeToRow, 
                             num_nodes, num_edges, embedding_dim,
@@ -211,7 +212,7 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   m.def("preprocess", &preprocess, "Preprocess Step (CUDA)");
 
   m.def("forward", &spmm_forward, "TC-GNN SPMM forward (CUDA)");
-  m.def("edge_feature", &sddmm_forward, "TC-GNN SDDMM forward (CUDA)");
+  m.def("forward_ef", &sddmm_forward, "TC-GNN SDDMM forward (CUDA)");
 
   m.def("backward", &spmm_backward, "TC-GNN backward (CUDA)");
   }
