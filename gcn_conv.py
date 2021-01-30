@@ -8,19 +8,30 @@ class GAccFunction(torch.autograd.Function):
     @staticmethod
     def forward(ctx, X, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow):
         # X = torch.sparse.mm(edge_coo, X)
-        ctx.save_for_backward(X, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
+        ctx.save_for_backward(X, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
+
+        # SDDMM: edge feature computation. 
         # edge_feature = GAcc.forward_ef(X, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
+
+        # GEMM node update
         X_prime = torch.mm(X, weights)
+
+        # SpMM: Neighbor Aggregation.
         X_prime = GAcc.forward(X_prime, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
+        
         return X_prime
 
     @staticmethod
     def backward(ctx, d_output):
-        # X, row_pointers, column_index, weights, degrees, partPtr, part2Node = ctx.saved_tensors
-        # d_input_prime = GAcc.backward(d_output, row_pointers, column_index, degrees, partPtr, part2Node, ctx.threadPerBlock)[0]
-        # d_input = torch.mm(d_input_prime, weights.transpose(0,1))
-        # d_weights = torch.mm(X.transpose(0,1), d_input_prime)
-        return None, None, None, None, None, None, None, None
+        X, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow = ctx.saved_tensors
+
+        # SPMM backward propagation.
+        d_input_prime = GAcc.forward(d_output, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
+
+        # GEMM backward propagation.
+        d_input = torch.mm(d_input_prime, weights.transpose(0,1))
+        d_weights = torch.mm(X.transpose(0,1), d_input_prime)
+        return d_input, d_weights, None, None, None, None, None, None
 
 class GCNConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):

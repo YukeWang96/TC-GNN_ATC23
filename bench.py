@@ -42,12 +42,10 @@ dataset = [
 		# ( 'amazon_also_bought'       , 96       , 22),
 ]
 
-
 for partsize in partsize_li:
-	print("-----partsize: ", partsize)
 	for hid in hidden:
 		print("### hidden: {}".format(hid))
 		for data, d, c in dataset:
 			print("=> {}".format(data))
-			command = "python main_gcn.py --dataset {} --dim {} --hidden {} --classes {} --partsize {}".format(data, d, hid, c, partsize)		
+			command = "python main_gcn.py --dataset {} --dim {} --hidden {} --classes {}".format(data, d, hid, c)		
 			os.system(command)

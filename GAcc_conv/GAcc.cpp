@@ -211,8 +211,12 @@ void preprocess(torch::Tensor edgeList_tensor,
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   m.def("preprocess", &preprocess, "Preprocess Step (CUDA)");
 
+  // forward computation SPMM and SDDMM for forward
   m.def("forward", &spmm_forward, "TC-GNN SPMM forward (CUDA)");
   m.def("forward_ef", &sddmm_forward, "TC-GNN SDDMM forward (CUDA)");
 
-  m.def("backward", &spmm_backward, "TC-GNN backward (CUDA)");
+  // backward
+  m.def("backward", &spmm_forward, "TC-GNN SPMM backward (CUDA)");
+  m.def("backward_ef", &sddmm_forward, "TC-GNN SDDMM backward_ef (CUDA)");
+//   m.def("backward", &spmm_backward, "TC-GNN backward (CUDA)");
   }
