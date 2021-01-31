@@ -9,15 +9,15 @@ import numpy as np
 import torch.nn.functional as F
 from torch_geometric.datasets import Planetoid
 import torch_geometric.transforms as T
-import GAcc
-
-from gcn_conv import *
 import torch.autograd.profiler as profiler
 from scipy.sparse import *
 from torch_geometric.datasets import Reddit
-from dataset import *
 
+from dataset import *
+from gcn_conv import *
 from config import *
+import GAcc
+
 GCN = True
 
 parser = argparse.ArgumentParser()
@@ -26,9 +26,11 @@ parser.add_argument("--dim", type=int, default=96, help="input embedding dimensi
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
 parser.add_argument("--epochs", type=int, default=40, help="number of epoches")
-
 args = parser.parse_args()
 
+#########################################
+## Load Graph from files.
+#########################################
 dataset = args.dataset
 if dataset == "reddit":
     path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', 'Reddit')
@@ -40,15 +42,16 @@ elif dataset in ['cora', 'pubmed', 'citeseer']:
     data = dataset[0]
 else:
     path = osp.join("/home/yuke/.graphs/orig", dataset)
-    # print(path)
     data = GAcc_dataset(path, args.dim, args.classes)
     dataset = data
-    
-# sys.exit(0)
+
+# print(path)
+#########################################
+## Build Graph CSR.
+#########################################
 num_nodes = len(data.x)
 num_edges = len(data.edge_index[1])
 val = [1] * num_edges
-
 start = time.perf_counter()
 scipy_coo = coo_matrix((val, data.edge_index), shape=(num_nodes,num_nodes))
 scipy_csr = scipy_coo.tocsr()
@@ -61,6 +64,9 @@ row_pointers = torch.IntTensor(scipy_csr.indptr)
 # degrees = (row_pointers[1:] - row_pointers[:-1]).tolist()
 # degrees = torch.sqrt(torch.FloatTensor(list(map(func, degrees)))).cuda()
 
+#########################################
+## Compute TC-GNN related graph MetaData.
+#########################################
 num_row_windows = (num_nodes + BLK_H - 1) // BLK_H
 edgeToColumn = torch.zeros(num_edges, dtype=torch.int)
 edgeToRow = torch.zeros(num_edges, dtype=torch.int)
@@ -79,12 +85,15 @@ blockPartition = blockPartition.cuda()
 edgeToColumn = edgeToColumn.cuda()
 edgeToRow = edgeToRow.cuda()
 
+#########################################
+## Build GCN and GAT Model.
+#########################################
 if GCN:
     class Net(torch.nn.Module):
         def __init__(self):
             super(Net, self).__init__()
-            self.conv1 = GCNConv(dataset.num_features, 16)
-            self.conv2 = GCNConv(16, dataset.num_classes)
+            GraphConv(dataset.num_features, args.hidden)
+            GraphConv(args.hidden, dataset.num_classes)
 
         def forward(self):
             x = data.x

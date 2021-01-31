@@ -5,10 +5,9 @@ import os
 
 
 hidden = [16] 		# [16, 32, 64, 128, 256]  # , 512, 1024, 2048] # [16]
-partsize_li = [64]  # [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
 data_dir = '/home/yuke/.graphs/orig/'
 # data_dir = '/home/yuke/.graphs/rabbit-orders/'
-print(data_dir)
+# print(data_dir)
 
 dataset = [
 		# ('toy'	        , 3	    , 2   ),  
@@ -42,10 +41,9 @@ dataset = [
 		# ( 'amazon_also_bought'       , 96       , 22),
 ]
 
-for partsize in partsize_li:
-	for hid in hidden:
-		print("### hidden: {}".format(hid))
-		for data, d, c in dataset:
-			print("=> {}".format(data))
-			command = "python main_gcn.py --dataset {} --dim {} --hidden {} --classes {}".format(data, d, hid, c)		
-			os.system(command)
+for hid in hidden:
+	print("### hidden: {}".format(hid))
+	for data, d, c in dataset:
+		print("=> {}".format(data))
+		command = "python main_gcn.py --dataset {} --dim {} --hidden {} --classes {}".format(data, d, hid, c)		
+		os.system(command)
