@@ -15,13 +15,13 @@ import sys
 import os
 from dataset import *
 
-
-
 from gcn import GCN, GAT
-#from gcn_mp import GCN
-#from gcn_spmv import GCN
+# from gcn_mp import GCN
 
-defGCN = False
+# run GCN
+defGCN = True  
+# Training or Inference
+TRAIN = True    
 
 def evaluate(model, features, labels, mask):
     model.eval()
@@ -209,14 +209,16 @@ def main(args):
         # forward
         logits = model(features)
 
-        # loss = loss_fcn(logits[train_mask], labels[train_mask])
-        # optimizer.zero_grad()
-        # loss.backward()
-        # optimizer.step()
-
+        if TRAIN:
+            loss = loss_fcn(logits[train_mask], labels[train_mask])
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+        torch.cuda.synchronize() 
+        
         if epoch >= 3: dur.append(time.time() - t0)
         if epoch == args.n_epochs:
-            print("Epoch {:05d} | Time(ms) {:.4f} | "
+            print("Epoch {:05d} | Time(ms) {:.3f} | "
                 "ETputs(KTEPS) {:.2f}". format(epoch, np.mean(dur) * 1e3, n_edges / np.mean(dur) / 1000))
 
         # acc = evaluate(model, features, labels, val_mask)

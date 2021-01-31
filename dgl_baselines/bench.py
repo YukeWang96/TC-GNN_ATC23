@@ -4,7 +4,7 @@ import datetime
 import os
 
 
-hidden = [64] # [16, 32, 64, 128, 256]  # , 512, 1024, 2048] # [16]
+hidden = [16] # [16, 32, 64, 128, 256]  # , 512, 1024, 2048] # [16]
 data_dir = '/home/yuke/.graphs/orig/'
 print(data_dir)
 
@@ -15,18 +15,18 @@ dataset = [
 		# ('pubmed'	        , 500	    , 3   ),      
 		# ('ppi'	            , 50	    , 121 ),   
 
-		('PROTEINS_full'             , 29       , 2) ,   
-		('OVCAR-8H'                  , 66       , 2) , 
-		('Yeast'                     , 74       , 2) ,
-		('DD'                        , 89       , 2) ,
-		('TWITTER-Real-Graph-Partial', 1323     , 2) ,   
-		('SW-620H'                   , 66       , 2) ,
+		# ('PROTEINS_full'             , 29       , 2) ,   
+		# ('OVCAR-8H'                  , 66       , 2) , 
+		# ('Yeast'                     , 74       , 2) ,
+		# ('DD'                        , 89       , 2) ,
+		# ('TWITTER-Real-Graph-Partial', 1323     , 2) ,   
+		# ('SW-620H'                   , 66       , 2) ,
 
-		# ( 'amazon0505'               , 96	  , 22),
-		# ( 'artist'                   , 100	  , 12),
-		# ( 'com-amazon'               , 96	  , 22),
-		# ( 'soc-BlogCatalog'	         , 128	  , 39),      
-		# ( 'amazon0601'  	         , 96	  , 22), 
+		( 'amazon0505'               , 96	  , 22),
+		( 'artist'                   , 100	  , 12),
+		( 'com-amazon'               , 96	  , 22),
+		( 'soc-BlogCatalog'	         , 128	  , 39),      
+		( 'amazon0601'  	         , 96	  , 22), 
 	    
 		# ( 'web-BerkStan'             , 100	  , 12),
 		# ('YeastH'                    , 75       , 2) ,   
