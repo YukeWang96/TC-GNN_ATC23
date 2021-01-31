@@ -21,18 +21,17 @@ dataset = [
 		# ('Yeast'                     , 74       , 2) ,
 		# ('DD'                        , 89       , 2) ,
 		# ('TWITTER-Real-Graph-Partial', 1323     , 2) ,   
-		# ('YeastH'                    , 75       , 2) ,   
 		# ('SW-620H'                   , 66       , 2) ,
 
-		# ( 'artist'                   , 100	  , 12),
-		# ( 'web-BerkStan'             , 100	  , 12),
-		# ( 'soc-BlogCatalog'	         , 128	  , 39), 
-
 		( 'amazon0505'               , 96	  , 22),
-		# ( 'com-amazon'               , 96	  , 22),
-		# ( 'amazon0601'  	         , 96	  , 22), 
+		( 'artist'                   , 100	  , 12),
+		( 'com-amazon'               , 96	  , 22),
+		( 'soc-BlogCatalog'	         , 128	  , 39),      
+		( 'amazon0601'  	         , 96	  , 22), 
 	    
-        # ( 'Reddit'                   , 602      , 41),
+		# ( 'web-BerkStan'             , 100	  , 12),
+		# ('YeastH'                    , 75       , 2) ,   
+        # ( 'reddit'                   , 602      , 41),
 		# ( 'wiki-topcats'             , 300	  , 12),
 		# ( 'COLLAB'                   , 100      , 3) ,
 		# ( 'wiki-topcats'             , 300	  , 12),
@@ -42,8 +41,8 @@ dataset = [
 ]
 
 for hid in hidden:
-	print("### hidden: {}".format(hid))
 	for data, d, c in dataset:
-		print("=> {}".format(data))
+		print("=> {}, hiddn: {}".format(data, hid))
 		command = "python main_gcn.py --dataset {} --dim {} --hidden {} --classes {}".format(data, d, hid, c)		
 		os.system(command)
+		print()

@@ -1,1 +1,4 @@
 dgl_baselines/dataset
+dgl_baselines/__pycache__
+GAcc_conv/__pycache__
+__pycache__

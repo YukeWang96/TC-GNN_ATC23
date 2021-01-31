@@ -3,7 +3,6 @@ import subprocess
 import datetime
 import os
 
-
 hidden = [16] # [16, 32, 64, 128, 256]  # , 512, 1024, 2048] # [16]
 data_dir = '/home/yuke/.graphs/orig/'
 print(data_dir)

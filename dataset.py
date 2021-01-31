@@ -40,7 +40,7 @@ class GAcc_dataset(torch.nn.Module):
         self.edge_index = np.array([src_li, dst_li])
         self.num_nodes = max(self.nodes) + 1
         dur = time.perf_counter() - start
-        print("=> Loading graph from edge list {:.3f}s ".format(dur))
+        print("Loading (ms):\t{:.3f}".format(dur*1e3))
 
 
     def init_embedding(self, dim):

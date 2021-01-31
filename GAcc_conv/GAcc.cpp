@@ -204,7 +204,7 @@ void preprocess(torch::Tensor edgeList_tensor,
             edgeToColumn[e_index] = clean_edges2col[eid];
         }
     }
-    printf("Total Blocks:\t%d\nExpected Edges:\t%d\n", block_counter, block_counter * 8 * 16);
+    printf("TC_Blocks:\t%d\nExp_Edges:\t%d\n", block_counter, block_counter * 8 * 16);
 }
 
 

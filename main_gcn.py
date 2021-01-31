@@ -19,13 +19,14 @@ from config import *
 import GAcc
 
 GCN = True
+TRAIN = True
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset", type=str, default='amazon0601', help="dataset")
 parser.add_argument("--dim", type=int, default=96, help="input embedding dimension")
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
-parser.add_argument("--epochs", type=int, default=40, help="number of epoches")
+parser.add_argument("--epochs", type=int, default=100, help="number of epoches")
 args = parser.parse_args()
 
 #########################################
@@ -56,7 +57,7 @@ start = time.perf_counter()
 scipy_coo = coo_matrix((val, data.edge_index), shape=(num_nodes,num_nodes))
 scipy_csr = scipy_coo.tocsr()
 build_csr = time.perf_counter() - start
-print("Build CSR: {:.3f}s ".format(build_csr))
+print("CSR (ms):\t{:.3f}".format(build_csr*1e3))
 
 column_index = torch.IntTensor(scipy_csr.indices)
 row_pointers = torch.IntTensor(scipy_csr.indptr)
@@ -77,7 +78,7 @@ start = time.perf_counter()
 GAcc.preprocess(column_index, row_pointers, num_nodes, num_row_windows,  \
                 BLK_H,	BLK_W, blockPartition, edgeToColumn, edgeToRow)
 build_neighbor_parts = time.perf_counter() - start
-print("Preprocess : {:.3f}s ".format(build_neighbor_parts))
+print("Prep. (ms):\t{:.3f}".format(build_neighbor_parts*1e3))
 
 column_index = column_index.cuda()
 row_pointers = row_pointers.cuda()
@@ -92,8 +93,8 @@ if GCN:
     class Net(torch.nn.Module):
         def __init__(self):
             super(Net, self).__init__()
-            GraphConv(dataset.num_features, args.hidden)
-            GraphConv(args.hidden, dataset.num_classes)
+            self.conv1 = GCNConv(dataset.num_features, args.hidden)
+            self.conv2 = GCNConv(args.hidden, dataset.num_classes)
 
         def forward(self):
             x = data.x
@@ -120,7 +121,7 @@ else:
             x = self.conv5(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
             return F.log_softmax(x, dim=1)
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 model, data = Net().to(device), data.to(device)
 optimizer = torch.optim.Adam([
     dict(params=model.conv1.parameters(), weight_decay=5e-4),
@@ -165,22 +166,21 @@ if __name__ == "__main__":
         start_train = time.perf_counter()
         train()
         train_time = time.perf_counter() - start_train
-        train_time_avg.append(train_time)
+        if epoch >= 3: train_time_avg.append(train_time)
         # if epoch == 10:
         #     train_acc, val_acc, tmp_test_acc = test(profile=True)
 
         start_test = time.perf_counter()
         train_acc, val_acc, tmp_test_acc = test()
         test_time = time.perf_counter() - start_test
-        test_time_avg.append(test_time)
+        if epoch > 3: test_time_avg.append(test_time)
 
-        print("Epoch: {:2} Train (ms): {:6.3f} Test (ms): {:6.3f}".format(epoch, train_time * 1e3, test_time * 1e3))
-        
+        # print("Epoch: {:2} Train (ms): {:6.3f} Test (ms): {:6.3f}".format(epoch, train_time * 1e3, test_time * 1e3))
         # if val_acc > best_val_acc:
         #     best_val_acc = val_acc
         #     test_acc = tmp_test_acc
         # log = 'Epoch: {:03d}, Train: {:.4f}, Train-Time: {:.3f} ms, Test-Time: {:.3f} ms, Val: {:.4f}, Test: {:.4f}'
         # print(log.format(epoch, train_acc, sum(time_avg)/len(time_avg) * 1e3, sum(test_time_avg)/len(test_time_avg) * 1e3, best_val_acc, test_acc))
 
-    print("Avg. Train (ms): {:6.3f} Test (ms): {:6.3f}"\
-            .format(epoch, sum(train_time_avg)/len(train_time_avg) * 1e3, sum(test_time_avg)/len(test_time_avg) * 1e3))
+    print("Train (ms):\t{:6.3f}\tTest (ms):\t{:6.3f}"\
+            .format(np.mean(train_time_avg) * 1e3, np.mean(test_time_avg) * 1e3))
