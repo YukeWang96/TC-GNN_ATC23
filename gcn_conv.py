@@ -4,6 +4,19 @@ import torch.nn as nn
 import GAcc
 import sys
 
+def gen_test_tensor(X_prime):
+    n_rows = X_prime.size(0)
+    n_cols = X_prime.size(1)
+    
+    X_new = []
+    for i in range(n_rows):
+        tmp = [i] * n_cols
+        X_new.append(tmp)
+
+    X_new = torch.FloatTensor(X_new).cuda()
+    return X_new
+
+
 class GAccFunction(torch.autograd.Function):
     @staticmethod
     def forward(ctx, X, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow):
@@ -15,10 +28,19 @@ class GAccFunction(torch.autograd.Function):
 
         # GEMM node update
         X_prime = torch.mm(X, weights)
+        
+        # X_prime_t = torch.ones_like(X_prime)
+        X_prime_t = gen_test_tensor(X_prime)
+        # print("=========Before Aggregation========")
+        # print(X_prime_t)
+        # sys.exit(0)
 
         # SpMM: Neighbor Aggregation.
-        X_prime = GAcc.forward(X_prime, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
-        
+        X_prime = GAcc.forward(X_prime_t, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
+        # print("==========After Aggreation=========")
+        # print(X_prime)
+        # sys.exit(0)
+
         return X_prime
 
     @staticmethod

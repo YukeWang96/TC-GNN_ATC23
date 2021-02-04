@@ -18,7 +18,7 @@ from dataset import *
 from gcn import GCN, GAT
 # from gcn_mp import GCN
 
-# run GCN
+# run GCN or GAT
 defGCN = True  
 # Training or Inference
 TRAIN = True    
