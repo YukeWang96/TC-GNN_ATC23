@@ -78,6 +78,38 @@ std::vector<torch::Tensor> spmm_forward(
                             input);
 }
 
+// ////////////////////////////////////////////
+// //
+// // SPMM Foward Pass
+// //
+// ////////////////////////////////////////////
+// std::vector<torch::Tensor> spmm_forward_gat(
+//     torch::Tensor input,
+//     torch::Tensor nodePointer,
+//     torch::Tensor edgeList,
+//     torch::Tensor blockPartition, 
+//     torch::Tensor edgeToColumn,
+//     torch::Tensor edgeToRow,
+//     int n_attentions
+// ) {
+//   CHECK_INPUT(input);
+//   CHECK_INPUT(nodePointer);
+//   CHECK_INPUT(edgeList);
+//   CHECK_INPUT(blockPartition);
+//   CHECK_INPUT(edgeToColumn);
+//   CHECK_INPUT(edgeToRow);
+
+//   int num_nodes = nodePointer.size(0) - 1;
+//   int num_edges = edgeList.size(0);
+//   int embedding_dim = input.size(1);
+
+//   return spmm_forward_cuda(nodePointer, edgeList, 
+//                             blockPartition, edgeToColumn, edgeToRow, 
+//                             num_nodes, num_edges, embedding_dim,
+//                             input, );
+// }
+
+
 ////////////////////////////////////////////
 //
 // SDDMM Foward Pass
@@ -214,6 +246,8 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   // forward computation SPMM and SDDMM for forward
   m.def("forward", &spmm_forward, "TC-GNN SPMM forward (CUDA)");
   m.def("forward_ef", &sddmm_forward, "TC-GNN SDDMM forward (CUDA)");
+  // m.def("forward_gat", &spmm_forward_gat, "TC-GNN SPMM (GAT) forward (CUDA)");
+
 
   // backward
   m.def("backward", &spmm_forward, "TC-GNN SPMM backward (CUDA)");

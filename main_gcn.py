@@ -18,16 +18,16 @@ from gcn_conv import *
 from config import *
 import GAcc
 
-GCN = True
-TRAIN = True
-
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset", type=str, default='amazon0601', help="dataset")
 parser.add_argument("--dim", type=int, default=96, help="input embedding dimension")
+parser.add_argument("--num_layers", type=int, default=6, help="num layers")
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
 parser.add_argument("--epochs", type=int, default=100, help="number of epoches")
+parser.add_argument("--GCN", type=bool, default=False, help="whether to run GCN")
 args = parser.parse_args()
+print(args)
 
 #########################################
 ## Load Graph from files.
@@ -89,36 +89,45 @@ edgeToRow = edgeToRow.cuda()
 #########################################
 ## Build GCN and GAT Model.
 #########################################
-if GCN:
+if args.GCN:
     class Net(torch.nn.Module):
         def __init__(self):
             super(Net, self).__init__()
             self.conv1 = GCNConv(dataset.num_features, args.hidden)
+            self.hidden_layers = nn.ModuleList()
+            for i in range(args.num_layers -  2):
+                self.hidden_layers.append(GCNConv(args.hidden, args.hidden))
             self.conv2 = GCNConv(args.hidden, dataset.num_classes)
+            self.relu = nn.ReLU()
 
         def forward(self):
             x = data.x
-            x = F.relu(self.conv1(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow))
+            x = self.relu(self.conv1(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow))
             x = F.dropout(x, training=self.training)
+            for Gconv  in self.hidden_layers:
+                x = Gconv(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
+                x = self.relu(x)
             x = self.conv2(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
             return F.log_softmax(x, dim=1)
 else:
     class Net(torch.nn.Module):
         def __init__(self):
             super(Net, self).__init__()
-            self.conv1 = GINConv(dataset.num_features, args.hidden)
-            self.conv2 = GINConv(args.hidden, args.hidden)
-            self.conv3 = GINConv(args.hidden, args.hidden)
-            self.conv4 = GINConv(args.hidden, args.hidden)
-            self.conv5 = GINConv(args.hidden, dataset.num_classes)
+            self.conv1 = GATConv(dataset.num_features, args.hidden)
+            self.hidden_layers = nn.ModuleList()
+            for i in range(args.num_layers -  2):
+                self.hidden_layers.append(GATConv(args.hidden, args.hidden))
+            self.conv2 = GATConv(args.hidden, dataset.num_classes)
+            self.relu = nn.ReLU()
 
         def forward(self):
             x = data.x
-            x = F.relu(self.conv1(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow))
-            x = F.relu(self.conv2(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow))
-            x = F.relu(self.conv3(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow))
-            x = F.relu(self.conv4(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow))
-            x = self.conv5(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
+            x = self.relu(self.conv1(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow))
+            x = F.dropout(x, training=self.training)
+            for Gconv in self.hidden_layers:
+                x = Gconv(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
+                x = self.relu(x)
+            x = self.conv2(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
             return F.log_softmax(x, dim=1)
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
