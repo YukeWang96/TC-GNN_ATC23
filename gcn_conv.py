@@ -30,13 +30,13 @@ class GAccFunction(torch.autograd.Function):
         X_prime = torch.mm(X, weights)
         
         # X_prime_t = torch.ones_like(X_prime)
-        X_prime_t = gen_test_tensor(X_prime)
+        # X_prime_t = gen_test_tensor(X_prime)
         # print("=========Before Aggregation========")
         # print(X_prime_t)
         # sys.exit(0)
 
         # SpMM: Neighbor Aggregation.
-        X_prime = GAcc.forward(X_prime_t, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
+        X_prime = GAcc.forward(X_prime, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
         # print("==========After Aggreation=========")
         # print(X_prime)
         # sys.exit(0)

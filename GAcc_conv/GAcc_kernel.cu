@@ -94,7 +94,7 @@ std::vector<torch::Tensor> spmm_forward_cuda(
     dim3 grid(num_row_windows, 1, 1);
     dim3 block(WARP_SIZE, WARPperBlock, 1);
 
-    const int dimTileNum = embedding_dim / BLK_H;
+    const int dimTileNum = (embedding_dim + BLK_H - 1) / BLK_H;
 	const int dynamic_shared_size = dimTileNum * BLK_W * BLK_H * sizeof(float); // dynamic shared memory.
 
     spmm_forward_cuda_kernel<<<grid, block, dynamic_shared_size>>>(
