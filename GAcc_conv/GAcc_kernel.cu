@@ -147,7 +147,7 @@ std::vector<torch::Tensor> spmm_forward_cuda(
 std::vector<torch::Tensor> spmmGAT_forward_cuda(
     torch::Tensor nodePointer,
     torch::Tensor edgeList,
-    torch::Tensor edgeAttention,        // edge attention [n_head, n_e]
+    torch::Tensor edgeAttention,        //*edge attention [n_head, n_e]
     torch::Tensor blockPartition, 
     torch::Tensor edgeToColumn,
     torch::Tensor edgeToRow,
@@ -160,19 +160,18 @@ std::vector<torch::Tensor> spmmGAT_forward_cuda(
     auto output = torch::zeros_like(input);
     const int num_row_windows = blockPartition.size(0);
     const int WARPperBlock = 16;
-
-
     const int num_attention = edgeAttention.size(0);
-    cudaStream_t* streams = new cudaStream_t[num_attention]; // stream2, stream3, stream4;
-
+ 
+    cudaStream_t* streams = new cudaStream_t[num_attention];
     dim3 grid(num_row_windows, 1, 1);
     dim3 block(WARP_SIZE, WARPperBlock, 1);
 
     const int dimTileNum = (embedding_dim + BLK_H - 1) / BLK_H;
 	const int dynamic_shared_size = dimTileNum * BLK_W * BLK_H * sizeof(float); // dynamic shared memory.
 
+    // printf("spmmGAT_forward_cuda--1\n");
     for (int att_idx = 0; att_idx < num_attention; att_idx++){
-
+        cudaStreamCreate ( &streams[att_idx]) ;
         spmmGAT_forward_cuda_kernel<<<grid, block, dynamic_shared_size, streams[att_idx]>>>(
                                                                                         nodePointer.data<int>(), 
                                                                                         edgeList.data<int>(),
@@ -187,13 +186,10 @@ std::vector<torch::Tensor> spmmGAT_forward_cuda(
                                                                                         output.data<float>()
                                                                                     );
     }
-
-
-
+    // printf("spmmGAT_forward_cuda--2\n");
     // check for error
     cudaError_t error = cudaGetLastError();
-    if(error != cudaSuccess)
-    {
+    if(error != cudaSuccess){
         // print the CUDA error message and exit
         printf("CUDA error: %s\n", cudaGetErrorString(error));
         exit(-1);
@@ -381,16 +377,16 @@ __global__ void spmm_forward_cuda_kernel(
 /// SPMM forward (GAT, AGNN)
 ///////////////////////////////////
 __global__ void spmmGAT_forward_cuda_kernel(
-	const int * __restrict__ nodePointer,		// node pointer.
-	const int *__restrict__ edgeList,			// edge list.
-    const float *__restrict__ edgeAttention,	    // edge attention.
-	const int *__restrict__ blockPartition, 	// number of TC_blocks (16x8) in each row_window.
-	const int *__restrict__ edgeToColumn, 		// eid -> col within each row_window.
-	const int *__restrict__ edgeToRow, 		    // eid -> col within each row_window.
+	const int * __restrict__    nodePointer,		// node pointer.
+	const int *__restrict__     edgeList,			// edge list.
+    const float *__restrict__   edgeAttention,	    // edge attention.
+	const int *__restrict__     blockPartition, 	// number of TC_blocks (16x8) in each row_window.
+	const int *__restrict__     edgeToColumn, 		// eid -> col within each row_window.
+	const int *__restrict__     edgeToRow, 		    // eid -> col within each row_window.
 	const int numNodes,
 	const int numEdges,
 	const int embedding_dim,				    // embedding dimension.
-	const float *__restrict__ input,		    // input feature matrix.
+	const float *__restrict__   input,		    // input feature matrix.
 	float *output							    // aggregated output feature matrix.
 ) {
     const unsigned bid = blockIdx.x;								// block_index == row_window_index

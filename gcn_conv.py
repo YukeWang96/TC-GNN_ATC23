@@ -56,7 +56,6 @@ class GAccFunction(torch.autograd.Function):
         return d_input, d_weights, None, None, None, None, None, None
 
 
-
 class GAccFunction_GAT(torch.autograd.Function):
     @staticmethod
     def forward(ctx, X, weights, attention_w, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow):
@@ -69,27 +68,38 @@ class GAccFunction_GAT(torch.autograd.Function):
         # SDDMM: edge feature computation. 
         edge_feature = GAcc.forward_ef(X_prime, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
 
-        # [n_e, n_head]       
-        edge_attentions = torch.mm(edge_feature.unsqueeze(-1), attention_w)
-        n_atttentions = edge_attentions.size(1)
-        
-        # SpMM: Neighbor Aggregation.
-        for i in range(n_atttentions): 
-            X_prime = GAcc.forward(X_prime, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
+        # Edge Attention Generation: [n_e, n_head]       
+        edge_attentions = torch.mm(edge_feature.unsqueeze(-1), attention_w).transpose(0,1).contiguous()
+        # print(edge_attentions.size())
+
+        # SpMM_gat: Neighbor Aggregation.
+        X_prime = GAcc.forward_gat(X_prime, row_pointers, column_index, edge_attentions, blockPartition, edgeToColumn, edgeToRow)[0]
+
+        ctx.save_for_backward(X, weights, row_pointers, column_index, edge_attentions, blockPartition, edgeToColumn, edgeToRow)
         # print("==========After Aggreation=========")
         return X_prime
 
     @staticmethod
     def backward(ctx, d_output):
-        X, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow = ctx.saved_tensors
+        X, weights, row_pointers, column_index, edge_attentions, blockPartition, edgeToColumn, edgeToRow = ctx.saved_tensors
 
         # SPMM backward propagation.
-        d_input_prime = GAcc.forward(d_output, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
+        d_input_prime = GAcc.forward_gat(d_output, row_pointers, column_index, edge_attentions, blockPartition, edgeToColumn, edgeToRow)[0]
 
         # GEMM backward propagation.
         d_input = torch.mm(d_input_prime, weights.transpose(0,1))
         d_weights = torch.mm(X.transpose(0,1), d_input_prime)
-        return d_input, d_weights, None, None, None, None, None, None
+
+        # attention weight back propagation.
+        d_attention = GAcc.forward_ef(d_output, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
+        # print(d_attention.size())
+        d_attention_exp = d_attention[None, :].expand(8, -1)
+        # print(d_attention_exp.size())
+
+        d_attention_w = torch.mm(d_attention_exp, column_index[:, None].float()).transpose(0,1)
+        # print(d_attention_w.size())
+
+        return d_input, d_weights, d_attention_w, None, None, None, None, None
 
 
 class GCNConv(torch.nn.Module):
