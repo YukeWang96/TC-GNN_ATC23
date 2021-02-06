@@ -15,7 +15,7 @@ dataset = [
 		# ('tc_gnn_verify'	, 16	, 2),
 		# ('tc_gnn_verify_2x'	, 16	, 2),
 
-		('citeseer'	        		, 3703	    , 6   ),  
+		# ('citeseer'	        		, 3703	    , 6   ),  
 		# ('cora' 	        		, 1433	    , 7   ),  
 		# ('pubmed'	        		, 500	    , 3   ),      
 		# ('ppi'	            		, 50	    , 121 ),   
