@@ -46,7 +46,7 @@ dataset = [
 
 data_dir = '/home/yuke/.graphs/orig/'
 print(data_dir)
-print("dataset,origin,reduced,reduction (%)")
+print("dataset,origin,origin_eff,reduced,reduced_eff,reduction (%)")
 
 
 def find_dense(path, data):
@@ -82,9 +82,13 @@ def find_dense(path, data):
 		dst_list = []
 		for src in range(src_iter, src_iter + dense_tile_H):
 			dst_list += graph[src]
+
+		actual_cnt = len(dst_list)
 		range_set = sorted(list(set(dst_list)))
 		opt_cnt += (len(range_set) + dense_tile_W - 1)//dense_tile_W
 		tmp_opt_cnt = (len(range_set) + dense_tile_W - 1)//dense_tile_W
+		exp_opt_cnt = (dense_tile_H * dense_tile_W) * tmp_opt_cnt
+
 
 		tmp = 0
 		range_set = sorted(list(range_set))
@@ -96,6 +100,8 @@ def find_dense(path, data):
 			i = j
 			tile_cnt += 1
 			tmp += 1
+
+		exp_tile_cnt =  (dense_tile_H * dense_tile_W) * tile_cnt
 
 		if tmp < tmp_opt_cnt:
 			print(range_set)
@@ -113,7 +119,7 @@ def find_dense(path, data):
 	# 						break
 
 			# tiles.append(loc_cnt)
-	print("{}.{},{:},{:.2f}".format(data, tile_cnt, opt_cnt, 100 * (tile_cnt - opt_cnt) / tile_cnt))
+	print("{}.{},{:.2f}, {}, {:.2f}, {:.2f}".format(data, tile_cnt, actual_cnt/exp_tile_cnt, opt_cnt, actual_cnt/exp_opt_cnt,  100 * (tile_cnt - opt_cnt) / tile_cnt))
 						
 	# plt.hist(tiles, bins=100)
 	# plt.savefig("{}.pdf".format(data))
