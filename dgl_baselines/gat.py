@@ -16,16 +16,6 @@ from dgl.data import register_data_args
 from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
 
 
-def gcn_msg(edge):
-    msg = edge.src['h'] * edge.src['norm']
-    return {'m': msg}
-
-
-def gcn_reduce(node):
-    accum = torch.sum(node.mailbox['m'], 1) * node.data['norm']
-    return {'h': accum}
-
-
 class NodeApplyModule(nn.Module):
     def __init__(self, out_feats, activation=None, bias=True):
         super(NodeApplyModule, self).__init__()
@@ -50,15 +40,16 @@ class NodeApplyModule(nn.Module):
         return {'h': h}
 
 
-class GCNLayer(nn.Module):
+class GATLayer(nn.Module):
     def __init__(self,
                  g,
                  in_feats,
                  out_feats,
                  activation,
                  dropout,
-                 bias=True):
-        super(GCNLayer, self).__init__()
+                 bias=True,
+                 attention_head=8):
+        super(GATLayer, self).__init__()
         self.g = g
         self.weight = nn.Parameter(torch.Tensor(in_feats, out_feats))
         if dropout:
@@ -68,11 +59,34 @@ class GCNLayer(nn.Module):
         self.node_update = NodeApplyModule(out_feats, activation, bias)
         self.reset_parameters()
 
+        # * add the attention weight tensor.
+        self.attention_w =  torch.nn.Parameter(torch.randn(1, attention_head))
+
     def reset_parameters(self):
         stdv = 1. / math.sqrt(self.weight.size(1))
         self.weight.data.uniform_(-stdv, stdv)
 
     def forward(self, h):
+        
+        # def gcn_msg(edge):
+        #     dot_attent = (edge.src['h'] * edge.dst['h']).sum(-1)[:, None]
+        #     msg = (dot_attent * edge.src['h'])[:, None]
+        #     msg = torch.matmul(msg.transpose(1,2), self.attention_w).sum(axis=2, keepdim=True).transpose(1,2).squeeze()
+        #     return {'m': msg}
+
+        # def gcn_reduce(node):
+        #     accum = torch.sum(node.mailbox['m'], 1)
+        #     return {'h': accum}
+
+        def gcn_msg(edge):
+            msg = edge.src['h'] * edge.src['norm']
+            return {'m': msg}
+
+
+        def gcn_reduce(node):
+            accum = torch.sum(node.mailbox['m'], 1) * node.data['norm']
+            return {'h': accum}
+
         if self.dropout:
             h = self.dropout(h)
         self.g.ndata['h'] = torch.mm(h, self.weight)
@@ -80,7 +94,7 @@ class GCNLayer(nn.Module):
         h = self.g.ndata.pop('h')
         return h
 
-class GCN(nn.Module):
+class GAT(nn.Module):
     def __init__(self,
                  g,
                  in_feats,
@@ -88,16 +102,17 @@ class GCN(nn.Module):
                  n_classes,
                  n_layers,
                  activation,
-                 dropout):
-        super(GCN, self).__init__()
+                 dropout,
+                 attention_head=8):
+        super(GAT, self).__init__()
         self.layers = nn.ModuleList()
         # input layer
-        self.layers.append(GCNLayer(g, in_feats, n_hidden, activation, dropout))
+        self.layers.append(GATLayer(g, in_feats, n_hidden, activation, dropout, attention_head=attention_head))
         # hidden layers
         for i in range(n_layers - 1):
-            self.layers.append(GCNLayer(g, n_hidden, n_hidden, activation, dropout))
+            self.layers.append(GATLayer(g, n_hidden, n_hidden, activation, dropout, attention_head=attention_head))
         # output layer
-        self.layers.append(GCNLayer(g, n_hidden, n_classes, None, dropout))
+        self.layers.append(GATLayer(g, n_hidden, n_classes, None, dropout, attention_head=attention_head))
 
     def forward(self, features):
         h = features
@@ -105,6 +120,7 @@ class GCN(nn.Module):
             h = layer(h)
         return h
 
+'''
 def evaluate(model, features, labels, mask):
     model.eval()
     with torch.no_grad():
@@ -231,3 +247,4 @@ if __name__ == '__main__':
     print(args)
 
     main(args)
+'''

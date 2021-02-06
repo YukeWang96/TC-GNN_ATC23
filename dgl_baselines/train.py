@@ -15,11 +15,11 @@ import sys
 import os
 from dataset import *
 
-from gcn import GCN, GAT
-# from gcn_mp import GCN
+from gcn import GCN
+from gat import GAT
 
 # run GCN or GAT
-defGCN = True  
+defGCN = False  
 # Training or Inference
 TRAIN = True    
 
@@ -181,6 +181,7 @@ def main(args):
                     F.relu,
                     args.dropout)
     else:
+        print("GAT")
         model = GAT(g,
                     in_feats,
                     args.n_hidden,
