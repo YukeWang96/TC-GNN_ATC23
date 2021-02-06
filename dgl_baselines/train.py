@@ -16,10 +16,13 @@ import os
 from dataset import *
 
 from gcn import GCN
+# from gcn_mp import GCN
+
+# from gcn import GAT
 from gat import GAT
 
 # run GCN or GAT
-defGCN = False  
+defGCN = True  
 # Training or Inference
 TRAIN = True    
 

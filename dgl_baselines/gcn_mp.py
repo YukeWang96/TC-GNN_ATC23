@@ -13,7 +13,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import dgl
 from dgl.data import register_data_args
-from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
+from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset, RedditDataset
+
 
 def gcn_msg(edge):
     msg = edge.src['h'] * edge.src['norm']
@@ -46,52 +47,40 @@ class NodeApplyModule(nn.Module):
             h = self.activation(h)
         return {'h': h}
 
-class GATLayer(nn.Module):
+
+class GCNLayer(nn.Module):
     def __init__(self,
                  g,
                  in_feats,
                  out_feats,
                  activation,
                  dropout,
-                 bias=True,
-                 attention_head=8):
-        super(GATLayer, self).__init__()
+                 bias=True):
+        super(GCNLayer, self).__init__()
         self.g = g
         self.weight = nn.Parameter(torch.Tensor(in_feats, out_feats))
         if dropout:
             self.dropout = nn.Dropout(p=dropout)
         else:
             self.dropout = 0.
-        self.node_update = NodeApplyModule(out_feats, activation, bias)
+        # self.node_update = NodeApplyModule(out_feats, activation, bias)
+        # self.weight = nn.Parameter(torch.randn())
         self.reset_parameters()
-
-        # * add the attention weight tensor.
-        self.attention_w =  torch.nn.Parameter(torch.randn(1, attention_head))
 
     def reset_parameters(self):
         stdv = 1. / math.sqrt(self.weight.size(1))
         self.weight.data.uniform_(-stdv, stdv)
 
     def forward(self, h):
-        
-        # def gcn_msg(edge):
-        #     dot_attent = (edge.src['h'] * edge.dst['h']).sum(-1)[:, None]
-        #     msg = (dot_attent * edge.src['h'])[:, None]
-        #     msg = torch.matmul(msg.transpose(1,2), self.attention_w).sum(axis=2, keepdim=True).transpose(1,2).squeeze()
-        #     return {'m': msg}
-
-        # def gcn_reduce(node):
-        #     accum = torch.sum(node.mailbox['m'], 1)
-        #     return {'h': accum}
-
         if self.dropout:
             h = self.dropout(h)
         self.g.ndata['h'] = torch.mm(h, self.weight)
-        self.g.update_all(gcn_msg, gcn_reduce, self.node_update)
+        # self.g.update_all(gcn_msg, gcn_reduce, self.node_update)
+        self.g.update_all(gcn_msg, gcn_reduce)
         h = self.g.ndata.pop('h')
         return h
 
-class GAT(nn.Module):
+class GCN(nn.Module):
     def __init__(self,
                  g,
                  in_feats,
@@ -99,17 +88,16 @@ class GAT(nn.Module):
                  n_classes,
                  n_layers,
                  activation,
-                 dropout,
-                 attention_head=8):
-        super(GAT, self).__init__()
+                 dropout):
+        super(GCN, self).__init__()
         self.layers = nn.ModuleList()
         # input layer
-        self.layers.append(GATLayer(g, in_feats, n_hidden, activation, dropout, attention_head=attention_head))
+        self.layers.append(GCNLayer(g, in_feats, n_hidden, activation, dropout))
         # hidden layers
         for i in range(n_layers - 1):
-            self.layers.append(GATLayer(g, n_hidden, n_hidden, activation, dropout, attention_head=attention_head))
+            self.layers.append(GCNLayer(g, n_hidden, n_hidden, activation, dropout))
         # output layer
-        self.layers.append(GATLayer(g, n_hidden, n_classes, None, dropout, attention_head=attention_head))
+        self.layers.append(GCNLayer(g, n_hidden, n_classes, None, dropout))
 
     def forward(self, features):
         h = features
@@ -117,7 +105,6 @@ class GAT(nn.Module):
             h = layer(h)
         return h
 
-'''
 def evaluate(model, features, labels, mask):
     model.eval()
     with torch.no_grad():
@@ -136,6 +123,8 @@ def main(args):
         data = CiteseerGraphDataset()
     elif args.dataset == 'pubmed':
         data = PubmedGraphDataset()
+    elif args.dataset == "reddit" or args.dataset == "Reddit":
+        data = RedditDataset()
     else:
         raise ValueError('Unknown dataset: {}'.format(args.dataset))
 
@@ -228,7 +217,7 @@ if __name__ == '__main__':
     register_data_args(parser)
     parser.add_argument("--dropout", type=float, default=0.5,
             help="dropout probability")
-    parser.add_argument("--gpu", type=int, default=-1,
+    parser.add_argument("--gpu", type=int, default=0,
             help="gpu")
     parser.add_argument("--lr", type=float, default=1e-2,
             help="learning rate")
@@ -244,4 +233,3 @@ if __name__ == '__main__':
     print(args)
 
     main(args)
-'''
