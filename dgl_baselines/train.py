@@ -20,9 +20,15 @@ from gcn import GCN
 
 # from gcn import GAT
 from gat import GAT
+from gin import GIN
 
 # run GCN or GAT
-defGCN = True  
+def_GCN = False  
+def_GIN = True
+def_GAT = False
+
+assert sum([def_GCN, def_GIN, def_GAT]) == 1
+
 # Training or Inference
 TRAIN = True    
 
@@ -175,7 +181,8 @@ def main(args):
     g.ndata['norm'] = norm.unsqueeze(1)
 
     # create GCN model
-    if defGCN:
+    if def_GCN:
+        print("Run GCN")
         model = GCN(g,
                     in_feats,
                     args.n_hidden,
@@ -183,9 +190,19 @@ def main(args):
                     args.n_layers,
                     F.relu,
                     args.dropout)
-    else:
-        print("GAT")
+    if def_GAT:
+        print("Run GAT")
         model = GAT(g,
+                    in_feats,
+                    args.n_hidden,
+                    n_classes,
+                    args.n_layers,
+                    F.relu,
+                    args.dropout)
+    
+    if def_GIN:
+        print("Run GIN")
+        model = GIN(g,
                     in_feats,
                     args.n_hidden,
                     n_classes,
@@ -244,7 +261,7 @@ if __name__ == '__main__':
     parser.add_argument("--dim", type=int, default=96, help="dim")
     parser.add_argument("--num_classes", type=int, default=22, help="num_classes")
     parser.add_argument("--lr", type=float, default=1e-2, help="learning rate")
-    parser.add_argument("--n-epochs", type=int, default=100, help="number of training epochs")
+    parser.add_argument("--n-epochs", type=int, default=10, help="number of training epochs")
     parser.add_argument("--n-hidden", type=int, default=16, help="number of hidden gcn units")
     parser.add_argument("--n-layers", type=int, default=1, help="number of hidden gcn layers")
     parser.add_argument("--weight-decay", type=float, default=5e-4, help="Weight for L2 loss")

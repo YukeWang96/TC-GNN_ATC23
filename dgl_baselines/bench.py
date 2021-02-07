@@ -11,9 +11,9 @@ dataset = [
 		# ('toy'	        , 3	    , 2   ),  
 
 		('citeseer'	        , 3703	    , 6   ),  
-		# ('cora' 	        , 1433	    , 7   ),  
-		# ('pubmed'	        , 500	    , 3   ),      
-		# ('ppi'	            , 50	    , 121 ),   
+		('cora' 	        , 1433	    , 7   ),  
+		('pubmed'	        , 500	    , 3   ),      
+		('ppi'	            , 50	    , 121 ),   
 
 		# ('PROTEINS_full'             , 29       , 2) ,   
 		# ('OVCAR-8H'                  , 66       , 2) , 

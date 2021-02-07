@@ -40,7 +40,7 @@ class GCN(nn.Module):
             h = layer(self.g, h)
         return h
 
-# '''
+
 class GAT(nn.Module):
     def __init__(self,
                  g,
@@ -74,4 +74,3 @@ class GAT(nn.Module):
         # output projection
         logits = self.gat_layers[-1](self.g, h).mean(1)
         return logits
-# '''

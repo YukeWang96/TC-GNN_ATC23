@@ -24,6 +24,7 @@ def gcn_reduce(node):
     accum = torch.sum(node.mailbox['m'], 1) * node.data['norm']
     return {'h': accum}
 
+'''
 class NodeApplyModule(nn.Module):
     def __init__(self, out_feats, activation=None, bias=True):
         super(NodeApplyModule, self).__init__()
@@ -46,7 +47,7 @@ class NodeApplyModule(nn.Module):
         if self.activation:
             h = self.activation(h)
         return {'h': h}
-
+'''
 
 class GCNLayer(nn.Module):
     def __init__(self,
@@ -63,8 +64,6 @@ class GCNLayer(nn.Module):
             self.dropout = nn.Dropout(p=dropout)
         else:
             self.dropout = 0.
-        # self.node_update = NodeApplyModule(out_feats, activation, bias)
-        # self.weight = nn.Parameter(torch.randn())
         self.reset_parameters()
 
     def reset_parameters(self):

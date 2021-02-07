@@ -15,6 +15,7 @@ import dgl
 from dgl.data import register_data_args
 from dgl.data import CoraGraphDataset, CiteseerGraphDataset, PubmedGraphDataset
 
+'''
 def gcn_msg(edge):
     msg = edge.src['h'] * edge.src['norm']
     return {'m': msg}
@@ -45,24 +46,15 @@ class NodeApplyModule(nn.Module):
         if self.activation:
             h = self.activation(h)
         return {'h': h}
+'''
 
 class GATLayer(nn.Module):
     def __init__(self,
-                 g,
                  in_feats,
                  out_feats,
-                 activation,
-                 dropout,
-                 bias=True,
                  attention_head=8):
         super(GATLayer, self).__init__()
-        self.g = g
         self.weight = nn.Parameter(torch.Tensor(in_feats, out_feats))
-        if dropout:
-            self.dropout = nn.Dropout(p=dropout)
-        else:
-            self.dropout = 0.
-        self.node_update = NodeApplyModule(out_feats, activation, bias)
         self.reset_parameters()
 
         # * add the attention weight tensor.
@@ -72,24 +64,52 @@ class GATLayer(nn.Module):
         stdv = 1. / math.sqrt(self.weight.size(1))
         self.weight.data.uniform_(-stdv, stdv)
 
-    def forward(self, h):
+    def forward(self, graph, h):
         
-        # def gcn_msg(edge):
-        #     dot_attent = (edge.src['h'] * edge.dst['h']).sum(-1)[:, None]
-        #     msg = (dot_attent * edge.src['h'])[:, None]
-        #     msg = torch.matmul(msg.transpose(1,2), self.attention_w).sum(axis=2, keepdim=True).transpose(1,2).squeeze()
-        #     return {'m': msg}
+        def gcn_msg(edge):
+            dot_attent = (edge.src['h'] * edge.dst['h']).sum(-1)[:, None]
+            msg = (dot_attent * edge.src['h'])[:, None]
+            msg = torch.matmul(msg.transpose(1,2), self.attention_w).sum(axis=2, keepdim=True).transpose(1,2).squeeze()
+            return {'m': msg}
 
-        # def gcn_reduce(node):
-        #     accum = torch.sum(node.mailbox['m'], 1)
-        #     return {'h': accum}
+        def gcn_reduce(node):
+            accum = torch.sum(node.mailbox['m'], 1)
+            return {'h': accum}
 
-        if self.dropout:
-            h = self.dropout(h)
-        self.g.ndata['h'] = torch.mm(h, self.weight)
-        self.g.update_all(gcn_msg, gcn_reduce, self.node_update)
-        h = self.g.ndata.pop('h')
+        graph.ndata['h'] = torch.mm(h, self.weight)
+        graph.update_all(gcn_msg, gcn_reduce)
+        h = graph.ndata.pop('h')
         return h
+
+'''
+# Define a GAT layer
+class GATLayer(nn.Module):
+    def __init__(self, in_feats, out_feats):
+        super(GATLayer, self).__init__()
+        self.linear_func = nn.Linear(in_feats, out_feats, bias=False)
+        self.attention_func = nn.Linear(2 * out_feats, 1, bias=False)
+        
+    def edge_attention(self, edges):
+        concat_z = torch.cat([edges.src['z'], edges.dst['z']], dim=1)
+        src_e = self.attention_func(concat_z)
+        src_e = F.leaky_relu(src_e)
+        return {'e': src_e}
+    
+    def message_func(self, edges):
+        return {'z': edges.src['z'], 'e':edges.data['e']}
+        
+    def reduce_func(self, nodes):
+        a = F.softmax(nodes.mailbox['e'], dim=1)
+        h = torch.sum(a * nodes.mailbox['z'], dim=1)
+        return {'h': h}
+                               
+    def forward(self, graph, h):
+        z = self.linear_func(h)
+        graph.ndata['z'] = z
+        graph.apply_edges(self.edge_attention)
+        graph.update_all(self.message_func, self.reduce_func)
+        return graph.ndata.pop('h')
+'''
 
 class GAT(nn.Module):
     def __init__(self,
@@ -104,17 +124,20 @@ class GAT(nn.Module):
         super(GAT, self).__init__()
         self.layers = nn.ModuleList()
         # input layer
-        self.layers.append(GATLayer(g, in_feats, n_hidden, activation, dropout, attention_head=attention_head))
+        # self.layers.append(GATLayer(g, in_feats, n_hidden, activation, dropout, attention_head=attention_head))
+        self.layers.append(GATLayer(in_feats, n_hidden))
+
         # hidden layers
         for i in range(n_layers - 1):
-            self.layers.append(GATLayer(g, n_hidden, n_hidden, activation, dropout, attention_head=attention_head))
+            self.layers.append(GATLayer(n_hidden, n_hidden))
         # output layer
-        self.layers.append(GATLayer(g, n_hidden, n_classes, None, dropout, attention_head=attention_head))
+        self.layers.append(GATLayer(n_hidden, n_classes))
+        self.graph = g
 
     def forward(self, features):
         h = features
         for layer in self.layers:
-            h = layer(h)
+            h = layer(self.graph, h)
         return h
 
 '''
