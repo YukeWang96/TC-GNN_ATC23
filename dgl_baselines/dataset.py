@@ -3,6 +3,7 @@ import torch
 import numpy as np
 import time
 import dgl 
+
 class GAcc_dataset(torch.nn.Module):
     """
     data loading for more graphs

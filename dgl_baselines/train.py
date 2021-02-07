@@ -74,6 +74,7 @@ def main(args):
             cuda = False
         else:
             cuda = True
+
         g = g.int().to(args.gpu)
         labels = labels.to(args.gpu)
         # print(labels)
@@ -116,6 +117,13 @@ def main(args):
             cuda = False
         else:
             cuda = True
+
+        print(g.edges())
+        with open("citeseer", "w") as fp:
+            for src, trg in zip(g.edges()[0], g.edges()[1]):
+                fp.write(f"{src} {trg}\n")
+        fp.close()
+        sys.exit(0)
 
         g = g.int().to(args.gpu)
         features = g.ndata['feat']

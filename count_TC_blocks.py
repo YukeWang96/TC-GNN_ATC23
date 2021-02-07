@@ -8,14 +8,14 @@ from collections import Counter, defaultdict
 import sys 
 
 dense_tile_H = 16
-dense_tile_W = 8
+dense_tile_W = 16
 
 dataset = [
 		# ('toy'	        , 3	    , 2   ),  
 		# ('tc_gnn_verify'	, 16	, 2),
 		# ('tc_gnn_verify_2x'	, 16	, 2),
 
-		# ('citeseer'	        		, 3703	    , 6   ),  
+		('citeseer'	        		, 3703	    , 6   ),  
 		('cora' 	        		, 1433	    , 7   ),  
 		('pubmed'	        		, 500	    , 3   ),      
 		('ppi'	            		, 50	    , 121 ),   
@@ -33,7 +33,7 @@ dataset = [
 		( 'web-BerkStan'             , 100	  , 12),
 		( 'soc-BlogCatalog'	         , 128	  , 39),      
 		( 'amazon0601'  	         , 96	  , 22), 
-		( 'Reddit'                   , 602    , 41),
+		# ( 'Reddit'                   , 602    , 41),
 
 		# ( 'wiki-topcats'             , 300	  , 12),
 		# ( 'COLLAB'                   , 100      , 3) ,
@@ -106,7 +106,7 @@ def find_dense(path, data):
 		if tmp < tmp_opt_cnt:
 			print(range_set)
 			print(tmp, tmp_opt_cnt)
-			system.exit(0)
+			sys.exit(0)
 	# tile_cnt = 0
 	# for src_iter in range(0, num_nodes, dense_tile_H):
 	# 	for dst_iter in range(0, num_nodes, dense_tile_W):
@@ -119,7 +119,7 @@ def find_dense(path, data):
 	# 						break
 
 			# tiles.append(loc_cnt)
-	print("{}.{},{:.2f}, {}, {:.2f}, {:.2f}".format(data, tile_cnt, actual_cnt/exp_tile_cnt, opt_cnt, actual_cnt/exp_opt_cnt,  100 * (tile_cnt - opt_cnt) / tile_cnt))
+	print("{},{},{:.2f},{},{:.2f},{:.2f}".format(data, tile_cnt, actual_cnt/exp_tile_cnt, opt_cnt, actual_cnt/exp_opt_cnt,  100 * (tile_cnt - opt_cnt) / tile_cnt))
 						
 	# plt.hist(tiles, bins=100)
 	# plt.savefig("{}.pdf".format(data))
