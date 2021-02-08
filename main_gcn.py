@@ -14,7 +14,7 @@ from scipy.sparse import *
 from torch_geometric.datasets import Reddit
 
 from dataset import *
-from gcn_conv import *
+from gnn_conv import *
 from config import *
 import GAcc
 
@@ -25,7 +25,7 @@ parser.add_argument("--num_layers", type=int, default=6, help="num layers")
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
 parser.add_argument("--epochs", type=int, default=100, help="number of epoches")
-parser.add_argument("--GCN", type=bool, default=False, help="whether to run GCN")
+parser.add_argument("--model", type=str, default='gin', help='GNN model', choices=['gcn', 'gin', 'gat'])
 args = parser.parse_args()
 print(args)
 
@@ -89,7 +89,7 @@ edgeToRow = edgeToRow.cuda()
 #########################################
 ## Build GCN and GAT Model.
 #########################################
-if args.GCN:
+if args.model == "gcn":
     class Net(torch.nn.Module):
         def __init__(self):
             super(Net, self).__init__()
@@ -109,7 +109,29 @@ if args.GCN:
                 x = self.relu(x)
             x = self.conv2(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
             return F.log_softmax(x, dim=1)
-else:
+
+elif args.model == "gin":
+    class Net(torch.nn.Module):
+        def __init__(self):
+            super(Net, self).__init__()
+            self.conv1 = GINConv(dataset.num_features, args.hidden)
+            self.hidden_layers = nn.ModuleList()
+            for i in range(args.num_layers -  2):
+                self.hidden_layers.append(GINConv(args.hidden, args.hidden))
+            self.conv2 = GINConv(args.hidden, dataset.num_classes)
+            self.relu = nn.ReLU()
+
+        def forward(self):
+            x = data.x
+            x = self.relu(self.conv1(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow))
+            x = F.dropout(x, training=self.training)
+            for Gconv  in self.hidden_layers:
+                x = Gconv(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
+                x = self.relu(x)
+            x = self.conv2(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
+            return F.log_softmax(x, dim=1)
+
+elif args.model == "gat":
     class Net(torch.nn.Module):
         def __init__(self):
             super(Net, self).__init__()

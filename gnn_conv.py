@@ -19,7 +19,6 @@ def gen_test_tensor(X_prime):
     X_new = torch.FloatTensor(X_new).cuda()
     return X_new
 
-
 class GAccFunction(torch.autograd.Function):
     @staticmethod
     def forward(ctx, X, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow):
@@ -55,6 +54,33 @@ class GAccFunction(torch.autograd.Function):
         d_weights = torch.mm(X.transpose(0,1), d_input_prime)
         return d_input, d_weights, None, None, None, None, None, None
 
+class GAccFunction_GIN(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, X, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow):
+
+        # SpMM: Neighbor Aggregation.
+        X_prime = GAcc.forward(X, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
+        
+        ctx.save_for_backward(X_prime, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
+
+        # GEMM node update
+        X_prime = torch.mm(X_prime, weights)
+        
+        return X_prime
+
+    @staticmethod
+    def backward(ctx, d_output):
+        X_prime, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow = ctx.saved_tensors
+
+        # GEMM backward propagation.
+        d_X_prime = torch.mm(d_output, weights.transpose(0,1))
+        d_weights = torch.mm(X_prime.transpose(0,1), d_output)
+
+        # SPMM backward propagation.
+        d_input = GAcc.forward(d_X_prime, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
+
+        return d_input, d_weights, None, None, None, None, None, None
+        # return None, d_weights, None, None, None, None, None, None
 
 class GAccFunction_GAT(torch.autograd.Function):
     @staticmethod
@@ -121,6 +147,22 @@ class GCNConv(torch.nn.Module):
         partitioin: for the graph with the part-based optimziation.
         '''
         return GAccFunction.apply(X, self.weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
+
+class GINConv(torch.nn.Module):
+    def __init__(self, input_dim, output_dim):
+        super(GINConv, self).__init__()
+        self.weights = torch.nn.Parameter(torch.randn(input_dim, output_dim))
+
+    def forward(self, X, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow):
+        '''
+        @param:
+        X:  the input tensor of the graph node embedding, shape: [n_nodes, n_dim].
+        A:  the CSR node pointer of the graph, shape: [node, 1].
+        edges: the CSR edge list of the graph, shape: [edge, 1].
+        partitioin: for the graph with the part-based optimziation.
+        '''
+        return GAccFunction_GIN.apply(X, self.weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
+
 
 class GATConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):

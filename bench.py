@@ -4,7 +4,7 @@ import datetime
 import os
 
 
-hidden = [16] # [16, 32, 64, 128, 256]  # , 512, 1024, 2048] # [16]
+hidden = [16, 32, 64, 128, 256]  # , 512, 1024, 2048] # [16]
 num_layers = [2]
 data_dir = '/home/yuke/.graphs/orig/'
 # data_dir = '/home/yuke/.graphs/rabbit-orders/'
@@ -27,14 +27,14 @@ dataset = [
 		# ('YeastH'                    , 75       , 2) ,   
 		# ('SW-620H'                   , 66       , 2) ,
 
-		# ( 'amazon0505'               , 96	  , 22),
-		# ( 'artist'                   , 100	  , 12),
-		# ( 'com-amazon'               , 96	  , 22),
+		( 'amazon0505'               , 96	  , 22),
+		( 'artist'                   , 100	  , 12),
+		( 'com-amazon'               , 96	  , 22),
 		# ( 'web-BerkStan'             , 100	  , 12),
 		# ( 'soc-BlogCatalog'	         , 128	  , 39),      
 		# ( 'amazon0601'  	         , 96	  , 22), 
-	    # ( 'reddit'                   , 602    , 41),
 
+	    # ( 'reddit'                   , 602    , 41),
 		# ( 'wiki-topcats'             , 300	  , 12),
 		# ( 'COLLAB'                   , 100      , 3) ,
 		# ( 'wiki-topcats'             , 300	  , 12),
