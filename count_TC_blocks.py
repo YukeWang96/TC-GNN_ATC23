@@ -6,6 +6,7 @@ import os
 import math
 from collections import Counter, defaultdict
 import sys 
+import numpy as np
 
 dense_tile_H = 16
 dense_tile_W = 16
@@ -15,24 +16,24 @@ dataset = [
 		# ('tc_gnn_verify'	, 16	, 2),
 		# ('tc_gnn_verify_2x'	, 16	, 2),
 
-		('citeseer'	        		, 3703	    , 6   ),  
-		('cora' 	        		, 1433	    , 7   ),  
-		('pubmed'	        		, 500	    , 3   ),      
-		('ppi'	            		, 50	    , 121 ),   
+		# ('citeseer'	        		, 3703	    , 6   ),  
+		# ('cora' 	        		, 1433	    , 7   ),  
+		# ('pubmed'	        		, 500	    , 3   ),      
+		# ('ppi'	            		, 50	    , 121 ),   
 		
-		('PROTEINS_full'             , 29       , 2) ,   
-		('OVCAR-8H'                  , 66       , 2) , 
-		('Yeast'                     , 74       , 2) ,
-		('DD'                        , 89       , 2) ,
-		('YeastH'                    , 75       , 2) ,   
-		('SW-620H'                   , 66       , 2) ,
+		# ('PROTEINS_full'             , 29       , 2) ,   
+		# ('OVCAR-8H'                  , 66       , 2) , 
+		# ('Yeast'                     , 74       , 2) ,
+		# ('DD'                        , 89       , 2) ,
+		# ('YeastH'                    , 75       , 2) ,   
+		# ('SW-620H'                   , 66       , 2) ,
 
 		( 'amazon0505'               , 96	  , 22),
 		( 'artist'                   , 100	  , 12),
 		( 'com-amazon'               , 96	  , 22),
-		( 'web-BerkStan'             , 100	  , 12),
-		( 'soc-BlogCatalog'	         , 128	  , 39),      
-		( 'amazon0601'  	         , 96	  , 22), 
+		# ( 'web-BerkStan'             , 100	  , 12),
+		# ( 'soc-BlogCatalog'	         , 128	  , 39),      
+		# ( 'amazon0601'  	         , 96	  , 22), 
 		# ( 'Reddit'                   , 602    , 41),
 
 		# ( 'wiki-topcats'             , 300	  , 12),
@@ -46,7 +47,7 @@ dataset = [
 
 data_dir = '/home/yuke/.graphs/orig/'
 print(data_dir)
-print("dataset,origin,origin_eff,reduced,reduced_eff,reduction (%)")
+# print("dataset,origin,origin_eff,reduced,reduced_eff,reduction (%)")
 
 
 def find_dense(path, data):
@@ -77,6 +78,7 @@ def find_dense(path, data):
 	# 	tiles[global_blk_idx] += 1
 	tile_cnt = 0
 	opt_cnt = 0
+	chunk_edges = []
 	for src_iter in range(0, num_nodes, dense_tile_H):
 
 		dst_list = []
@@ -84,6 +86,8 @@ def find_dense(path, data):
 			dst_list += graph[src]
 
 		actual_cnt = len(dst_list)
+		chunk_edges.append(len(dst_list))
+
 		range_set = sorted(list(set(dst_list)))
 		opt_cnt += (len(range_set) + dense_tile_W - 1)//dense_tile_W
 		tmp_opt_cnt = (len(range_set) + dense_tile_W - 1)//dense_tile_W
@@ -106,20 +110,11 @@ def find_dense(path, data):
 		if tmp < tmp_opt_cnt:
 			print(range_set)
 			print(tmp, tmp_opt_cnt)
+			print("tmp < tmp_opt_cnt Error Encounter, Duplicate Edges")
 			sys.exit(0)
-	# tile_cnt = 0
-	# for src_iter in range(0, num_nodes, dense_tile_H):
-	# 	for dst_iter in range(0, num_nodes, dense_tile_W):
-	# 		loc_cnt = 0
-	# 		for i in range(src_iter, min(num_nodes, src_iter + dense_tile_H)):
-	# 			for j in range(dst_iter, min(num_nodes, dst_iter + dense_tile_W)):
-	# 				if i in graph:
-	# 					if j in graph[i]:
-	# 						tile_cnt += 1
-	# 						break
 
-			# tiles.append(loc_cnt)
-	print("{},{},{:.2f},{},{:.2f},{:.2f}".format(data, tile_cnt, actual_cnt/exp_tile_cnt, opt_cnt, actual_cnt/exp_opt_cnt,  100 * (tile_cnt - opt_cnt) / tile_cnt))
+	print("{:10},Avg.Chunk.Size: {:.2f}".format(data, np.mean(chunk_edges)))
+	# print("{},{},{:.2f},{},{:.2f},{:.2f}".format(data, tile_cnt, actual_cnt/exp_tile_cnt, opt_cnt, actual_cnt/exp_opt_cnt,  100 * (tile_cnt - opt_cnt) / tile_cnt))
 						
 	# plt.hist(tiles, bins=100)
 	# plt.savefig("{}.pdf".format(data))
@@ -127,5 +122,4 @@ def find_dense(path, data):
 	# return tiles
 
 for data, d, c in dataset:
-	# print("=> {}".format(data))
 	find_dense(data_dir + data, data)

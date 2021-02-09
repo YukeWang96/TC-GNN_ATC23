@@ -25,7 +25,7 @@ parser.add_argument("--num_layers", type=int, default=6, help="num layers")
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
 parser.add_argument("--epochs", type=int, default=100, help="number of epoches")
-parser.add_argument("--model", type=str, default='gin', help='GNN model', choices=['gcn', 'gin', 'gat'])
+parser.add_argument("--model", type=str, default='gcn', help='GNN model', choices=['gcn', 'gin', 'gat'])
 args = parser.parse_args()
 print(args)
 

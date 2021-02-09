@@ -4,7 +4,7 @@ import datetime
 import os
 
 
-hidden = [16, 32, 64, 128, 256]  # , 512, 1024, 2048] # [16]
+hidden = [16] #[16, 32, 64, 128, 256]  # , 512, 1024, 2048] # [16]
 num_layers = [2]
 data_dir = '/home/yuke/.graphs/orig/'
 # data_dir = '/home/yuke/.graphs/rabbit-orders/'
