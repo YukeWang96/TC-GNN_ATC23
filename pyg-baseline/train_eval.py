@@ -22,7 +22,7 @@ def cross_validation_with_val_set(dataset, model, folds, epochs, batch_size,
     # test_dataset = dataset[test_idx]
     # val_dataset = dataset[val_idx]
 
-    batch_size = len(dataset.data.x)
+    batch_size = 128 # len(dataset.data.x)
     labels = torch.zeros(batch_size).type(torch.LongTensor).to(device)
 
     test_dataset = dataset[:]
@@ -119,10 +119,10 @@ def train(model, optimizer, loader, labels=None):
         data = data.to(device)
         out = model(data)
 
-        # print(out.size())
+        print(out.size())
         # print(data.y.size())
         # print(data.y.view(-1).size())
-        # sys.exit(0)
+        sys.exit(0)
 
         # loss = F.nll_loss(out, data.y.view(-1))
         loss = F.nll_loss(out, labels.view(-1))
