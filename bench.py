@@ -6,6 +6,7 @@ import os
 
 hidden = [16] #[16, 32, 64, 128, 256]  # , 512, 1024, 2048] # [16]
 num_layers = [2]
+model = 'gat'
 data_dir = '/home/yuke/.graphs/orig/'
 # data_dir = '/home/yuke/.graphs/rabbit-orders/'
 # print(data_dir)
@@ -27,13 +28,13 @@ dataset = [
 		('YeastH'                    , 75       , 2) ,   
 		('SW-620H'                   , 66       , 2) ,
 
-		# ( 'amazon0505'               , 96	  , 22),
-		# ( 'artist'                   , 100	  , 12),
-		# ( 'com-amazon'               , 96	  , 22),
-		# ( 'web-BerkStan'             , 100	  , 12),
-		# ( 'soc-BlogCatalog'	         , 128	  , 39),      
-		# ( 'amazon0601'  	         , 96	  , 22), 
+		( 'amazon0505'               , 96	  , 22),
+		( 'artist'                   , 100	  , 12),
+		( 'com-amazon'               , 96	  , 22),
+		( 'soc-BlogCatalog'	         , 128	  , 39),      
+		( 'amazon0601'  	         , 96	  , 22), 
 
+		# ( 'web-BerkStan'             , 100	  , 12),
 	    # ( 'reddit'                   , 602    , 41),
 		# ( 'wiki-topcats'             , 300	  , 12),
 		# ( 'COLLAB'                   , 100      , 3) ,
@@ -47,7 +48,7 @@ for n_Layer in num_layers:
 	for hid in hidden:
 		for data, d, c in dataset:
 			print("=> {}, hiddn: {}".format(data, hid))
-			command = "python main_gcn.py --dataset {} --dim {} --hidden {} --classes {} --num_layers {}".format(data, d, hid, c, n_Layer)		
+			command = "python main_gcn.py --dataset {} --dim {} --hidden {} --classes {} --num_layers {} --model {}".format(data, d, hid, c, n_Layer, model)		
 			os.system(command)
 			print()
 		print("----------------------------")

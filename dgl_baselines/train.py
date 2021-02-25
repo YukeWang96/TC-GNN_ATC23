@@ -24,8 +24,8 @@ from gin import GIN
 
 # run GCN or GAT
 def_GCN = False  
-def_GIN = True
-def_GAT = False
+def_GIN = False
+def_GAT = True
 
 assert sum([def_GCN, def_GIN, def_GAT]) == 1
 
@@ -118,12 +118,12 @@ def main(args):
         else:
             cuda = True
 
-        print(g.edges())
-        with open("citeseer", "w") as fp:
-            for src, trg in zip(g.edges()[0], g.edges()[1]):
-                fp.write(f"{src} {trg}\n")
-        fp.close()
-        sys.exit(0)
+        # print(g.edges())
+        # with open("citeseer", "w") as fp:
+            # for src, trg in zip(g.edges()[0], g.edges()[1]):
+                # fp.write(f"{src} {trg}\n")
+        # fp.close()
+        # sys.exit(0)
 
         g = g.int().to(args.gpu)
         features = g.ndata['feat']

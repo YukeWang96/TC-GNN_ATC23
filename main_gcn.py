@@ -200,12 +200,10 @@ if __name__ == "__main__":
         if epoch >= 3: train_time_avg.append(train_time)
         # if epoch == 10:
         #     train_acc, val_acc, tmp_test_acc = test(profile=True)
-
         start_test = time.perf_counter()
         train_acc, val_acc, tmp_test_acc = test()
         test_time = time.perf_counter() - start_test
         if epoch > 3: test_time_avg.append(test_time)
-
         # print("Epoch: {:2} Train (ms): {:6.3f} Test (ms): {:6.3f}".format(epoch, train_time * 1e3, test_time * 1e3))
         # if val_acc > best_val_acc:
         #     best_val_acc = val_acc
