@@ -24,7 +24,7 @@ parser.add_argument("--dim", type=int, default=96, help="input embedding dimensi
 parser.add_argument("--num_layers", type=int, default=6, help="num layers")
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
-parser.add_argument("--epochs", type=int, default=100, help="number of epoches")
+parser.add_argument("--epochs", type=int, default=1, help="number of epoches")
 parser.add_argument("--model", type=str, default='gcn', help='GNN model', choices=['gcn', 'gin', 'gat'])
 args = parser.parse_args()
 print(args)
@@ -211,5 +211,6 @@ if __name__ == "__main__":
         # log = 'Epoch: {:03d}, Train: {:.4f}, Train-Time: {:.3f} ms, Test-Time: {:.3f} ms, Val: {:.4f}, Test: {:.4f}'
         # print(log.format(epoch, train_acc, sum(time_avg)/len(time_avg) * 1e3, sum(test_time_avg)/len(test_time_avg) * 1e3, best_val_acc, test_acc))
 
-    print("Train (ms):\t{:6.3f}\tTest (ms):\t{:6.3f}"\
-            .format(np.mean(train_time_avg) * 1e3, np.mean(test_time_avg) * 1e3))
+    if epoch <= 3:
+        print("Train (ms):\t{:6.3f}\tTest (ms):\t{:6.3f}"\
+                .format(np.mean(train_time_avg) * 1e3, np.mean(test_time_avg) * 1e3))
