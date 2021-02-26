@@ -4,7 +4,7 @@ import datetime
 import os
 
 
-hidden = [16] #[16, 32, 64, 128, 256]  # , 512, 1024, 2048] # [16]
+hidden = [32] #[16, 32, 64, 128, 256]  # , 512, 1024, 2048] # [16]
 num_layers = [2]
 model = 'gat'
 data_dir = '/home/yuke/.graphs/orig/'
@@ -16,10 +16,10 @@ dataset = [
 		# ('tc_gnn_verify'	, 16	, 2),
 		# ('tc_gnn_verify_2x'	, 16	, 2),
 
-		# ('citeseer'	        		, 3703	    , 6   ),  
-		# ('cora' 	        		, 1433	    , 7   ),  
-		# ('pubmed'	        		, 500	    , 3   ),      
-		# ('ppi'	            		, 50	    , 121 ),   
+		('citeseer'	        		, 3703	    , 6   ),  
+		('cora' 	        		, 1433	    , 7   ),  
+		('pubmed'	        		, 500	    , 3   ),      
+		('ppi'	            		, 50	    , 121 ),   
 		
 		('PROTEINS_full'             , 29       , 2) ,   
 		('OVCAR-8H'                  , 66       , 2) , 

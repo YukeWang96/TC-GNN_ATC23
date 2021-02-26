@@ -23,9 +23,9 @@ from gat import GAT
 from gin import GIN
 
 # run GCN or GAT
-def_GCN = False  
+def_GCN = True  
 def_GIN = False
-def_GAT = True
+def_GAT = False
 
 assert sum([def_GCN, def_GIN, def_GAT]) == 1
 
