@@ -21,13 +21,14 @@ from gcn import GCN
 # from gcn import GAT
 from gat import GAT
 from gin import GIN
+from agnn import AGNN
 
 # run GCN or GAT
-def_GCN = True  
+def_GCN = False  
 def_GIN = False
-def_GAT = False
+def_AGNN = True
 
-assert sum([def_GCN, def_GIN, def_GAT]) == 1
+assert sum([def_GCN, def_GIN, def_AGNN]) == 1
 
 # Training or Inference
 TRAIN = True    
@@ -198,9 +199,9 @@ def main(args):
                     args.n_layers,
                     F.relu,
                     args.dropout)
-    if def_GAT:
+    if def_AGNN:
         print("Run GAT")
-        model = GAT(g,
+        model = AGNN(g,
                     in_feats,
                     args.n_hidden,
                     n_classes,
