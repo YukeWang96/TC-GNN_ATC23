@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <vector>
 
+#include <thrust/device_vector.h>
+#include <thrust/sort.h>
+
 #include <cuda.h>
 #include <mma.h>
 #include <cuda_runtime.h>
@@ -10,6 +13,110 @@
 #define WPB 8
 
 using namespace nvcuda;
+
+////////////////////
+// each warp fill neighbor for one nodes
+// warp -- all neighbors of a node
+////////////////////
+__global__ void fill_edgeToRow(int* edgeToRow, int *nodePointer, int num_nodes){
+
+	// #pragma omp parallel for 
+    // for (unsigned nid = 0; nid < num_nodes; nid++){
+    //     for (unsigned eid = nodePointer[nid]; eid < nodePointer[nid+1]; eid++)
+    //         edgeToRow[eid] = nid;
+    // }
+	int tid = blockDim.x * blockIdx.x + threadIdx.x;
+	int nid = tid / 32;
+	int laneid = tid % 32;
+
+	// check a valid node range.
+	if (nid < num_nodes){
+		#pragma unroll
+		for (int eid = nodePointer[nid] + laneid; eid < nodePointer[nid+1]; eid += 32){
+            edgeToRow[eid] = nid;
+		}
+	}
+
+}
+
+__global__ void fill_window (int* edgeToColumn, 
+						     int* blockPartition, 
+							 int* nodePointer,
+							 int* edgeList, 
+							 int blockSize_h,
+							 int blockSize_w,
+							 int num_nodes
+							)
+{
+		int tid = blockDim.x * blockIdx.x + threadIdx.x;
+
+		int winId = tid / 32;		// each warp one window
+		int lanid = tid % 32;
+
+        unsigned block_start = nodePointer[winId * blockSize_h];
+        unsigned block_end = nodePointer[min(winId * blockSize_h + blockSize_h, num_nodes)];
+        unsigned num_window_edges = block_end - block_start;
+
+    //     unsigned *neighbor_window = (unsigned *) malloc (num_window_edges * sizeof(unsigned));
+    //     memcpy(neighbor_window, &edgeList[block_start], num_window_edges * sizeof(unsigned));
+
+		// thrust::device_vector<int>neighbor_window(&edgeList[block_start], &edgeList[block_end]);
+		// Step-1: Sort the neighbor id array of a row window.
+        // thrust::sort(neighbor_window.begin(), neighbor_window.end());
+
+    //     // Step-2: Deduplication of the edge id array.
+    //     // printf("Before dedupblication: %d\n", num_window_edges);
+    //     std::map<unsigned, unsigned> clean_edges2col = inplace_deduplication(neighbor_window, num_window_edges);
+
+    //     // generate blockPartition --> number of TC_blcok in each row window.
+    //     blockPartition[windowId] = (clean_edges2col.size() + blockSize_w - 1) /blockSize_w;
+    //     block_counter += blockPartition[windowId];
+
+    //     // scan the array and generate edge to column mapping. --> edge_id to compressed_column_id of TC_block.
+    //     for (unsigned e_index = block_start; e_index < block_end; e_index++){
+    //         unsigned eid = edgeList[e_index];
+    //         edgeToColumn[e_index] = clean_edges2col[eid];
+    //     }			
+}
+
+void fill_edgeToRow_cuda(int* edgeToRow, int *nodePointer, int num_nodes){
+	int wrap_size = 32; 
+	int block_size = 1024;
+	int grid_size =  (num_nodes * wrap_size + block_size - 1) / block_size;
+	// each warp fill neighbor for one nodes
+	fill_edgeToRow <<< grid_size, block_size >>>(edgeToRow, nodePointer, num_nodes);
+	
+	cudaError_t error = cudaGetLastError();
+    if(error != cudaSuccess)
+    {
+        // print the CUDA error message and exit
+        printf("CUDA error: %s\n", cudaGetErrorString(error));
+        exit(-1);
+    }
+}
+
+void fill_window_cuda(	int* edgeToColumn, 
+					  	int* blockPartition, 
+					  	int* nodePointer,
+						int* edgeList, 
+					   	int blockSize_h,
+						int blockSize_w,
+						int num_nodes)
+{
+	int wrap_size = 32; 
+	int block_size = 1024;
+	int window_count = (num_nodes + blockSize_h - 1) / blockSize_h;
+	int grid_size =  (window_count * wrap_size + block_size - 1) / block_size;
+	// each warp will handle all neighbor for a TC block window (16 x 8)
+	fill_window <<< grid_size, block_size >>> (edgeToColumn, blockPartition, nodePointer, edgeList,
+																blockSize_h, blockSize_w, num_nodes);
+	cudaError_t error = cudaGetLastError();
+	if(error != cudaSuccess)
+	{
+		printf("CUDA error: %s\n", cudaGetErrorString(error));
+		exit(-1);
+	}
+}
 
 //////////////////////
 /// SPMM forward (GCN, GraphSAGE)

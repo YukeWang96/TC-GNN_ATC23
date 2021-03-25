@@ -10,6 +10,10 @@
 
 #define min(x, y) (((x) < (y))? (x) : (y))
 
+void fill_edgeToRow_cuda(int* edgeToRow, int *nodePointer, int num_nodes);
+void fill_window_cuda(int* edgeToColumn, int* blockPartition, int* nodePointer,
+                      int* edgeList, int blockSize_h, int blockSize_w, int num_nodes);
+
 std::vector<torch::Tensor> spmm_forward_cuda(
       torch::Tensor nodePointer,
     torch::Tensor edgeList,
@@ -168,7 +172,6 @@ std::map<unsigned, unsigned> inplace_deduplication(unsigned* array, unsigned len
 void preprocess(torch::Tensor edgeList_tensor, 
                 torch::Tensor nodePointer_tensor, 
                 int num_nodes, 
-                int num_row_windows,
                 int blockSize_h,
                 int blockSize_w,
                 torch::Tensor blockPartition_tensor, 
@@ -223,8 +226,40 @@ void preprocess(torch::Tensor edgeList_tensor,
 }
 
 
+void preprocess_gpu(torch::Tensor edgeList_tensor, 
+                torch::Tensor nodePointer_tensor, 
+                int num_nodes, 
+                int blockSize_h,
+                int blockSize_w,
+                torch::Tensor blockPartition_tensor, 
+                torch::Tensor edgeToColumn_tensor,
+                torch::Tensor edgeToRow_tensor
+                )
+{
+
+    // input tensors.
+    auto edgeList = edgeList_tensor.data<int>();
+    auto nodePointer = nodePointer_tensor.data<int>();
+
+    // output tensors.
+    auto blockPartition = blockPartition_tensor.data<int>();
+    auto edgeToColumn = edgeToColumn_tensor.data<int>();
+    auto edgeToRow = edgeToRow_tensor.data<int>();
+
+    unsigned block_counter = 0;
+    
+    fill_edgeToRow_cuda(edgeToRow, nodePointer, num_nodes);
+    fill_window_cuda(edgeToColumn, blockPartition, nodePointer, edgeList,
+                                blockSize_h, blockSize_w, num_nodes);
+
+    printf("TC_Blocks:\t%d\nExp_Edges:\t%d\n", block_counter, block_counter * 8 * 16);
+}
+
+
+
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
-  m.def("preprocess", &preprocess, "Preprocess Step (CUDA)");
+  m.def("preprocess", &preprocess, "Preprocess Step (CPU)");
+  m.def("preprocess_gpu", &preprocess_gpu, "Preprocess Step (CUDA)");
 
   // forward computation
   m.def("forward", &spmm_forward, "TC-GNN SPMM forward (CUDA)");

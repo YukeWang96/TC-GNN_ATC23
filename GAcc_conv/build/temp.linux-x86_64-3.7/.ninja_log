@@ -38,3 +38,9 @@
 4	33787	1612749788124911779	/home/yuke/GAcc-pytorch/GAcc_conv/build/temp.linux-x86_64-3.7/GAcc_kernel.o	402ea8f23fb0c5b0
 4	33464	1612749949257641448	/home/yuke/GAcc-pytorch/GAcc_conv/build/temp.linux-x86_64-3.7/GAcc_kernel.o	402ea8f23fb0c5b0
 5	33698	1612750258111063033	/home/yuke/GAcc-pytorch/GAcc_conv/build/temp.linux-x86_64-3.7/GAcc_kernel.o	402ea8f23fb0c5b0
+0	21346	1616190701872134329	/home/yuke/TC_GNN_pytorch/GAcc_conv/build/temp.linux-x86_64-3.7/GAcc.o	df09bf93826323fa
+0	35683	1616190716208214904	/home/yuke/TC_GNN_pytorch/GAcc_conv/build/temp.linux-x86_64-3.7/GAcc_kernel.o	593dfa0e61bd1d77
+5	36866	1616194590486093032	/home/yuke/TC_GNN_pytorch/GAcc_conv/build/temp.linux-x86_64-3.7/GAcc_kernel.o	593dfa0e61bd1d77
+4	38291	1616195423890531506	/home/yuke/TC_GNN_pytorch/GAcc_conv/build/temp.linux-x86_64-3.7/GAcc_kernel.o	593dfa0e61bd1d77
+4	21340	1616196147794465943	/home/yuke/TC_GNN_pytorch/GAcc_conv/build/temp.linux-x86_64-3.7/GAcc.o	df09bf93826323fa
+5	21040	1616196284963222174	/home/yuke/TC_GNN_pytorch/GAcc_conv/build/temp.linux-x86_64-3.7/GAcc.o	df09bf93826323fa

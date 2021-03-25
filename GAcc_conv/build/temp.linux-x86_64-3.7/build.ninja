@@ -18,8 +18,8 @@ rule cuda_compile
 
 
 
-build /home/yuke/GAcc-pytorch/GAcc_conv/build/temp.linux-x86_64-3.7/GAcc.o: compile /home/yuke/GAcc-pytorch/GAcc_conv/GAcc.cpp
-build /home/yuke/GAcc-pytorch/GAcc_conv/build/temp.linux-x86_64-3.7/GAcc_kernel.o: cuda_compile /home/yuke/GAcc-pytorch/GAcc_conv/GAcc_kernel.cu
+build /home/yuke/TC_GNN_pytorch/GAcc_conv/build/temp.linux-x86_64-3.7/GAcc.o: compile /home/yuke/TC_GNN_pytorch/GAcc_conv/GAcc.cpp
+build /home/yuke/TC_GNN_pytorch/GAcc_conv/build/temp.linux-x86_64-3.7/GAcc_kernel.o: cuda_compile /home/yuke/TC_GNN_pytorch/GAcc_conv/GAcc_kernel.cu
 
 
 

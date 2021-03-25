@@ -24,8 +24,8 @@ parser.add_argument("--dim", type=int, default=96, help="input embedding dimensi
 parser.add_argument("--num_layers", type=int, default=6, help="num layers")
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
-parser.add_argument("--epochs", type=int, default=1, help="number of epoches")
-parser.add_argument("--model", type=str, default='gcn', help='GNN model', choices=['gcn', 'gin', 'gat'])
+parser.add_argument("--epochs", type=int, default=10, help="number of epoches")
+parser.add_argument("--model", type=str, default='gcn', help='GNN model', choices=['gcn', 'gin', 'agnn'])
 args = parser.parse_args()
 print(args)
 
@@ -75,10 +75,18 @@ blockPartition = torch.zeros(num_row_windows, dtype=torch.int)
 
 # preprocessing for generating meta-information
 start = time.perf_counter()
-GAcc.preprocess(column_index, row_pointers, num_nodes, num_row_windows,  \
+GAcc.preprocess(column_index, row_pointers, num_nodes,  \
                 BLK_H,	BLK_W, blockPartition, edgeToColumn, edgeToRow)
+# column_index  = column_index.cuda()
+# row_pointers = row_pointers.cuda()
+# edgeToColumn = edgeToColumn.cuda()
+# edgeToRow = edgeToRow.cuda()
+# blockPartition = blockPartition.cuda()
+# GAcc.preprocess_gpu(column_index, row_pointers, num_nodes,  \
+#                 BLK_H,	BLK_W, blockPartition, edgeToColumn, edgeToRow)
 build_neighbor_parts = time.perf_counter() - start
 print("Prep. (ms):\t{:.3f}".format(build_neighbor_parts*1e3))
+# sys.exit(0)
 
 column_index = column_index.cuda()
 row_pointers = row_pointers.cuda()
@@ -131,7 +139,7 @@ elif args.model == "gin":
             x = self.conv2(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
             return F.log_softmax(x, dim=1)
 
-elif args.model == "gat":
+elif args.model == "agnn":
     class Net(torch.nn.Module):
         def __init__(self):
             super(Net, self).__init__()
@@ -211,6 +219,5 @@ if __name__ == "__main__":
         # log = 'Epoch: {:03d}, Train: {:.4f}, Train-Time: {:.3f} ms, Test-Time: {:.3f} ms, Val: {:.4f}, Test: {:.4f}'
         # print(log.format(epoch, train_acc, sum(time_avg)/len(time_avg) * 1e3, sum(test_time_avg)/len(test_time_avg) * 1e3, best_val_acc, test_acc))
 
-    if epoch <= 3:
-        print("Train (ms):\t{:6.3f}\tTest (ms):\t{:6.3f}"\
-                .format(np.mean(train_time_avg) * 1e3, np.mean(test_time_avg) * 1e3))
+    print("Train (ms):\t{:6.3f}\tTest (ms):\t{:6.3f}"\
+            .format(np.mean(train_time_avg) * 1e3, np.mean(test_time_avg) * 1e3))

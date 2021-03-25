@@ -1,7 +1,6 @@
 import os.path as osp
 
 import torch
-# from torch_geometric.datasets import TUDataset
 from tu_dataset import *
 from torch_geometric.utils import degree
 import torch_geometric.transforms as T

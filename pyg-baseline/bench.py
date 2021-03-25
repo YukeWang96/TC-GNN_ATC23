@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-import datetime
-import os
 import subprocess
 
 graphs = [
@@ -9,8 +7,9 @@ graphs = [
     ('Yeast'                     ),   
     ('DD'                        ),
     ('YeastH'                    ),
-    ('SW-620H'                   ),
 
+
+    # ('SW-620H'                   ),
     # ('TWITTER-Real-Graph-Partial'),
     # ('COLLAB'                    ),
     # ('BZR'                       ),
