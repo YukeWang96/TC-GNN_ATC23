@@ -131,13 +131,13 @@ __global__ void spmm_forward_cuda_kernel(
 	const int numEdges,
 	const int embedding_dim,				    // embedding dimension.
 	const float *__restrict__ in_mat,		    // input feature matrix.
-	float *out_mat							    // aggregated output feature matrix.
+	float *out_mat							    // aggreAGNNed output feature matrix.
 );
 
 //////////////////////
-/// SPMM forward (GAT, AGNN)
+/// SPMM forward (AGNN, AGNN)
 //////////////////////
-__global__ void spmmGAT_forward_cuda_kernel(
+__global__ void spmmAGNN_forward_cuda_kernel(
 	const int * __restrict__ nodePointer,		// node pointer.
 	const int *__restrict__ edgeList,			// edge list.
     const float *__restrict__ edgeAttention,	// edge attention.
@@ -148,7 +148,7 @@ __global__ void spmmGAT_forward_cuda_kernel(
 	const int numEdges,
 	const int embedding_dim,				    // embedding dimension.
 	const float *__restrict__ input,		    // input feature matrix.
-	float *output							    // aggregated output feature matrix.
+	float *output							    // aggreAGNNed output feature matrix.
 );
 
 //////////////////////
@@ -164,7 +164,7 @@ __global__ void sddmm_forward_cuda_kernel(
 	const int numEdges,
 	const int embedding_dim,				    // embedding dimension.
 	float *__restrict__ in_mat,					// input feature matrix.
-	float *edgeFeature							// aggregated output feature matrix.
+	float *edgeFeature							// aggreAGNNed output feature matrix.
 );
 
 ////////////////////////////////////////////
@@ -221,10 +221,10 @@ std::vector<torch::Tensor> spmm_forward_cuda(
 
 ////////////////////////////////////////////
 //
-// SPMM Foward Pass (GAT, AGNN)
+// SPMM Foward Pass (AGNN, AGNN)
 //
 ////////////////////////////////////////////
-std::vector<torch::Tensor> spmmGAT_forward_cuda(
+std::vector<torch::Tensor> spmmAGNN_forward_cuda(
     torch::Tensor nodePointer,
     torch::Tensor edgeList,
     torch::Tensor edgeAttention,        //*edge attention [n_head, n_e]
@@ -249,10 +249,10 @@ std::vector<torch::Tensor> spmmGAT_forward_cuda(
     const int dimTileNum = (embedding_dim + BLK_H - 1) / BLK_H;
 	const int dynamic_shared_size = dimTileNum * BLK_W * BLK_H * sizeof(float); // dynamic shared memory.
 
-    // printf("spmmGAT_forward_cuda--1\n");
+    // printf("spmmAGNN_forward_cuda--1\n");
     for (int att_idx = 0; att_idx < num_attention; att_idx++){
         cudaStreamCreate ( &streams[att_idx]) ;
-        spmmGAT_forward_cuda_kernel<<<grid, block, dynamic_shared_size, streams[att_idx]>>>(
+        spmmAGNN_forward_cuda_kernel<<<grid, block, dynamic_shared_size, streams[att_idx]>>>(
                                                                                         nodePointer.data<int>(), 
                                                                                         edgeList.data<int>(),
                                                                                         edgeAttention.data<float>(),
@@ -266,7 +266,7 @@ std::vector<torch::Tensor> spmmGAT_forward_cuda(
                                                                                         output.data<float>()
                                                                                     );
     }
-    // printf("spmmGAT_forward_cuda--2\n");
+    // printf("spmmAGNN_forward_cuda--2\n");
     // check for error
     cudaError_t error = cudaGetLastError();
     if(error != cudaSuccess){
@@ -343,7 +343,7 @@ __global__ void spmm_forward_cuda_kernel(
 	const int numEdges,
 	const int embedding_dim,				    // embedding dimension.
 	const float *__restrict__ input,		    // input feature matrix.
-	float *output							    // aggregated output feature matrix.
+	float *output							    // aggreAGNNed output feature matrix.
 ) {
     const unsigned bid = blockIdx.x;								// block_index == row_window_index
 	const unsigned wid = threadIdx.y;								// warp_index handling multi-dimension > 16.
@@ -454,9 +454,9 @@ __global__ void spmm_forward_cuda_kernel(
 }
 
 ////////////////////////////////////
-/// SPMM forward (GAT, AGNN)
+/// SPMM forward (AGNN, AGNN)
 ///////////////////////////////////
-__global__ void spmmGAT_forward_cuda_kernel(
+__global__ void spmmAGNN_forward_cuda_kernel(
 	const int * __restrict__    nodePointer,		// node pointer.
 	const int *__restrict__     edgeList,			// edge list.
     const float *__restrict__   edgeAttention,	    // edge attention.
@@ -467,7 +467,7 @@ __global__ void spmmGAT_forward_cuda_kernel(
 	const int numEdges,
 	const int embedding_dim,				    // embedding dimension.
 	const float *__restrict__   input,		    // input feature matrix.
-	float *output							    // aggregated output feature matrix.
+	float *output							    // aggreAGNNed output feature matrix.
 ) {
     const unsigned bid = blockIdx.x;								// block_index == row_window_index
 	const unsigned wid = threadIdx.y;								// warp_index handling multi-dimension > 16.
@@ -591,7 +591,7 @@ __global__ void sddmm_forward_cuda_kernel(
 	const int numEdges,
 	const int embedding_dim,				    // embedding dimension.
 	float *__restrict__ in_mat,					// input feature matrix.
-	float *edgeFeature							// aggregated output feature matrix.
+	float *edgeFeature							// aggreAGNNed output feature matrix.
 )
 {
     // printf("at sddmm_forward_cuda_kernel\n");

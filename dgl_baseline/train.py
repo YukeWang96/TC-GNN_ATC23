@@ -19,7 +19,7 @@ from gcn import GCN
 from gin import GIN
 from agnn import AGNN
 
-# run GCN or GAT
+# run GCN or AGNN
 def_GCN = False  
 def_GIN = False
 def_AGNN = True
@@ -191,7 +191,7 @@ def main(args):
                     F.relu,
                     args.dropout)
     if def_AGNN:
-        print("Run GAT")
+        print("Run AGNN")
         model = AGNN(g,
                     in_feats,
                     args.n_hidden,

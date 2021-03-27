@@ -25,12 +25,12 @@ class GIN(nn.Module):
         self.output_MLP = nn.Linear(n_hidden, n_classes)
 
         # input layer
-        self.layers.append(GINConv(apply_func=self.input_MLP, aggregator_type='sum'))
+        self.layers.append(GINConv(apply_func=self.input_MLP, aggreAGNNor_type='sum'))
         # hidden layers
         for i in range(n_hidden_layers - 1):
-            self.layers.append(GINConv(apply_func=self.hidden_MLP, aggregator_type='sum'))
+            self.layers.append(GINConv(apply_func=self.hidden_MLP, aggreAGNNor_type='sum'))
         # output layer
-        self.layers.append(GINConv(apply_func=self.output_MLP, aggregator_type='sum'))
+        self.layers.append(GINConv(apply_func=self.output_MLP, aggreAGNNor_type='sum'))
 
     def forward(self, features):
         h = features

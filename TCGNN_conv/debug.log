@@ -357,7 +357,7 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.7/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.7/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.7/site-packages/torch/include/torch/extension.h:4,
                  from /home/yuke/TC_GNN_pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/yuke/TC_GNN_pytorch/TCGNN_conv/TCGNN.cpp: In function ‘std::vector<at::Tensor> spmm_forward_gat(at::Tensor, at::Tensor, at::Tensor, at::Tensor, at::Tensor, at::Tensor, at::Tensor)’:
+/home/yuke/TC_GNN_pytorch/TCGNN_conv/TCGNN.cpp: In function ‘std::vector<at::Tensor> spmm_forward_AGNN(at::Tensor, at::Tensor, at::Tensor, at::Tensor, at::Tensor, at::Tensor, at::Tensor)’:
 /home/yuke/TC_GNN_pytorch/TCGNN_conv/TCGNN.cpp:54:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
  #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
                                           ^

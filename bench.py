@@ -2,21 +2,24 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-
-hidden = [16] #[16, 32, 64, 128, 256, 512, 1024, 2048] 
-num_layers = [2]
 model = 'gcn'
-data_dir = '/home/yuke/.graphs/orig/'
+hidden = [16]
+num_layers = [2]
+
+# model = 'gin'
+# hidden = [32]
+# num_layers = [4]
+
 
 dataset = [
 		# ('toy'	        , 3	    , 2   ),  
 		# ('tc_gnn_verify'	, 16	, 2),
 		# ('tc_gnn_verify_2x'	, 16	, 2),
 
-		# ('citeseer'	        		, 3703	    , 6   ),  
-		# ('cora' 	        		, 1433	    , 7   ),  
-		# ('pubmed'	        		, 500	    , 3   ),      
-		# ('ppi'	            		, 50	    , 121 ),   
+		('citeseer'	        		, 3703	    , 6   ),  
+		('cora' 	        		, 1433	    , 7   ),  
+		('pubmed'	        		, 500	    , 3   ),      
+		('ppi'	            		, 50	    , 121 ),   
 		
 		('PROTEINS_full'             , 29       , 2) ,   
 		('OVCAR-8H'                  , 66       , 2) , 

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import torch
-import TCGNN
 import sys
+import math
+import TCGNN
 
 n_heads = 8
 n_output = 8
@@ -29,11 +30,11 @@ class TCGNNFunction(torch.autograd.Function):
         
         # X_prime_t = torch.ones_like(X_prime)
         # X_prime_t = gen_test_tensor(X_prime)
-        # print("=========Before Aggregation========")
+        # print("=========Before AggreAGNNion========")
         # print(X_prime_t)
         # sys.exit(0)
 
-        # SpMM: Neighbor Aggregation.
+        # SpMM: Neighbor AggreAGNNion.
         X_prime = TCGNN.forward(X_prime, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
         # print("==========After Aggreation=========")
         # print(X_prime)
@@ -45,10 +46,10 @@ class TCGNNFunction(torch.autograd.Function):
     def backward(ctx, d_output):
         X, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow = ctx.saved_tensors
 
-        # SPMM backward propagation.
+        # SPMM backward propaAGNNion.
         d_input_prime = TCGNN.forward(d_output, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
 
-        # GEMM backward propagation.
+        # GEMM backward propaAGNNion.
         d_input = torch.mm(d_input_prime, weights.transpose(0,1))
         d_weights = torch.mm(X.transpose(0,1), d_input_prime)
         return d_input, d_weights, None, None, None, None, None, None
@@ -57,7 +58,7 @@ class TCGNNFunction_GIN(torch.autograd.Function):
     @staticmethod
     def forward(ctx, X, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow):
 
-        # SpMM: Neighbor Aggregation.
+        # SpMM: Neighbor AggreAGNNion.
         X_prime = TCGNN.forward(X, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
         
         ctx.save_for_backward(X_prime, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
@@ -71,17 +72,17 @@ class TCGNNFunction_GIN(torch.autograd.Function):
     def backward(ctx, d_output):
         X_prime, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow = ctx.saved_tensors
 
-        # GEMM backward propagation.
+        # GEMM backward propaAGNNion.
         d_X_prime = torch.mm(d_output, weights.transpose(0,1))
         d_weights = torch.mm(X_prime.transpose(0,1), d_output)
 
-        # SPMM backward propagation.
+        # SPMM backward propaAGNNion.
         d_input = TCGNN.forward(d_X_prime, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
 
         return d_input, d_weights, None, None, None, None, None, None
         # return None, d_weights, None, None, None, None, None, None
 
-class TCGNNFunction_GAT(torch.autograd.Function):
+class TCGNNFunction_AGNN(torch.autograd.Function):
     @staticmethod
     def forward(ctx, X, weights, attention_w, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow):
 
@@ -97,8 +98,8 @@ class TCGNNFunction_GAT(torch.autograd.Function):
         edge_attentions = torch.mm(edge_feature.unsqueeze(-1), attention_w).transpose(0,1).contiguous()
         # print(edge_attentions.size())
 
-        # SpMM_gat: Neighbor Aggregation.
-        X_prime = TCGNN.forward_gat(X_prime, row_pointers, column_index, edge_attentions, blockPartition, edgeToColumn, edgeToRow)[0]
+        # SpMM_AGNN: Neighbor AggreAGNNion.
+        X_prime = TCGNN.forward_AGNN(X_prime, row_pointers, column_index, edge_attentions, blockPartition, edgeToColumn, edgeToRow)[0]
 
         ctx.save_for_backward(X, weights, row_pointers, column_index, edge_attentions, blockPartition, edgeToColumn, edgeToRow)
         # print("==========After Aggreation=========")
@@ -108,14 +109,14 @@ class TCGNNFunction_GAT(torch.autograd.Function):
     def backward(ctx, d_output):
         X, weights, row_pointers, column_index, edge_attentions, blockPartition, edgeToColumn, edgeToRow = ctx.saved_tensors
 
-        # SPMM backward propagation.
-        d_input_prime = TCGNN.forward_gat(d_output, row_pointers, column_index, edge_attentions, blockPartition, edgeToColumn, edgeToRow)[0]
+        # SPMM backward propaAGNNion.
+        d_input_prime = TCGNN.forward_AGNN(d_output, row_pointers, column_index, edge_attentions, blockPartition, edgeToColumn, edgeToRow)[0]
 
-        # GEMM backward propagation.
+        # GEMM backward propaAGNNion.
         d_input = torch.mm(d_input_prime, weights.transpose(0,1))
         d_weights = torch.mm(X.transpose(0,1), d_input_prime)
 
-        # attention weight back propagation.
+        # attention weight back propaAGNNion.
         d_attention = TCGNN.forward_ef(d_output, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
         # print(d_attention.size())
         d_attention_exp = d_attention[None, :].expand(8, -1)
@@ -163,12 +164,12 @@ class GINConv(torch.nn.Module):
         return TCGNNFunction_GIN.apply(X, self.weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
 
 
-class GATConv(torch.nn.Module):
+class AGNNConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):
-        super(GATConv, self).__init__()
+        super(AGNNConv, self).__init__()
         self.weights = torch.nn.Parameter(torch.randn(input_dim, output_dim))
         self.attention_w = torch.nn.Parameter(torch.randn(1, n_heads))
-        # self.reset_parameters()
+        self.reset_parameters()
 
     def reset_parameters(self):
         stdv = 1. / math.sqrt(self.weights.size(1))
@@ -182,4 +183,4 @@ class GATConv(torch.nn.Module):
         edges: the CSR edge list of the graph, shape: [edge, 1].
         partitioin: for the graph with the part-based optimziation.
         '''
-        return TCGNNFunction_GAT.apply(X, self.weights, self.attention_w, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
+        return TCGNNFunction_AGNN.apply(X, self.weights, self.attention_w, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)

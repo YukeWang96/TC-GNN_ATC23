@@ -9,7 +9,7 @@ import torch
 import torch.nn as nn
 from dgl.nn.pytorch import GraphConv
 import dgl.function as fn
-from dgl.nn.pytorch import edge_softmax, GATConv
+from dgl.nn.pytorch import edge_softmax, AGNNConv
 
 class GCN(nn.Module):
     def __init__(self,
@@ -41,7 +41,7 @@ class GCN(nn.Module):
         return h
 
 
-class GAT(nn.Module):
+class AGNN(nn.Module):
     def __init__(self,
                  g,
                  in_dim,
@@ -51,26 +51,26 @@ class GAT(nn.Module):
                  activation,
                  dropout):
 
-        super(GAT, self).__init__()
+        super(AGNN, self).__init__()
         self.g = g
         self.num_layers = num_layers
-        self.gat_layers = nn.ModuleList()
+        self.AGNN_layers = nn.ModuleList()
         self.activation = activation
-        self.gat_layers.append(GATConv(in_dim, num_hidden, 8, activation=self.activation))
+        self.AGNN_layers.append(AGNNConv(in_dim, num_hidden, 8, activation=self.activation))
         
         # hidden layers
         for l in range(1, num_layers):
             # due to multi-head, the in_dim = num_hidden * num_heads
-            self.gat_layers.append(GATConv(num_hidden * heads[l-1], num_hidden, 8, activation=self.activation))
+            self.AGNN_layers.append(AGNNConv(num_hidden * heads[l-1], num_hidden, 8, activation=self.activation))
 
         # output projection
-        self.gat_layers.append(GATConv(num_hidden * 8, num_classes, 1))
+        self.AGNN_layers.append(AGNNConv(num_hidden * 8, num_classes, 1))
 
     def forward(self, inputs):
         h = inputs
         for l in range(self.num_layers):
-            h = self.gat_layers[l](self.g, h).flatten(1)
+            h = self.AGNN_layers[l](self.g, h).flatten(1)
 
         # output projection
-        logits = self.gat_layers[-1](self.g, h).mean(1)
+        logits = self.AGNN_layers[-1](self.g, h).mean(1)
         return logits

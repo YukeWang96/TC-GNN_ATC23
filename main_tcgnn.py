@@ -7,6 +7,7 @@ import torch
 import numpy as np 
 import torch.nn as nn
 import torch.nn.functional as F
+from tqdm import *
 
 import TCGNN
 from dataset import *
@@ -16,7 +17,7 @@ from config import *
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset", type=str, default='amazon0601', help="dataset")
 parser.add_argument("--dim", type=int, default=96, help="input embedding dimension")
-parser.add_argument("--num_layers", type=int, default=6, help="num layers")
+parser.add_argument("--num_layers", type=int, default=2, help="num layers")
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
 parser.add_argument("--epochs", type=int, default=10, help="number of epoches")
@@ -66,9 +67,11 @@ if args.model == "gcn":
         def __init__(self):
             super(Net, self).__init__()
             self.conv1 = GCNConv(dataset.num_features, args.hidden)
+
             self.hidden_layers = nn.ModuleList()
-            for i in range(args.num_layers -  2):
+            for _ in range(args.num_layers -  2):
                 self.hidden_layers.append(GCNConv(args.hidden, args.hidden))
+            
             self.conv2 = GCNConv(args.hidden, dataset.num_classes)
             self.relu = nn.ReLU()
 
@@ -107,11 +110,11 @@ elif args.model == "agnn":
     class Net(torch.nn.Module):
         def __init__(self):
             super(Net, self).__init__()
-            self.conv1 = GATConv(dataset.num_features, args.hidden)
+            self.conv1 = AGNNConv(dataset.num_features, args.hidden)
             self.hidden_layers = nn.ModuleList()
             for i in range(args.num_layers -  2):
-                self.hidden_layers.append(GATConv(args.hidden, args.hidden))
-            self.conv2 = GATConv(args.hidden, dataset.num_classes)
+                self.hidden_layers.append(AGNNConv(args.hidden, args.hidden))
+            self.conv2 = AGNNConv(args.hidden, dataset.num_classes)
             self.relu = nn.ReLU()
 
         def forward(self):
@@ -137,11 +140,15 @@ def train():
     optimizer.step()
 
 if __name__ == "__main__":
-    
+
+    # dry run.
+    for epoch in range(1, 3):
+        train()
+
     torch.cuda.synchronize()
     start_train = time.perf_counter()
     
-    for epoch in range(1, args.epochs + 1):
+    for _ in tqdm(range(1, args.epochs + 1)):
         train()
 
     torch.cuda.synchronize()

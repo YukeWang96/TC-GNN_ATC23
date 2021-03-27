@@ -1,5 +1,9 @@
 dgl_baselines/dataset
 dgl_baselines/__pycache__
-TCGNN_conv/__pycache__
-__pycache__
+*__pycache__
+__pycache__/*
 data/
+.vscode/*
+*egg-info
+*dist
+*build
