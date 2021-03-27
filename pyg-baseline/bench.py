@@ -1,27 +1,33 @@
 #!/usr/bin/env python3
-import subprocess
+import os
+os.environ["PYTHONWARNINGS"] = "ignore"
 
-graphs = [
-    ('PROTEINS_full'             ),   
-    ('OVCAR-8H'                  ),   
-    ('Yeast'                     ),   
-    ('DD'                        ),
-    ('YeastH'                    ),
+hidden = [16]
+# hidden = [32]
 
+dataset = [
+        # ('citeseer'	        , 3703	    , 6   ),  
+        # ('cora' 	        , 1433	    , 7   ),  
+        # ('pubmed'	        , 500	    , 3   ),      
+        # ('ppi'	            , 50	    , 121 ),   
 
-    # ('SW-620H'                   ),
-    # ('TWITTER-Real-Graph-Partial'),
-    # ('COLLAB'                    ),
-    # ('BZR'                       ),
-    # ('IMDB-BINARY'               ),
-    # ('DD'                        ),
+        # ('PROTEINS_full'             , 29       , 2) ,   
+        ('OVCAR-8H'                  , 66       , 2) , 
+        ('Yeast'                     , 74       , 2) ,
+        ('DD'                        , 89       , 2) ,
+        # ('YeastH'                    , 74       , 2) ,
+        # ('TWITTER-Real-Graph-Partial', 1323     , 2) ,   
+        # ('SW-620H'                   , 66       , 2) ,
 
-    # ('ENZYMES'                   ),      
-    # ('REDDIT-MULTI-12K'          ),       
-    # ('REDDIT-MULTI-5K'           ),
-    # ('REDDIT-BINARY'             ),
+        # ( 'amazon0505'               , 96	  , 22),
+        # ( 'artist'                   , 100  , 12),
+        # ( 'com-amazon'               , 96	  , 22),
+        # ( 'soc-BlogCatalog'	         , 128  , 39), 
+        # ( 'amazon0601'  	         , 96	  , 22), 
 ]
 
-for gname in graphs:
-    instance = ['python3', 'main.py', '--dataset', gname]
-    subprocess.run(instance)
+
+for hid in hidden:
+    for data, d, c in dataset:
+        command = "python pyg_main.py --dataset {} --dim {} --hidden {} --classes {}".format(data, d, hid, c)		
+        os.system(command)

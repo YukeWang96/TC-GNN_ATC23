@@ -16,7 +16,7 @@ from torch_geometric.datasets import Reddit
 from dataset import *
 from gnn_conv import *
 from config import *
-import GAcc
+import TCGNN
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset", type=str, default='amazon0601', help="dataset")
@@ -75,14 +75,14 @@ blockPartition = torch.zeros(num_row_windows, dtype=torch.int)
 
 # preprocessing for generating meta-information
 start = time.perf_counter()
-GAcc.preprocess(column_index, row_pointers, num_nodes,  \
+TCGNN.preprocess(column_index, row_pointers, num_nodes,  \
                 BLK_H,	BLK_W, blockPartition, edgeToColumn, edgeToRow)
 # column_index  = column_index.cuda()
 # row_pointers = row_pointers.cuda()
 # edgeToColumn = edgeToColumn.cuda()
 # edgeToRow = edgeToRow.cuda()
 # blockPartition = blockPartition.cuda()
-# GAcc.preprocess_gpu(column_index, row_pointers, num_nodes,  \
+# TCGNN.preprocess_gpu(column_index, row_pointers, num_nodes,  \
 #                 BLK_H,	BLK_W, blockPartition, edgeToColumn, edgeToRow)
 build_neighbor_parts = time.perf_counter() - start
 print("Prep. (ms):\t{:.3f}".format(build_neighbor_parts*1e3))

@@ -1,7 +1,0 @@
-GAcc.cpp
-GAcc_kernel.cu
-setup.py
-GAcc.egg-info/PKG-INFO
-GAcc.egg-info/SOURCES.txt
-GAcc.egg-info/dependency_links.txt
-GAcc.egg-info/top_level.txt
