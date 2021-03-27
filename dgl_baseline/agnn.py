@@ -9,15 +9,12 @@ class AGNN(nn.Module):
                  n_hidden,
                  n_classes,
                  n_layers,
-                 activation=None,
-                 dropout=None,
                  init_beta=1,
                  learn_beta=1):
         super(AGNN, self).__init__()
         self.g = g
                 
         self.proj = nn.Sequential(
-            nn.Dropout(dropout),
             nn.Linear(in_feats, n_hidden),
             nn.ReLU()
         )
@@ -27,7 +24,6 @@ class AGNN(nn.Module):
         )
 
         self.cls = nn.Sequential(
-            nn.Dropout(dropout),
             nn.Linear(n_hidden, n_classes)
         )
 

@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
-import subprocess
-import datetime
 import os
 
-hidden = [32] # [16, 32, 64, 128, 256]  # , 512, 1024, 2048] # [16]
-data_dir = '/home/yuke/.graphs/orig/'
-print(data_dir)
+hidden = [16] # [16, 32, 64, 128, 256]  # , 512, 1024, 2048] # [16]
 
 dataset = [
-		# ('citeseer'	        , 3703	    , 6   ),  
+		('citeseer'	        , 3703	    , 6   ),  
 		# ('cora' 	        , 1433	    , 7   ),  
 		# ('pubmed'	        , 500	    , 3   ),      
 		# ('ppi'	        	, 50	    , 121 ),   
@@ -19,11 +15,11 @@ dataset = [
 		# ('DD'                        , 89       , 2) ,
 		# ('YeastH'                    , 75       , 2) ,   
 
-		( 'amazon0505'               , 96	  , 22),
-		( 'artist'                   , 100	  , 12),
-		( 'com-amazon'               , 96	  , 22),
-		( 'soc-BlogCatalog'	         , 128	  , 39),      
-		( 'amazon0601'  	         , 96	  , 22), 
+		# ( 'amazon0505'               , 96	  , 22),
+		# ( 'artist'                   , 100	  , 12),
+		# ( 'com-amazon'               , 96	  , 22),
+		# ( 'soc-BlogCatalog'	         , 128	  , 39),      
+		# ( 'amazon0601'  	         , 96	  , 22), 
 
 		# ('SW-620H'                   , 66       , 2) ,
 	    # ( 'reddit'                   , 602    , 41),

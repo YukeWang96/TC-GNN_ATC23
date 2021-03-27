@@ -89,6 +89,7 @@ elif args.model == "gin":
     class Net(torch.nn.Module):
         def __init__(self):
             super(Net, self).__init__()
+            
             self.conv1 = GINConv(dataset.num_features, args.hidden)
             self.hidden_layers = nn.ModuleList()
             for i in range(args.num_layers -  2):
@@ -100,7 +101,7 @@ elif args.model == "gin":
             x = dataset.x
             x = self.relu(self.conv1(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow))
             x = F.dropout(x, training=self.training)
-            for Gconv  in self.hidden_layers:
+            for Gconv in self.hidden_layers:
                 x = Gconv(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
                 x = self.relu(x)
             x = self.conv2(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
@@ -112,7 +113,7 @@ elif args.model == "agnn":
             super(Net, self).__init__()
             self.conv1 = AGNNConv(dataset.num_features, args.hidden)
             self.hidden_layers = nn.ModuleList()
-            for i in range(args.num_layers -  2):
+            for _ in range(args.num_layers -  2):
                 self.hidden_layers.append(AGNNConv(args.hidden, args.hidden))
             self.conv2 = AGNNConv(args.hidden, dataset.num_classes)
             self.relu = nn.ReLU()

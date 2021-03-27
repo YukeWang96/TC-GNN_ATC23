@@ -1,0 +1,100 @@
+TC_Blocks:	1197
+Exp_Edges:	153216
+Namespace(classes=6, dataset='citeseer', dim=3703, epochs=10, hidden=16, model='gcn', num_layers=2)
+Prep. (ms):	1.429
+Train (ms):	 3.031
+TC_Blocks:	1268
+Exp_Edges:	162304
+Namespace(classes=7, dataset='cora', dim=1433, epochs=10, hidden=16, model='gcn', num_layers=2)
+Prep. (ms):	1.545
+Train (ms):	 2.971
+TC_Blocks:	11474
+Exp_Edges:	1468672
+Namespace(classes=3, dataset='pubmed', dim=500, epochs=10, hidden=16, model='gcn', num_layers=2)
+Prep. (ms):	18.940
+Train (ms):	 2.793
+TC_Blocks:	81439
+Exp_Edges:	10424192
+Namespace(classes=121, dataset='ppi', dim=50, epochs=10, hidden=16, model='gcn', num_layers=2)
+Prep. (ms):	125.395
+Train (ms):	 4.833
+TC_Blocks:	12867
+Exp_Edges:	1646976
+Namespace(classes=2, dataset='PROTEINS_full', dim=29, epochs=10, hidden=16, model='gcn', num_layers=2)
+Prep. (ms):	25.954
+Train (ms):	 2.722
+TC_Blocks:	408653
+Exp_Edges:	52307584
+Namespace(classes=2, dataset='OVCAR-8H', dim=66, epochs=10, hidden=16, model='gcn', num_layers=2)
+Prep. (ms):	593.877
+Train (ms):	66.381
+TC_Blocks:	340051
+Exp_Edges:	43526528
+Namespace(classes=2, dataset='Yeast', dim=74, epochs=10, hidden=16, model='gcn', num_layers=2)
+Prep. (ms):	503.585
+Train (ms):	61.057
+TC_Blocks:	130006
+Exp_Edges:	16640768
+Namespace(classes=2, dataset='DD', dim=89, epochs=10, hidden=16, model='gcn', num_layers=2)
+Prep. (ms):	197.344
+Train (ms):	11.429
+TC_Blocks:	408233
+Exp_Edges:	52253824
+Namespace(classes=2, dataset='SW-620H', dim=66, epochs=10, hidden=16, model='gcn', num_layers=2)
+Prep. (ms):	622.050
+Train (ms):	68.017
+TC_Blocks:	455410
+Exp_Edges:	58292480
+Namespace(classes=22, dataset='amazon0505', dim=96, epochs=10, hidden=16, model='gcn', num_layers=2)
+Prep. (ms):	720.028
+Train (ms):	23.806
+TC_Blocks:	201600
+Exp_Edges:	25804800
+Namespace(classes=12, dataset='artist', dim=100, epochs=10, hidden=16, model='gcn', num_layers=2)
+Prep. (ms):	283.369
+Train (ms):	 4.994
+TC_Blocks:	238338
+Exp_Edges:	30507264
+Namespace(classes=22, dataset='com-amazon', dim=96, epochs=10, hidden=16, model='gcn', num_layers=2)
+Prep. (ms):	305.502
+Train (ms):	17.365
+TC_Blocks:	179903
+Exp_Edges:	23027584
+Namespace(classes=39, dataset='soc-BlogCatalog', dim=128, epochs=10, hidden=16, model='gcn', num_layers=2)
+Prep. (ms):	288.267
+Train (ms):	10.130
+TC_Blocks:	316725
+Exp_Edges:	40540800
+Namespace(classes=22, dataset='amazon0601', dim=96, epochs=10, hidden=16, model='gcn', num_layers=2)
+Prep. (ms):	463.384
+Train (ms):	20.310
+=> citeseer, hiddn: 16
+
+=> cora, hiddn: 16
+
+=> pubmed, hiddn: 16
+
+=> ppi, hiddn: 16
+
+=> PROTEINS_full, hiddn: 16
+
+=> OVCAR-8H, hiddn: 16
+
+=> Yeast, hiddn: 16
+
+=> DD, hiddn: 16
+
+=> SW-620H, hiddn: 16
+
+=> amazon0505, hiddn: 16
+
+=> artist, hiddn: 16
+
+=> com-amazon, hiddn: 16
+
+=> soc-BlogCatalog, hiddn: 16
+
+=> amazon0601, hiddn: 16
+
+----------------------------
+===========================
