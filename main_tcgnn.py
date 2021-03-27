@@ -4,20 +4,14 @@ import os
 import sys
 import time
 import torch
-import math
 import numpy as np 
 import torch.nn as nn
 import torch.nn.functional as F
-from torch_geometric.datasets import Planetoid
-import torch_geometric.transforms as T
-import torch.autograd.profiler as profiler
-from scipy.sparse import *
-from torch_geometric.datasets import Reddit
 
+import TCGNN
 from dataset import *
 from gnn_conv import *
 from config import *
-import TCGNN
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--dataset", type=str, default='amazon0601', help="dataset")
@@ -34,37 +28,14 @@ print(args)
 ## Load Graph from files.
 #########################################
 dataset = args.dataset
-if dataset == "reddit":
-    path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', 'Reddit')
-    dataset = Reddit(path)
-    data = dataset[0]
-elif dataset in ['cora', 'pubmed', 'citeseer']:
-    path = osp.join(osp.dirname(osp.realpath(__file__)), '..', 'data', dataset)
-    dataset = Planetoid(path, dataset, transform=T.NormalizeFeatures())
-    data = dataset[0]
-else:
-    path = osp.join("/home/yuke/.graphs/orig", dataset)
-    data = TCGNN_dataset(path, args.dim, args.classes)
-    dataset = data
+# path = osp.join("/home/yuke/.graphs/orig", dataset)
+path = osp.join("/home/yuke/.graphs/osdi-ae-graphs", dataset + ".npz")
+dataset = TCGNN_dataset(path, args.dim, args.classes, load_from_txt=False)
 
-# print(path)
-#########################################
-## Build Graph CSR.
-#########################################
-num_nodes = len(data.x)
-num_edges = len(data.edge_index[1])
-val = [1] * num_edges
-start = time.perf_counter()
-scipy_coo = coo_matrix((val, data.edge_index), shape=(num_nodes,num_nodes))
-scipy_csr = scipy_coo.tocsr()
-build_csr = time.perf_counter() - start
-print("CSR (ms):\t{:.3f}".format(build_csr*1e3))
-
-column_index = torch.IntTensor(scipy_csr.indices)
-row_pointers = torch.IntTensor(scipy_csr.indptr)
-
-# degrees = (row_pointers[1:] - row_pointers[:-1]).tolist()
-# degrees = torch.sqrt(torch.FloatTensor(list(map(func, degrees)))).cuda()
+num_nodes = dataset.num_nodes
+num_edges = dataset.num_edges
+column_index =  dataset.column_index 
+row_pointers = dataset.row_pointers
 
 #########################################
 ## Compute TC-GNN related graph MetaData.
@@ -88,7 +59,7 @@ edgeToColumn = edgeToColumn.cuda()
 edgeToRow = edgeToRow.cuda()
 
 #########################################
-## Build GCN and GAT Model.
+## Build GCN and AGNN Model
 #########################################
 if args.model == "gcn":
     class Net(torch.nn.Module):
@@ -102,7 +73,7 @@ if args.model == "gcn":
             self.relu = nn.ReLU()
 
         def forward(self):
-            x = data.x
+            x = dataset.x
             x = self.relu(self.conv1(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow))
             x = F.dropout(x, training=self.training)
             for Gconv  in self.hidden_layers:
@@ -123,7 +94,7 @@ elif args.model == "gin":
             self.relu = nn.ReLU()
 
         def forward(self):
-            x = data.x
+            x = dataset.x
             x = self.relu(self.conv1(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow))
             x = F.dropout(x, training=self.training)
             for Gconv  in self.hidden_layers:
@@ -144,7 +115,7 @@ elif args.model == "agnn":
             self.relu = nn.ReLU()
 
         def forward(self):
-            x = data.x
+            x = dataset.x
             x = self.relu(self.conv1(x, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow))
             x = F.dropout(x, training=self.training)
             for Gconv in self.hidden_layers:
@@ -154,63 +125,26 @@ elif args.model == "agnn":
             return F.log_softmax(x, dim=1)
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-model, data = Net().to(device), data.to(device)
-optimizer = torch.optim.Adam([
-    dict(params=model.conv1.parameters(), weight_decay=5e-4),
-    dict(params=model.conv2.parameters(), weight_decay=0)
-], lr=0.01)
-
+model, dataset = Net().to(device), dataset.to(device)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
 # Training 
 def train():
     model.train()
     optimizer.zero_grad()
-    loss = F.nll_loss(model()[data.train_mask], data.y[data.train_mask])
+    loss = F.nll_loss(model()[:], dataset.y[:])
     loss.backward()
     optimizer.step()
 
-# Inference 
-@torch.no_grad()
-def test(profile=False):
-    model.eval()
-    if profile:
-        with profiler.profile(record_shapes=True, use_cuda=True) as prof:
-            with profiler.record_function("model_inference"):
-                logits, accs = model(), []
-        print(prof.key_averages().table())
-    else:
-        logits, accs = model(), []
-    
-    for mask in [data.train_mask, data.val_mask, data.test_mask]:
-        pred = logits[mask].max(1)[1]
-        acc = pred.eq(data.y[mask]).sum().item() / mask.sum().item()
-        accs.append(acc)
-    return accs
-
-
 if __name__ == "__main__":
-
-    best_val_acc = test_acc = 0
-    train_time_avg = []
-    test_time_avg = []
+    
+    torch.cuda.synchronize()
+    start_train = time.perf_counter()
     
     for epoch in range(1, args.epochs + 1):
-        start_train = time.perf_counter()
         train()
-        train_time = time.perf_counter() - start_train
-        if epoch >= 3: train_time_avg.append(train_time)
-        # if epoch == 10:
-        #     train_acc, val_acc, tmp_test_acc = test(profile=True)
-        start_test = time.perf_counter()
-        train_acc, val_acc, tmp_test_acc = test()
-        test_time = time.perf_counter() - start_test
-        if epoch > 3: test_time_avg.append(test_time)
-        # print("Epoch: {:2} Train (ms): {:6.3f} Test (ms): {:6.3f}".format(epoch, train_time * 1e3, test_time * 1e3))
-        # if val_acc > best_val_acc:
-        #     best_val_acc = val_acc
-        #     test_acc = tmp_test_acc
-        # log = 'Epoch: {:03d}, Train: {:.4f}, Train-Time: {:.3f} ms, Test-Time: {:.3f} ms, Val: {:.4f}, Test: {:.4f}'
-        # print(log.format(epoch, train_acc, sum(time_avg)/len(time_avg) * 1e3, sum(test_time_avg)/len(test_time_avg) * 1e3, best_val_acc, test_acc))
 
-    print("Train (ms):\t{:6.3f}\tTest (ms):\t{:6.3f}"\
-            .format(np.mean(train_time_avg) * 1e3, np.mean(test_time_avg) * 1e3))
+    torch.cuda.synchronize()
+    train_time = time.perf_counter() - start_train
+
+    print("Train (ms):\t{:6.3f}".format(train_time*1e3/args.epochs))

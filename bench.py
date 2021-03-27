@@ -7,8 +7,6 @@ hidden = [16] #[16, 32, 64, 128, 256, 512, 1024, 2048]
 num_layers = [2]
 model = 'gcn'
 data_dir = '/home/yuke/.graphs/orig/'
-# data_dir = '/home/yuke/.graphs/rabbit-orders/'
-# print(data_dir)
 
 dataset = [
 		# ('toy'	        , 3	    , 2   ),  
@@ -26,11 +24,11 @@ dataset = [
 		('DD'                        , 89       , 2) ,
 		('SW-620H'                   , 66       , 2) ,
 
-		# ( 'amazon0505'               , 96	  , 22),
-		# ( 'artist'                   , 100	  , 12),
-		# ( 'com-amazon'               , 96	  , 22),
-		# ( 'soc-BlogCatalog'	         , 128	  , 39),      
-		# ( 'amazon0601'  	         , 96	  , 22), 
+		( 'amazon0505'               , 96	  , 22),
+		( 'artist'                   , 100	  , 12),
+		( 'com-amazon'               , 96	  , 22),
+		( 'soc-BlogCatalog'	         , 128	  , 39),      
+		( 'amazon0601'  	         , 96	  , 22), 
 
 		# ('YeastH'                    , 75       , 2) ,   
 		# ( 'web-BerkStan'             , 100	  , 12),
