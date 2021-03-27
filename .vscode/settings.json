@@ -1,9 +1,0 @@
-{
-    "python.pythonPath": "/home/yuke/anaconda3/envs/dgl/bin/python",
-    "files.associations": {
-        "array": "cpp",
-        "string": "cpp",
-        "string_view": "cpp",
-        "*.cu": "cpp"
-    }
-}
