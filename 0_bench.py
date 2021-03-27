@@ -10,7 +10,6 @@ num_layers = [2]
 # hidden = [32]
 # num_layers = [4]
 
-
 dataset = [
 		# ('toy'	        , 3	    , 2   ),  
 		# ('tc_gnn_verify'	, 16	, 2),
