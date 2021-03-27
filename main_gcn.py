@@ -43,7 +43,7 @@ elif dataset in ['cora', 'pubmed', 'citeseer']:
     data = dataset[0]
 else:
     path = osp.join("/home/yuke/.graphs/orig", dataset)
-    data = GAcc_dataset(path, args.dim, args.classes)
+    data = TCGNN_dataset(path, args.dim, args.classes)
     dataset = data
 
 # print(path)

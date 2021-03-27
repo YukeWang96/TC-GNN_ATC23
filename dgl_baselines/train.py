@@ -57,7 +57,7 @@ def main(args):
         data = DglNodePropPredDataset(name=args.dataset)
     else:
         path = os.path.join("/home/yuke/.graphs/orig", args.dataset)
-        data = GAcc_dataset(path, args.dim, args.num_classes)
+        data = TCGNN_dataset(path, args.dim, args.num_classes)
     # else:
         # raise ValueError('Unknown dataset: {}'.format(args.dataset))
 

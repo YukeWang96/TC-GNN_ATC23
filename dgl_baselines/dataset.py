@@ -4,12 +4,12 @@ import numpy as np
 import time
 import dgl 
 
-class GAcc_dataset(torch.nn.Module):
+class TCGNN_dataset(torch.nn.Module):
     """
     data loading for more graphs
     """
     def __init__(self, path, dim, num_class):
-        super(GAcc_dataset, self).__init__()
+        super(TCGNN_dataset, self).__init__()
         self.nodes = set()
         self.num_nodes = 0
         self.num_features = dim 

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import torch
-import torch.nn as nn
 import TCGNN
 import sys
 
@@ -19,7 +18,7 @@ def gen_test_tensor(X_prime):
     X_new = torch.FloatTensor(X_new).cuda()
     return X_new
 
-class GAccFunction(torch.autograd.Function):
+class TCGNNFunction(torch.autograd.Function):
     @staticmethod
     def forward(ctx, X, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow):
         # X = torch.sparse.mm(edge_coo, X)
@@ -54,7 +53,7 @@ class GAccFunction(torch.autograd.Function):
         d_weights = torch.mm(X.transpose(0,1), d_input_prime)
         return d_input, d_weights, None, None, None, None, None, None
 
-class GAccFunction_GIN(torch.autograd.Function):
+class TCGNNFunction_GIN(torch.autograd.Function):
     @staticmethod
     def forward(ctx, X, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow):
 
@@ -82,7 +81,7 @@ class GAccFunction_GIN(torch.autograd.Function):
         return d_input, d_weights, None, None, None, None, None, None
         # return None, d_weights, None, None, None, None, None, None
 
-class GAccFunction_GAT(torch.autograd.Function):
+class TCGNNFunction_GAT(torch.autograd.Function):
     @staticmethod
     def forward(ctx, X, weights, attention_w, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow):
 
@@ -146,7 +145,7 @@ class GCNConv(torch.nn.Module):
         edges: the CSR edge list of the graph, shape: [edge, 1].
         partitioin: for the graph with the part-based optimziation.
         '''
-        return GAccFunction.apply(X, self.weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
+        return TCGNNFunction.apply(X, self.weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
 
 class GINConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):
@@ -161,7 +160,7 @@ class GINConv(torch.nn.Module):
         edges: the CSR edge list of the graph, shape: [edge, 1].
         partitioin: for the graph with the part-based optimziation.
         '''
-        return GAccFunction_GIN.apply(X, self.weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
+        return TCGNNFunction_GIN.apply(X, self.weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
 
 
 class GATConv(torch.nn.Module):
@@ -183,4 +182,4 @@ class GATConv(torch.nn.Module):
         edges: the CSR edge list of the graph, shape: [edge, 1].
         partitioin: for the graph with the part-based optimziation.
         '''
-        return GAccFunction_GAT.apply(X, self.weights, self.attention_w, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
+        return TCGNNFunction_GAT.apply(X, self.weights, self.attention_w, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
