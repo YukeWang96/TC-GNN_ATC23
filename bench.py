@@ -47,7 +47,7 @@ for n_Layer in num_layers:
 	for hid in hidden:
 		for data, d, c in dataset:
 			print("=> {}, hiddn: {}".format(data, hid))
-			command = "python main_gcn.py --dataset {} --dim {} --hidden {} --classes {} --num_layers {} --model {}"\
+			command = "python main_tcgnn.py --dataset {} --dim {} --hidden {} --classes {} --num_layers {} --model {}"\
 					.format(data, d, hid, c, n_Layer, model)		
 			# command = "sudo ncu --csv --set full python main_gcn.py --dataset {0} --dim {1} --hidden {2} --classes {3} --num_layers {4} --model {5} | tee prof_{0}.csv".format(data, d, hid, c, n_Layer, model)		
 			os.system(command)

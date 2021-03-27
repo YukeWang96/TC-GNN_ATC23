@@ -1,0 +1,7 @@
+TCGNN.cpp
+TCGNN_kernel.cu
+setup.py
+TCGNN.egg-info/PKG-INFO
+TCGNN.egg-info/SOURCES.txt
+TCGNN.egg-info/dependency_links.txt
+TCGNN.egg-info/top_level.txt

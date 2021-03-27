@@ -16,10 +16,6 @@ import os
 from dataset import *
 
 from gcn import GCN
-# from gcn_mp import GCN
-
-# from gcn import GAT
-from gat import GAT
 from gin import GIN
 from agnn import AGNN
 
@@ -27,6 +23,24 @@ from agnn import AGNN
 def_GCN = False  
 def_GIN = False
 def_AGNN = True
+
+
+parser = argparse.ArgumentParser(description='GCN')
+register_data_args(parser)
+parser.add_argument("--dropout", type=float, default=0.5,
+        help="dropout probability")
+parser.add_argument("--gpu", type=int, default=0, help="gpu")
+parser.add_argument("--dim", type=int, default=96, help="dim")
+parser.add_argument("--num_classes", type=int, default=22, help="num_classes")
+parser.add_argument("--lr", type=float, default=1e-2, help="learning rate")
+parser.add_argument("--n-epochs", type=int, default=10, help="number of training epochs")
+parser.add_argument("--n-hidden", type=int, default=16, help="number of hidden gcn units")
+parser.add_argument("--n-layers", type=int, default=4, help="number of hidden gcn layers")
+parser.add_argument("--weight-decay", type=float, default=5e-4, help="Weight for L2 loss")
+parser.add_argument("--self-loop", action='store_true', help="graph self-loop (default=False)")
+parser.set_defaults(self_loop=True)
+args = parser.parse_args()
+# print(args)
 
 assert sum([def_GCN, def_GIN, def_AGNN]) == 1
 
@@ -85,14 +99,6 @@ def main(args):
         # print(g.ndata['feat'])
         splitted_idx = data.get_idx_split()
         train_idx, val_idx, test_idx = splitted_idx["train"], splitted_idx["valid"], splitted_idx["test"]
-        # print(train_idx.size())
-        # print(val_idx.size())
-        # print(test_idx.size())
-
-        # add self-loop
-        print(f"Total edges before adding self-loop {g.number_of_edges()}")
-        g = g.remove_self_loop().add_self_loop()
-        print(f"Total edges after adding self-loop {g.number_of_edges()}")
 
         all_nodes = len(train_idx) + len(val_idx) + len(test_idx)
         train_mask = torch.LongTensor(np.ones(all_nodes)).to(args.gpu)
@@ -103,10 +109,6 @@ def main(args):
         in_feats = features.shape[1]
         n_classes = (labels.max() + 1).item()
         n_edges = len(g.all_edges())
-        # onehot = torch.zeros([feat.shape[0], n_classes]).to(device)
-        # onehot[train_mask, labels[train_mask, 0]] = 1
-        # return torch.cat([feat, onehot], dim=-1)
-        # labels = onehot
 
     ##########################
     # For DGL-builtin datasets
@@ -160,17 +162,6 @@ def main(args):
         in_feats = features.size(1)
         n_classes = data.num_classes
         n_edges = data.num_edges
-
-    # print("""----Data statistics------'
-    #   #Edges %d
-    #   #Classes %d
-    #   #Train samples %d
-    #   #Val samples %d
-    #   #Test samples %d""" %
-    #       (n_edges, n_classes,
-    #           train_mask.int().sum().item(),
-    #           val_mask.int().sum().item(),
-    #           test_mask.int().sum().item()))
 
     
     # add self loop
@@ -262,20 +253,4 @@ def main(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='GCN')
-    register_data_args(parser)
-    parser.add_argument("--dropout", type=float, default=0.5,
-            help="dropout probability")
-    parser.add_argument("--gpu", type=int, default=0, help="gpu")
-    parser.add_argument("--dim", type=int, default=96, help="dim")
-    parser.add_argument("--num_classes", type=int, default=22, help="num_classes")
-    parser.add_argument("--lr", type=float, default=1e-2, help="learning rate")
-    parser.add_argument("--n-epochs", type=int, default=10, help="number of training epochs")
-    parser.add_argument("--n-hidden", type=int, default=16, help="number of hidden gcn units")
-    parser.add_argument("--n-layers", type=int, default=4, help="number of hidden gcn layers")
-    parser.add_argument("--weight-decay", type=float, default=5e-4, help="Weight for L2 loss")
-    parser.add_argument("--self-loop", action='store_true', help="graph self-loop (default=False)")
-    parser.set_defaults(self_loop=True)
-    args = parser.parse_args()
-    # print(args)
     main(args)
