@@ -15,9 +15,7 @@ dataset = [
         ('OVCAR-8H'                  , 66       , 2) , 
         ('Yeast'                     , 74       , 2) ,
         ('DD'                        , 89       , 2) ,
-        # ('YeastH'                    , 74       , 2) ,
-        # ('TWITTER-Real-Graph-Partial', 1323     , 2) ,   
-        # ('SW-620H'                   , 66       , 2) ,
+        ('YeastH'                    , 74       , 2) ,
 
         ( 'amazon0505'               , 96	  , 22),
         ( 'artist'                   , 100  , 12),
