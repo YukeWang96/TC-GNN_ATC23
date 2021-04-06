@@ -2,6 +2,9 @@
 import torch
 import sys
 import math
+import time 
+
+from tqdm.std import tqdm
 import TCGNN
 
 n_heads = 8
@@ -18,6 +21,33 @@ def gen_test_tensor(X_prime):
 
     X_new = torch.FloatTensor(X_new).cuda()
     return X_new
+
+
+class TCGNNFunction_SAG(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, X, row_pointers, column_index, \
+                blockPartition, edgeToColumn, edgeToRow):
+
+        ctx.save_for_backward(row_pointers, column_index, \
+                                blockPartition, edgeToColumn, edgeToRow)
+
+        # Basic Scatter and Gather
+        X_out = TCGNN.forward(X, row_pointers, column_index, \
+                                blockPartition, edgeToColumn, edgeToRow)[0]
+
+        return X_out
+
+    @staticmethod
+    def backward(ctx, d_output):
+        row_pointers, column_index, \
+            blockPartition, edgeToColumn, edgeToRow = ctx.saved_tensors
+
+        # SAG backward.
+        d_input = TCGNN.forward(d_output, row_pointers, column_index, \
+                                blockPartition, edgeToColumn, edgeToRow)[0]
+
+        return d_input, None, None, None, None, None, None
+
 
 class TCGNNFunction(torch.autograd.Function):
     @staticmethod
@@ -127,6 +157,37 @@ class TCGNNFunction_AGNN(torch.autograd.Function):
 
         return d_input, d_weights, d_attention_w, None, None, None, None, None
 
+
+
+
+
+###################################
+# Definition of each conv layers
+###################################
+class SAG(torch.nn.Module):
+    def __init__(self, row_pointers, column_index, \
+                    blockPartition, edgeToColumn, edgeToRow):
+        super(SAG, self).__init__()
+
+        self.row_pointers = row_pointers
+        self.column_index = column_index
+        self.blockPartition = blockPartition
+        self.edgeToColumn = edgeToColumn
+        self.edgeToRow = edgeToRow
+
+
+    def profile(self, X, num_rounds=200):
+        
+        torch.cuda.synchronize()
+        start = time.perf_counter()
+
+        for _ in tqdm(range(num_rounds)):
+            TCGNNFunction_SAG.apply(X, self.row_pointers, self.column_index, \
+                                        self.blockPartition, self.edgeToColumn, self.edgeToRow)
+        torch.cuda.synchronize()
+        dur = time.perf_counter() - start
+        print("=> SAG profiling avg (ms): {:.3f}".format(dur*1e3/num_rounds))
+        print()
 
 class GCNConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):

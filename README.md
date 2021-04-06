@@ -12,9 +12,10 @@ git clone git@github.com:YukeWang96/TCGNN-Pytorch.git
 > + `CUDA >= 11.0` and `nvcc >= 11.0`
 
 ## Files and Directory.
++ `config.py`: the configuration file for the shape of a TC block.
 + `bench.py`: the benchmark file for invoking `main_tcgnn.py` for various datasets and models.
 + `main_tcgnn.py`: the main entry for running TC-GNN.
-+ `count_TC_blocks.py`: counting the TC blocks without sparse-graph translation.
++ `count_TC_blocks.py`: counting the total number of TC blocks without sparse-graph translation.
 + `proc_prof.py`: get the detailed GPU kernel metrics from the ncu csv output. 
 + `TCGNN_conv/`: the directory for core TC-GNN implementations, including `TCGNN_kernel.cu` and `TCGNN.cpp`.
 

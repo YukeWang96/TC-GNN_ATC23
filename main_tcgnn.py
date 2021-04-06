@@ -22,6 +22,8 @@ parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
 parser.add_argument("--epochs", type=int, default=10, help="number of epoches")
 parser.add_argument("--model", type=str, default='gcn', help='GNN model', choices=['gcn', 'gin', 'agnn'])
+
+parser.add_argument("--single_kernel", action='store_true', help="whether to profile a single SAG kernel")
 args = parser.parse_args()
 print(args)
 
@@ -58,6 +60,16 @@ row_pointers = row_pointers.cuda()
 blockPartition = blockPartition.cuda()
 edgeToColumn = edgeToColumn.cuda()
 edgeToRow = edgeToRow.cuda()
+
+#########################################
+## Single Satter-And-Gather (SAG) Profiling.
+#########################################
+if args.single_kernel:
+    SAG_obj = SAG(row_pointers, column_index,\
+                    blockPartition, edgeToColumn, edgeToRow)
+    X = dataset.x
+    SAG_obj.profile(X)
+    exit(0)
 
 #########################################
 ## Build GCN and AGNN Model
