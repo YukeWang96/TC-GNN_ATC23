@@ -34,23 +34,21 @@ if run_GCN:
     class Net(torch.nn.Module):
         def __init__(self):
             super(Net, self).__init__()
-            self.conv1 = GCNConv(dataset.num_features, args.hidden, cached=True,
-                                normalize=False)
-            self.conv2 = GCNConv(args.hidden, dataset.num_classes, cached=True,
-                                normalize=False)
+            # self.conv1 = GCNConv(dataset.num_features, args.hidden, cached=True, normalize=False)
+            # self.conv2 = GCNConv(args.hidden, dataset.num_classes, cached=True, normalize=False)
 
-            # self.lin1 = torch.nn.Linear(dataset.num_features, args.hidden)
-            # self.convs = torch.nn.ModuleList()
-            # for _ in range(4):
-            #     self.convs.append(AGNNConv(requires_grad=False))
-            # self.lin2 = torch.nn.Linear(args.hidden, dataset.num_classes)
+            self.lin1 = torch.nn.Linear(dataset.num_features, args.hidden)
+            self.convs = torch.nn.ModuleList()
+            for _ in range(4):
+                self.convs.append(AGNNConv(requires_grad=False))
+            self.lin2 = torch.nn.Linear(args.hidden, dataset.num_classes)
 
         def forward(self):
-            x, edge_index = data.x, data.edge_index
-            x = F.relu(self.conv1(x, edge_index))
-            x = F.dropout(x, training=self.training)
-            x = self.conv2(x, edge_index)
-            return F.log_softmax(x, dim=1)
+            # x, edge_index = data.x, data.edge_index
+            # x = F.relu(self.conv1(x, edge_index))
+            # x = F.dropout(x, training=self.training)
+            # x = self.conv2(x, edge_index)
+            # return F.log_softmax(x, dim=1)
 
             x, edge_index = data.x, data.edge_index        
             x = F.relu(self.lin1(x))
