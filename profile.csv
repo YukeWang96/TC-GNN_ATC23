@@ -1,0 +1,15 @@
+dataset,Avg.Epoch (ms)
+citeseer,0.040
+cora,0.066
+pubmed,0.147
+ppi,0.537
+PROTEINS_full,0.115
+OVCAR-8H,3.199
+Yeast,2.786
+DD,0.814
+SW-620H,3.197
+amazon0505,3.682
+artist,1.643
+com-amazon,1.744
+soc-BlogCatalog,1.898
+amazon0601,1.985

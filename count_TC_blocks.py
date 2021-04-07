@@ -3,13 +3,13 @@ import subprocess
 import datetime
 import os
 # import matplotlib.pyplot as plt
-import math
-from collections import Counter, defaultdict
+from collections import defaultdict
 import sys 
 import numpy as np
+import math
 
-dense_tile_H = 16
-dense_tile_W = 16
+dense_tile_H = 8
+dense_tile_W = 8
 
 dataset = [
 		# ('toy'	        , 3	    , 2   ),  
@@ -28,12 +28,14 @@ dataset = [
 		# ('YeastH'                    , 75       , 2) ,   
 		# ('SW-620H'                   , 66       , 2) ,
 
-		( 'amazon0505'               , 96	  , 22),
-		( 'artist'                   , 100	  , 12),
-		( 'com-amazon'               , 96	  , 22),
+		# ( 'amazon0505'               , 96	  , 22),
+		# ( 'artist'                   , 100	  , 12),
+		# ( 'com-amazon'               , 96	  , 22),
+		( 'soc-BlogCatalog'	         , 128	  , 39),      
+		( 'amazon0601'  	         , 96	  , 22), 
+
+
 		# ( 'web-BerkStan'             , 100	  , 12),
-		# ( 'soc-BlogCatalog'	         , 128	  , 39),      
-		# ( 'amazon0601'  	         , 96	  , 22), 
 		# ( 'Reddit'                   , 602    , 41),
 
 		# ( 'wiki-topcats'             , 300	  , 12),
@@ -46,14 +48,12 @@ dataset = [
 
 
 data_dir = '/home/yuke/.graphs/orig/'
-print(data_dir)
+# print(data_dir)
 # print("dataset,origin,origin_eff,reduced,reduced_eff,reduction (%)")
-
 
 def find_dense(path, data):
 	fp = open(path)
 	nodes = set()
-
 
 	graph = defaultdict(list)
 	for line in fp:
@@ -89,11 +89,14 @@ def find_dense(path, data):
 		chunk_edges.append(len(dst_list))
 
 		range_set = sorted(list(set(dst_list)))
+
+		# TC-GNN tiles
 		opt_cnt += (len(range_set) + dense_tile_W - 1)//dense_tile_W
 		tmp_opt_cnt = (len(range_set) + dense_tile_W - 1)//dense_tile_W
 		exp_opt_cnt = (dense_tile_H * dense_tile_W) * tmp_opt_cnt
 
 
+		# naive sliding window without compression.
 		tmp = 0
 		range_set = sorted(list(range_set))
 		i = j = 0
@@ -113,13 +116,22 @@ def find_dense(path, data):
 			print("tmp < tmp_opt_cnt Error Encounter, Duplicate Edges")
 			sys.exit(0)
 
-	print("{:10},Avg.Chunk.Size: {:.2f}".format(data, np.mean(chunk_edges)))
-	# print("{},{},{:.2f},{},{:.2f},{:.2f}".format(data, tile_cnt, actual_cnt/exp_tile_cnt, opt_cnt, actual_cnt/exp_opt_cnt,  100 * (tile_cnt - opt_cnt) / tile_cnt))
-						
+	# print("{:10},Avg.Chunk.Size: {:.2f}".format(data, np.mean(chunk_edges)))
+	# print("{},{},{:.2f},{},{:.2f},{:.2f}".format(data, tile_cnt, \
+	# 											actual_cnt/exp_tile_cnt, \
+	# 											opt_cnt, actual_cnt/exp_opt_cnt,  \
+	# 											100 * (tile_cnt - opt_cnt) / tile_cnt))
+
+
+	naive_blockPerRow = math.ceil(tile_cnt/(num_nodes//dense_tile_H))
+	tcgnn_blockPerRow = math.ceil(opt_cnt/(num_nodes//dense_tile_H))
+	print("{},{},{}".format(data, naive_blockPerRow, tcgnn_blockPerRow))
+
 	# plt.hist(tiles, bins=100)
 	# plt.savefig("{}.pdf".format(data))
 	# print(Counter(tiles))
 	# return tiles
-
-for data, d, c in dataset:
-	find_dense(data_dir + data, data)
+if __name__ == '__main__':
+	print("Dataset,Naive BPW,TC-GNN BPW")
+	for data, d, c in dataset:
+		find_dense(data_dir + data, data)

@@ -1,0 +1,15 @@
+/home/yuke/.graphs/orig/
+dataset,Naive BPW,TC-GNN BPW
+citeseer,20,4
+cora,24,5
+pubmed,35,5
+ppi,57,13
+PROTEINS_full,5,3
+OVCAR-8H,4,3
+Yeast,3,3
+DD,11,4
+YeastH,4,3
+SW-620H,4,3
+amazon0505,51,10
+artist,245,33
+com-amazon,44,6
