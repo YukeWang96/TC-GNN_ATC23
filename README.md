@@ -1,4 +1,5 @@
-# TC-GNN (Running GNN on Dense Tensor Core)
+# TC-GNN (Running Sparse GNN on Dense Tensor Core)
+**Note: this project is under active development**
 
 + **Clone this project**
 ```
