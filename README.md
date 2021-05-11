@@ -1,7 +1,7 @@
 # TC-GNN (Running Sparse GNN on Dense Tensor Core)
 **Note: this project is under active development**
 
-+ **Clone this project**
++ **Clone this project**.
 ```
 git clone git@github.com:YukeWang96/TCGNN-Pytorch.git
 ```
@@ -83,7 +83,7 @@ tar -zxvf tcgnn-ae-graphs.tar.gz
 > + `./0_bench.py| tee run_dgl.log` to run the script and the report 10 epoch runtime for all evaluated datasets. 
 > + `./1_log2csv.py` to convert the `run_dgl.log` to `run_dgl.csv` for ease of visualization.
 
-## Running **TC-GNN** .
+## Running **TC-GNN**.
 > +  Under the current project directory 
 > + `./0_bench.py| tee run_TCGNN.log` to run the script and the report 10 epoch runtime for all evaluated datasets. 
 > + `./1_log2csv.py` to convert the `run_TCGNN.log` to `run_TCGNN.csv` for ease of analysis.
