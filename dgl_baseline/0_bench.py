@@ -20,16 +20,6 @@ dataset = [
 		( 'com-amazon'               , 96	  , 22),
 		( 'soc-BlogCatalog'	         , 128	  , 39),      
 		( 'amazon0601'  	         , 96	  , 22), 
-
-		# ('SW-620H'                   , 66       , 2) ,
-	    # ( 'reddit'                   , 602    , 41),
-		# ( 'web-BerkStan'             , 100	  , 12),
-		# ( 'wiki-topcats'             , 300	  , 12),
-		# ( 'COLLAB'                   , 100      , 3) ,
-		# ( 'wiki-topcats'             , 300	  , 12),
-		# ( 'Reddit'                   , 602      , 41),
-		# ( 'enwiki-2013'	           , 100	  , 12),      
-		# ( 'amazon_also_bought'       , 96       , 22),
 ]
 
 

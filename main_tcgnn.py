@@ -32,7 +32,7 @@ print(args)
 #########################################
 dataset = args.dataset
 # path = osp.join("/home/yuke/.graphs/orig", dataset)
-path = osp.join("/home/yuke/.graphs/osdi-ae-graphs", dataset + ".npz")
+path = osp.join("tcgnn-ae-graphs/", dataset + ".npz")
 dataset = TCGNN_dataset(path, args.dim, args.classes, load_from_txt=False)
 
 num_nodes = dataset.num_nodes

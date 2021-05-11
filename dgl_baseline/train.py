@@ -24,8 +24,7 @@ args = parser.parse_args()
 print(args)
 
 def main(args):
-    # path = os.path.join("/home/yuke/.graphs/orig", args.dataset)
-    path = os.path.join("/home/yuke/.graphs/osdi-ae-graphs", args.dataset + ".npz")
+    path = os.path.join("../tcgnn-ae-graphs", args.dataset + ".npz")
     data = TCGNN_dataset(path, args.dim, args.num_classes, load_from_txt=False)
 
     g = data.g.int().to(args.gpu)

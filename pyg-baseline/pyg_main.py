@@ -15,7 +15,7 @@ from dataset import *
 run_GCN = True
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--dataDir", type=str, default="../osdi-ae-graphs", help="the path to graphs")
+parser.add_argument("--dataDir", type=str, default="../tcgnn-ae-graphs", help="the path to graphs")
 parser.add_argument("--dataset", type=str, default='amazon0601', help="dataset")
 parser.add_argument("--dim", type=int, default=96, help="input embedding dimension")
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
@@ -24,9 +24,9 @@ parser.add_argument("--epochs", type=int, default=200, help="number of epoches")
 args = parser.parse_args()
 print(args)
 
-# path = osp.join(args.dataDir, args.dataset+".npz")
-path = osp.join("/home/yuke/.graphs/orig/", args.dataset)
-dataset = custom_dataset(path, args.dim, args.classes, load_from_txt=True)
+path = osp.join(args.dataDir, args.dataset+".npz")
+# path = osp.join("../tcgnn-ae-graphs", args.dataset)
+dataset = custom_dataset(path, args.dim, args.classes, load_from_txt=False)
 data = dataset
 
 

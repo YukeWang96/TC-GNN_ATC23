@@ -62,6 +62,10 @@ python setup.py install
 to install the TCGNN_conv modules with Pytorch binding. **Note that this step is required for both Docker and Conda setup.**
 
 
+### Download graph datasets from [tcgnn-ae-graphs.tar.gz](https://drive.google.com/file/d/1dI5iC6TmfkFxLWiZ-lSA9AdHXvMdaKjy/view?usp=sharing), then 
+```
+tar -zxvf tcgnn-ae-graphs.tar.gz
+``` 
 
 ## Running **PyG** baseline.
 > +  Go to **`pyg_baseline/`** directory;
