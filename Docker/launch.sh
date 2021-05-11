@@ -1,0 +1,1 @@
+docker run -it --rm --gpus all -v $PWD/../:/tcgnn tcgnn-ae:latest /bin/bash

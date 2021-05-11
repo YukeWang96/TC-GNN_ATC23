@@ -12,7 +12,7 @@ git clone git@github.com:YukeWang96/TCGNN-Pytorch.git
 > + `cmake >= 3.14`
 > + `CUDA >= 11.0` and `nvcc >= 11.0`
 
-## Files and Directory.
+## Files and Directories.
 + `config.py`: the configuration file for the shape of a TC block.
 + `bench.py`: the benchmark file for invoking `main_tcgnn.py` for various datasets and models.
 + `main_tcgnn.py`: the main entry for running TC-GNN.
@@ -21,6 +21,12 @@ git clone git@github.com:YukeWang96/TCGNN-Pytorch.git
 + `TCGNN_conv/`: the directory for core TC-GNN implementations, including `TCGNN_kernel.cu` and `TCGNN.cpp`.
 
 ## Environment Setup.
+### [**Method-1**] Install via Docker (Recommended).
++ Go to `Docker/`
++ Run `./build.sh`
++ Run `./launch.sh`
+
+### [**Method-2**] Install via Conda.
 + Install **`conda`** on system **[Toturial](https://www.digitalocean.com/community/tutorials/how-to-install-anaconda-on-ubuntu-18-04-quickstart)**.
 + Create a **`conda`** environment: 
 ```
@@ -48,7 +54,12 @@ pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-1.8.0+cu111
 pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.8.0+cu111.html
 pip install torch-geometric
 ```
-+ Go to `TCGNN_conv/`, then `python setup.py install` to install the TCGNN_conv modules with Pytorch binding.
+
+### [**Required for Method-1 and 2**]  Install **`TC-GNN`**, go to `TCGNN_conv/`, then 
+```
+python setup.py install
+``` 
+to install the TCGNN_conv modules with Pytorch binding. **Note that this step is required for both Docker and Conda setup.**
 
 
 
