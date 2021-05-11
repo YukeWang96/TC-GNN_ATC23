@@ -55,14 +55,18 @@ pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.8.0+c
 pip install torch-geometric
 ```
 
-### [**Required for Method-1 and 2**]  Install **`TC-GNN`**, go to `TCGNN_conv/`, then 
+### Install **`TC-GNN`**.
+Go to `TCGNN_conv/`, then run
 ```
 python setup.py install
 ``` 
-to install the TCGNN_conv modules with Pytorch binding. **Note that this step is required for both Docker and Conda setup.**
+to install the TCGNN_conv modules with Pytorch binding. 
+**Note that this step is required for both Docker and Conda setup.**
 
 
-### Download graph datasets from [tcgnn-ae-graphs.tar.gz](https://drive.google.com/file/d/1dI5iC6TmfkFxLWiZ-lSA9AdHXvMdaKjy/view?usp=sharing), then 
+### Download graph datasets.
+Get the preprocessed datasets in `.npy` at [here](https://drive.google.com/file/d/1dI5iC6TmfkFxLWiZ-lSA9AdHXvMdaKjy/view?usp=sharing), 
+then run
 ```
 tar -zxvf tcgnn-ae-graphs.tar.gz
 ``` 
