@@ -18,8 +18,8 @@ rule cuda_compile
 
 
 
-build /home/yuke/TC_GNN_pytorch/TCGNN_conv/build/temp.linux-x86_64-3.7/TCGNN.o: compile /home/yuke/TC_GNN_pytorch/TCGNN_conv/TCGNN.cpp
-build /home/yuke/TC_GNN_pytorch/TCGNN_conv/build/temp.linux-x86_64-3.7/TCGNN_kernel.o: cuda_compile /home/yuke/TC_GNN_pytorch/TCGNN_conv/TCGNN_kernel.cu
+build /home/yuke/TCGNN-Pytorch/TCGNN_conv/build/temp.linux-x86_64-3.7/TCGNN.o: compile /home/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp
+build /home/yuke/TCGNN-Pytorch/TCGNN_conv/build/temp.linux-x86_64-3.7/TCGNN_kernel.o: cuda_compile /home/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN_kernel.cu
 
 
 

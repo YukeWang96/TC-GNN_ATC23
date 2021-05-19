@@ -1,0 +1,37 @@
+TC_Blocks:	455410
+Exp_Edges:	58292480
+Namespace(classes=22, dataset='amazon0505', dim=16, epochs=10, hidden=16, model='agnn', num_layers=2, single_kernel=False)
+Prep. (ms):	671.933
+Train (ms):	117.148
+TC_Blocks:	201600
+Exp_Edges:	25804800
+Namespace(classes=12, dataset='artist', dim=16, epochs=10, hidden=16, model='agnn', num_layers=2, single_kernel=False)
+Prep. (ms):	279.617
+Train (ms):	34.688
+TC_Blocks:	238338
+Exp_Edges:	30507264
+Namespace(classes=22, dataset='com-amazon', dim=16, epochs=10, hidden=16, model='agnn', num_layers=2, single_kernel=False)
+Prep. (ms):	294.294
+Train (ms):	53.921
+TC_Blocks:	179903
+Exp_Edges:	23027584
+Namespace(classes=39, dataset='soc-BlogCatalog', dim=16, epochs=10, hidden=16, model='agnn', num_layers=2, single_kernel=False)
+Prep. (ms):	294.989
+Train (ms):	63.611
+TC_Blocks:	316725
+Exp_Edges:	40540800
+Namespace(classes=22, dataset='amazon0601', dim=16, epochs=10, hidden=16, model='agnn', num_layers=2, single_kernel=False)
+Prep. (ms):	437.725
+Train (ms):	65.883
+=> amazon0505, hiddn: 16
+
+=> artist, hiddn: 16
+
+=> com-amazon, hiddn: 16
+
+=> soc-BlogCatalog, hiddn: 16
+
+=> amazon0601, hiddn: 16
+
+----------------------------
+===========================

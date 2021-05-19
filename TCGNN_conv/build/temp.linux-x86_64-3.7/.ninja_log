@@ -1,3 +1,3 @@
 # ninja log v5
-0	21540	1616805913225921507	/home/yuke/TC_GNN_pytorch/TCGNN_conv/build/temp.linux-x86_64-3.7/TCGNN.o	1102852a4acd9991
-1	37436	1616805929109984328	/home/yuke/TC_GNN_pytorch/TCGNN_conv/build/temp.linux-x86_64-3.7/TCGNN_kernel.o	894002495a30a064
+0	20945	1621445674717836205	/home/yuke/TCGNN-Pytorch/TCGNN_conv/build/temp.linux-x86_64-3.7/TCGNN.o	b57748571e366984
+0	35925	1621445689697931428	/home/yuke/TCGNN-Pytorch/TCGNN_conv/build/temp.linux-x86_64-3.7/TCGNN_kernel.o	6967b372b7981a47

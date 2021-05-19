@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
-import subprocess
-import datetime
-import os
-# import matplotlib.pyplot as plt
 from collections import defaultdict
 import sys 
-import numpy as np
 import math
 
 dense_tile_H = 8
@@ -28,9 +23,9 @@ dataset = [
 		# ('YeastH'                    , 75       , 2) ,   
 		# ('SW-620H'                   , 66       , 2) ,
 
-		# ( 'amazon0505'               , 96	  , 22),
-		# ( 'artist'                   , 100	  , 12),
-		# ( 'com-amazon'               , 96	  , 22),
+		( 'amazon0505'               , 96	  , 22),
+		( 'artist'                   , 100	  , 12),
+		( 'com-amazon'               , 96	  , 22),
 		( 'soc-BlogCatalog'	         , 128	  , 39),      
 		( 'amazon0601'  	         , 96	  , 22), 
 
@@ -122,16 +117,15 @@ def find_dense(path, data):
 	# 											opt_cnt, actual_cnt/exp_opt_cnt,  \
 	# 											100 * (tile_cnt - opt_cnt) / tile_cnt))
 
-
 	naive_blockPerRow = math.ceil(tile_cnt/(num_nodes//dense_tile_H))
 	tcgnn_blockPerRow = math.ceil(opt_cnt/(num_nodes//dense_tile_H))
-	print("{},{},{}".format(data, naive_blockPerRow, tcgnn_blockPerRow))
+	print("{},{},{},".format(data, naive_blockPerRow, tcgnn_blockPerRow, math.ceil(num_nodes//dense_tile_H)))
 
 	# plt.hist(tiles, bins=100)
 	# plt.savefig("{}.pdf".format(data))
 	# print(Counter(tiles))
 	# return tiles
 if __name__ == '__main__':
-	print("Dataset,Naive BPW,TC-GNN BPW")
+	print("Dataset,Naive BPW,TC-GNN BPW, Total W")
 	for data, d, c in dataset:
 		find_dense(data_dir + data, data)

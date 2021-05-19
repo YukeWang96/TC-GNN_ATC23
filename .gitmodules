@@ -1,0 +1,6 @@
+[submodule "ge-spmm"]
+	path = ge-spmm
+	url = git@github.com:hgyhungry/ge-spmm.git
+[submodule "tSparse"]
+	path = tSparse
+	url = git@github.com:oresths/tSparse.git
