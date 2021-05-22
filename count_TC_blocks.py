@@ -29,10 +29,8 @@ dataset = [
 		( 'soc-BlogCatalog'	         , 128	  , 39),      
 		( 'amazon0601'  	         , 96	  , 22), 
 
-
 		# ( 'web-BerkStan'             , 100	  , 12),
 		# ( 'Reddit'                   , 602    , 41),
-
 		# ( 'wiki-topcats'             , 300	  , 12),
 		# ( 'COLLAB'                   , 100      , 3) ,
 		# ( 'wiki-topcats'             , 300	  , 12),
@@ -119,7 +117,7 @@ def find_dense(path, data):
 
 	naive_blockPerRow = math.ceil(tile_cnt/(num_nodes//dense_tile_H))
 	tcgnn_blockPerRow = math.ceil(opt_cnt/(num_nodes//dense_tile_H))
-	print("{},{},{},".format(data, naive_blockPerRow, tcgnn_blockPerRow, math.ceil(num_nodes//dense_tile_H)))
+	print("{},{},{},{}".format(data, naive_blockPerRow, tcgnn_blockPerRow, math.ceil(num_nodes//dense_tile_H)))
 
 	# plt.hist(tiles, bins=100)
 	# plt.savefig("{}.pdf".format(data))

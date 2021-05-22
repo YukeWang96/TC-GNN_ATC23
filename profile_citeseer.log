@@ -1,0 +1,4 @@
+Namespace(classes=6, dataset='citeseer', dim=16, epochs=10, hidden=16, model='gcn', num_layers=2, single_kernel=True, sparsity=0.4)
+Before Drop Edges:  9228
+After Select Edges: {} 4614
+=> citeseer, hiddn: 16

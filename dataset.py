@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from numpy.core import numeric
 import torch
 import numpy as np
 import time
@@ -10,7 +11,7 @@ class TCGNN_dataset(torch.nn.Module):
     """
     data loading for more graphs
     """
-    def __init__(self, path, dim, num_class, load_from_txt=True, verbose=False):
+    def __init__(self, path, dim, num_class, load_from_txt=True, verbose=False, sparsity=1):
         super(TCGNN_dataset, self).__init__()
 
         self.nodes = set()
@@ -23,9 +24,12 @@ class TCGNN_dataset(torch.nn.Module):
         
         self.reorder_flag = False
         self.verbose_flag = verbose
+        self.sparsity = sparsity
 
         self.avg_degree = -1
         self.avg_edgeSpan = -1
+
+        self.syn = False
 
         self.init_edges(path)
         self.init_embedding(dim)
@@ -43,45 +47,60 @@ class TCGNN_dataset(torch.nn.Module):
 
     def init_edges(self, path):
 
-        # loading from a txt graph file
-        if self.load_from_txt:
-            fp = open(path, "r")
+        if self.syn:
+            self.num_nodes = 3000
+            node_li = list(range(self.num_nodes))
+            from itertools import product
             src_li = []
             dst_li = []
-            start = time.perf_counter()
-            for line in fp:
-                src, dst = line.strip('\n').split()
-                src, dst = int(src), int(dst)
+            cnt = 0
+            for src, dst in product(node_li, node_li):
                 src_li.append(src)
                 dst_li.append(dst)
-                self.nodes.add(src)
-                self.nodes.add(dst)
-            
-            self.num_edges = len(src_li)
-            self.num_nodes = max(self.nodes) + 1
+                cnt += 1
             self.edge_index = np.stack([src_li, dst_li])
 
-            dur = time.perf_counter() - start
-            if self.verbose_flag:
-                print("# Loading (txt) {:.3f}s ".format(dur))
+        else:
+            # loading from a txt graph file
+            if self.load_from_txt:
+                fp = open(path, "r")
+                src_li = []
+                dst_li = []
+                start = time.perf_counter()
+                for line in fp:
+                    src, dst = line.strip('\n').split()
+                    src, dst = int(src), int(dst)
+                    src_li.append(src)
+                    dst_li.append(dst)
+                    self.nodes.add(src)
+                    self.nodes.add(dst)
+                
+                self.num_edges = len(src_li)
+                self.num_nodes = max(self.nodes) + 1
+                self.edge_index = np.stack([src_li, dst_li])
 
-        # loading from a .npz graph file
-        else: 
-            if not path.endswith('.npz'):
-                raise ValueError("graph file must be a .npz file")
+                dur = time.perf_counter() - start
+                if self.verbose_flag:
+                    print("# Loading (txt) {:.3f}s ".format(dur))
 
-            start = time.perf_counter()
-            graph_obj = np.load(path)
-            src_li = graph_obj['src_li']
-            dst_li = graph_obj['dst_li']
+            # loading from a .npz graph file
+            else: 
+                if not path.endswith('.npz'):
+                    raise ValueError("graph file must be a .npz file")
 
-            self.num_nodes = graph_obj['num_nodes']
-            self.num_edges = len(src_li)
-            self.edge_index = np.stack([src_li, dst_li])
-            dur = time.perf_counter() - start
-            if self.verbose_flag:
-                print("# Loading (npz)(s): {:.3f}".format(dur))
+                start = time.perf_counter()
+                graph_obj = np.load(path)
+                src_li = graph_obj['src_li']
+                dst_li = graph_obj['dst_li']
+
+                self.num_nodes = graph_obj['num_nodes']
+                self.num_edges = len(src_li)
+                self.edge_index = np.stack([src_li, dst_li])
+                dur = time.perf_counter() - start
+                if self.verbose_flag:
+                    print("# Loading (npz)(s): {:.3f}".format(dur))
         
+        self.num_edges = num_edges = len(self.edge_index[0])
         self.avg_degree = self.num_edges / self.num_nodes
         self.avg_edgeSpan = np.mean(np.abs(np.subtract(src_li, dst_li)))
 
@@ -90,8 +109,23 @@ class TCGNN_dataset(torch.nn.Module):
             print("# avg_degree: {:.2f}".format(self.avg_degree))
             print("# avg_edgeSpan: {}".format(int(self.avg_edgeSpan)))
 
+        # sparsity = 0.5
+        # print("Before Drop Edges: ", num_edges)
+        # n = int(self.sparsity * num_edges) 
+        # index = np.random.choice(num_edges, n, replace=False)  
+        # print("After Select Edges: {}", len(index))
+        # self.num_edges = len(index)
+
+        # src = self.edge_index[0][index]
+        # dst = self.edge_index[1][index]
+        # print(len(src))
+        # print(len(dst))
+        # self.edge_index = np.stack([src, dst])
+        # print(self.edge_index)
+        # exit(0)
+
         # Build graph CSR.
-        val = [1] * self.num_edges
+        val = [1] * len(self.edge_index[0])
         start = time.perf_counter()
         scipy_coo = coo_matrix((val, self.edge_index), shape=(self.num_nodes, self.num_nodes))
         scipy_csr = scipy_coo.tocsr()

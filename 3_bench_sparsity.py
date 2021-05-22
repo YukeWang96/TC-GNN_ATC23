@@ -47,19 +47,23 @@ dataset = [
 
 for n_Layer in num_layers:
     for hid in hidden:
-        for data, d, c in dataset:
-            print("=> {}, hiddn: {}".format(data, hid))
-            command = "python main_tcgnn.py --dataset {} \
-                                            --dim {} \
-                                            --hidden {} \
-                                            --classes {} \
-                                            --num_layers {} \
-                                            --model {} \
-                                            --sparsity {}"\
-                    .format(data, 1024, hid, c, n_Layer, model, (2**sparsity)/10)
-            if single_kernel:
-                command += " --single_kernel"
-            if kernel_profile:
-                command = "sudo ncu --set detailed --section SpeedOfLight_RooflineChart " + command
-            # command = "sudo ncu --csv --set full python main_gcn.py --dataset {0} --dim {1} --hidden {2} --classes {3} --num_layers {4} --model {5} | tee prof_{0}.csv".format(data, d, hid, c, n_Layer, model)		
-            os.system(command)
+        for sparsity in range(1, 2, 1):
+            for data, d, c in dataset:
+                print("=> {}, hiddn: {}".format(data, hid))
+                command = "python main_tcgnn.py --dataset {} \
+                                                --dim {} \
+                                                --hidden {} \
+                                                --classes {} \
+                                                --num_layers {} \
+                                                --model {} \
+                                                --sparsity {}"\
+                        .format(data, 1024, hid, c, n_Layer, model, (2**sparsity)/10)
+                if single_kernel:
+                    command += " --single_kernel"
+                if kernel_profile:
+                    command = "sudo ncu --set detailed --section SpeedOfLight_RooflineChart " + command
+                # command = "sudo ncu --csv --set full python main_gcn.py --dataset {0} --dim {1} --hidden {2} --classes {3} --num_layers {4} --model {5} | tee prof_{0}.csv".format(data, d, hid, c, n_Layer, model)		
+                os.system(command)
+            # print()
+    #     print("----------------------------")
+    # print("===========================")

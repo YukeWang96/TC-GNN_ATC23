@@ -1,0 +1,6 @@
+Dataset,Naive BPW,TC-GNN BPW," Total W"
+amazon0505,51,10,51279
+artist,245,33,6314
+com-amazon,44,6,41857
+soc-BlogCatalog,99,21,11097
+amazon0601,34,7,50424
