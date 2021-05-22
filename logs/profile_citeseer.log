@@ -1,7 +1,4 @@
-SOL L1/TEX Cache               25.32
-SOL L2 Cache                   3.15
-SM [%]                         1.91
-Achieved Occupancy             11.30
-Achieved Active Warps Per SM   5.42
-Max Bandwidth                  4.06
-Memory Throughput              27196225923.65
+Namespace(classes=6, dataset='citeseer', dim=16, epochs=10, hidden=16, model='gcn', num_layers=2, single_kernel=True, sparsity=0.4)
+Before Drop Edges:  9228
+After Select Edges: {} 4614
+=> citeseer, hiddn: 16
