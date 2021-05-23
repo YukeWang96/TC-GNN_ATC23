@@ -1,0 +1,7 @@
+Namespace(classes=22, dataset='amazon0505', dim=16, epochs=10, hidden=16, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+Prep. (ms):	633.215
+TC_Blocks:	455410
+Exp_Edges:	58292480
+gflop: 156.124, embedding_dim: 16
+TC-GNN -- Time (ms): 2.415, GFLOPs: 64.658
+================================
