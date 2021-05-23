@@ -23,7 +23,6 @@ parser.add_argument("--classes", type=int, default=22, help="number of output cl
 parser.add_argument("--epochs", type=int, default=10, help="number of epoches")
 parser.add_argument("--model", type=str, default='gcn', help='GNN model', choices=['gcn', 'gin', 'agnn'])
 parser.add_argument("--sparsity", type=float, default=1)
-
 parser.add_argument("--single_kernel", action='store_true', help="whether to profile a single SAG kernel")
 args = parser.parse_args()
 print(args)

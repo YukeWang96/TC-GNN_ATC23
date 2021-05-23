@@ -54,9 +54,8 @@ for n_Layer in num_layers:
                                             --hidden {} \
                                             --classes {} \
                                             --num_layers {} \
-                                            --model {} \
-                                            --sparsity {}"\
-                    .format(data, 1024, hid, c, n_Layer, model, (2**sparsity)/10)
+                                            --model {}"\
+                    .format(data, 1024, hid, c, n_Layer, model)
             if single_kernel:
                 command += " --single_kernel"
             if kernel_profile:

@@ -12,6 +12,8 @@
 #include "config.h"
 #define WPB 8
 
+__global__ void warmup(){}
+
 using namespace nvcuda;
 
 ////////////////////
@@ -190,22 +192,52 @@ std::vector<torch::Tensor> spmm_forward_cuda(
 
     dim3 grid(num_row_windows, 1, 1);
     dim3 block(WARP_SIZE, WARPperBlock, 1);
-
+	
     const int dimTileNum = (embedding_dim + BLK_H - 1) / BLK_H;
 	const int dynamic_shared_size = dimTileNum * BLK_W * BLK_H * sizeof(float); // dynamic shared memory.
 
-    spmm_forward_cuda_kernel<<<grid, block, dynamic_shared_size>>>(
-                                                                    nodePointer.data<int>(), 
-                                                                    edgeList.data<int>(),
-                                                                    blockPartition.data<int>(), 
-                                                                    edgeToColumn.data<int>(), 
-                                                                    edgeToRow.data<int>(), 
-                                                                    num_nodes,
-                                                                    num_edges,
-                                                                    embedding_dim,
-                                                                    input.data<float>(), 
-                                                                    output.data<float>()
-                                                                );
+	#define PROFILE 200
+
+	#ifdef PROFILE
+
+	cudaEvent_t start, stop;
+	cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+
+	for (int i=0; i<PROFILE; i++) {
+        warmup<<<1,1>>>();
+    }
+
+	cudaEventRecord(start, 0);
+	
+	for (int i=0; i<PROFILE; i++) 
+	#endif 
+
+		spmm_forward_cuda_kernel<<<grid, block, dynamic_shared_size>>>(
+																		nodePointer.data<int>(), 
+																		edgeList.data<int>(),
+																		blockPartition.data<int>(), 
+																		edgeToColumn.data<int>(), 
+																		edgeToRow.data<int>(), 
+																		num_nodes,
+																		num_edges,
+																		embedding_dim,
+																		input.data<float>(), 
+																		output.data<float>()
+																	);
+
+	#ifdef PROFILE
+	cudaEventRecord(stop, 0);
+	cudaEventSynchronize(stop);
+	float gflop = 2*num_edges/1e6*embedding_dim;
+	// printf("embedding_dim: %d\n", embedding_dim);
+	printf("gflop: %.3f, embedding_dim: %d\n", gflop, embedding_dim);
+
+	float milliseconds;
+	cudaEventElapsedTime(&milliseconds, start, stop);
+	printf("TC-GNN -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
+	printf("\n================================\n");
+	#endif
 
     // check for error
     cudaError_t error = cudaGetLastError();

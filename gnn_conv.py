@@ -176,7 +176,7 @@ class SAG(torch.nn.Module):
         self.edgeToRow = edgeToRow
 
 
-    def profile(self, X, num_rounds=200):
+    def profile(self, X, num_rounds=1):
         
         torch.cuda.synchronize()
         start = time.perf_counter()
@@ -186,8 +186,8 @@ class SAG(torch.nn.Module):
                                         self.blockPartition, self.edgeToColumn, self.edgeToRow)
         torch.cuda.synchronize()
         dur = time.perf_counter() - start
-        print("=> SAG profiling avg (ms): {:.3f}".format(dur*1e3/num_rounds))
-        print()
+        # print("=> SAG profiling avg (ms): {:.3f}".format(dur*1e3/num_rounds))
+        # print()
 
 class GCNConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):
