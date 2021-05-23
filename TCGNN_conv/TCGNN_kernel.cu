@@ -10,7 +10,7 @@
 #include <cuda_runtime.h>
 
 #include "config.h"
-#define WPB 8
+#define WPB 4
 
 __global__ void warmup(){}
 
@@ -196,7 +196,7 @@ std::vector<torch::Tensor> spmm_forward_cuda(
     const int dimTileNum = (embedding_dim + BLK_H - 1) / BLK_H;
 	const int dynamic_shared_size = dimTileNum * BLK_W * BLK_H * sizeof(float); // dynamic shared memory.
 
-	#define PROFILE 200
+	#define PROFILE 1
 
 	#ifdef PROFILE
 
@@ -236,7 +236,7 @@ std::vector<torch::Tensor> spmm_forward_cuda(
 	float milliseconds;
 	cudaEventElapsedTime(&milliseconds, start, stop);
 	printf("TC-GNN -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
-	printf("\n================================\n");
+	printf("================================\n");
 	#endif
 
     // check for error
@@ -406,17 +406,18 @@ __global__ void spmm_forward_cuda_kernel(
 	// Processing TC_blocks along the column dimension of Sparse A.
 	for (unsigned i = 0; i < num_TC_blocks; i++){
 
-		// Init A_colToX_row with dummy values.
-		if (tid < BLK_W){
-			sparse_AToX_index[tid] = numNodes + 1;
-		}
+		// // Init A_colToX_row with dummy values.
+		// if (tid < BLK_W){
+		// 	sparse_AToX_index[tid] = numNodes + 1;
+		// }
 
-		__syncthreads();
+		// __syncthreads();
 
 		// Init sparse_A with zero values.
 		#pragma unroll
 		for (unsigned idx = tid; idx < BLK_W * BLK_H; idx += threadPerBlock){
 			sparse_A[idx] = 0;
+			sparse_AToX_index[tid%BLK_W] = numNodes + 1;
 		}
 
 		// Init dense_X with zero values.
@@ -427,23 +428,24 @@ __global__ void spmm_forward_cuda_kernel(
 
 		// Initialize sparse_A by using BLK_H (16) threads from the warp-0.
 		// currently fetch all neighbors of the current nodes.
-		// then to see whether it can fit into current TC_block frame of column.		
-		#pragma unroll
-		for (unsigned eIdx = eIdx_start + tid; eIdx < eIdx_end; eIdx += threadPerBlock){
-			unsigned col = edgeToColumn[eIdx];
-			if (i * BLK_W <= col && col < (i + 1) * BLK_W){			// if the edge in the current TC_block frame of column.
-				unsigned row_local = edgeToRow[eIdx] % BLK_H;
-				unsigned col_local = col % BLK_W;
-				sparse_A[row_local * BLK_W + col_local] = 1;		// set the edge of the sparse_A.
-				sparse_AToX_index[col_local] = edgeList[eIdx];		// record the mapping from sparse_A colId to rowId of dense_X.
-			}		
-		}
+		// then to see whether it can fit into current TC_block frame of column.	
+		// #pragma unroll
+		// for (unsigned eIdx = eIdx_start + tid; eIdx < eIdx_end; eIdx += threadPerBlock){
+		// 	unsigned col = edgeToColumn[eIdx];
+		// 	if (i * BLK_W <= col && col < (i + 1) * BLK_W){			// if the edge in the current TC_block frame of column.
+		// 		unsigned row_local = edgeToRow[eIdx] % BLK_H;
+		// 		unsigned col_local = col % BLK_W;
+		// 		sparse_A[row_local * BLK_W + col_local] = 1;		// set the edge of the sparse_A.
+		// 		sparse_AToX_index[col_local] = edgeList[eIdx];		// record the mapping from sparse_A colId to rowId of dense_X.
+		// 	}		
+		// }
 
-		__syncthreads();
+		// __syncthreads();
 
 		// Initialize dense_X by column-major store,
 		// Threads of a warp for fetching a dense_X.
 		// each warp identify by wid.
+
 		if (wid < dimTileNum)
 			#pragma unroll
 			for (unsigned idx = laneid; idx < BLK_W * BLK_H; idx += warpSize){
