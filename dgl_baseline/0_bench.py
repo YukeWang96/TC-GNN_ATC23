@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 import os
 
-# model = 'gcn'
-# hidden = [16]
-# num_layers = 2
+model = 'gcn'
+hidden = [16]
+num_layers = 2
 
-model = 'agnn'
-hidden = [32]
-num_layers = 4
+# model = 'agnn'
+# hidden = [32]
+# num_layers = 4
 
 dataset = [
 		('citeseer'	        , 3703	    , 6   ),  
