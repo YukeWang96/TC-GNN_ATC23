@@ -8,3 +8,6 @@ data/
 *dist
 *build
 tcgnn-ae-graphs
+*.tar.gz
+*.csv
+*.log

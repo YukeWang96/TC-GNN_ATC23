@@ -43,7 +43,7 @@ pip install torch==1.8.0+cu111 torchvision==0.9.0+cu111 torchaudio==0.8.0 -f htt
 + Install [**`Deep Graph Library (DGL)`**](https://github.com/dmlc/dgl).
 ```
 conda install -c dglteam dgl-cuda11.0
-pip install torch requests
+pip install torch requests tqdm
 ```
 
 + Install [**`Pytorch-Geometric (PyG)`**](https://github.com/rusty1s/pytorch_geometric).
