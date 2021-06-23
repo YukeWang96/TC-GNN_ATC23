@@ -2,13 +2,13 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-# model = 'gcn'
-# hidden = [16]
-# num_layers = [2]
+model = 'gcn'
+hidden = [16]
+num_layers = [2]
 
-model = 'agnn'
-hidden = [32]
-num_layers = [4]
+# model = 'agnn'
+# hidden = [32]
+# num_layers = [4]
 
 dataset = [
 		# ('toy'	        , 3	    , 2   ),  
@@ -24,7 +24,7 @@ dataset = [
 		('OVCAR-8H'                  , 66       , 2) , 
 		('Yeast'                     , 74       , 2) ,
 		('DD'                        , 89       , 2) ,
-		('SW-620H'                   , 66       , 2) ,
+		('YeastH'                    , 75       , 2) ,   
 
 		( 'amazon0505'               , 96	  , 22),
 		( 'artist'                   , 100	  , 12),
@@ -32,7 +32,7 @@ dataset = [
 		( 'soc-BlogCatalog'	         , 128	  , 39),      
 		( 'amazon0601'  	         , 96	  , 22), 
 
-		# ('YeastH'                    , 75       , 2) ,   
+		# ('SW-620H'                   , 66       , 2) ,
 		# ( 'web-BerkStan'             , 100	  , 12),
 	    # ( 'reddit'                   , 602    , 41),
 		# ( 'wiki-topcats'             , 300	  , 12),

@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 import os
 
-hidden = [16] 
+# model = 'gcn'
+# hidden = [16]
+# num_layers = 2
+
+model = 'agnn'
+hidden = [32]
+num_layers = 4
 
 dataset = [
 		('citeseer'	        , 3703	    , 6   ),  
@@ -26,6 +32,12 @@ dataset = [
 for hid in hidden:
 	for data, d, c in dataset:
 		print("=> {}, hidden: {}".format(data, hid))
-		command = "python train.py --dataset {} --dim {} --n-hidden {} --num_classes {}".format(data, d, hid, c)		
+		command = "python train.py \
+					--dataset {} \
+					--model {}\
+					--dim {} \
+					--n-hidden {} \
+					--n-layers {} \
+					--num_classes {}".format(data, model, d, hid, num_layers, c)		
 		os.system(command)
 		print()
