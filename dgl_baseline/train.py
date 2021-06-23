@@ -77,9 +77,9 @@ def main(args):
     for _ in tqdm(range(1, args.n_epochs + 1)):
         logits = model(features)
         loss = loss_fcn(logits[:], labels[:])
-        # optimizer.zero_grad()
-        # loss.backward()
-        # optimizer.step()
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
 
     torch.cuda.synchronize() 
     dur = time.perf_counter() - t0
