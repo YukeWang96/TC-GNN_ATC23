@@ -58,7 +58,7 @@ pip install torch-geometric
 ### Install **`TC-GNN`**.
 Go to `TCGNN_conv/`, then run
 ```
-python setup.py install
+./build.sh
 ``` 
 to install the TCGNN_conv modules with Pytorch binding. 
 **Note that this step is required for both Docker and Conda setup.**
