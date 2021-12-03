@@ -1,5 +1,14 @@
-# TC-GNN (Running Sparse GNN on Dense Tensor Core)
-**Note: this project is under active development**
+# TC-GNN (Running Sparse GNN on Dense Tensor Core on Ampere GPU)
+
++ **Cite this project and [paper]().**
+```
+@inproceedings{TC-GNN,
+  title={TC-GNN: Accelerating Sparse Graph Neural Network Computation Via Dense Tensor Core on GPUs},
+  author={Yuke Wang and Boyuan Feng and Yufei Ding},
+  booktitle={Arxiv},
+  year={2022}
+}
+```
 
 + **Clone this project**.
 ```
