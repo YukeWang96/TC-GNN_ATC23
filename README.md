@@ -1,6 +1,6 @@
 # TC-GNN (Running Sparse GNN on Dense Tensor Core on Ampere GPU)
 
-+ **Cite this project and [paper]().**
++ **Cite this project and [paper](https://arxiv.org/abs/2112.02052).**
 ```
 @inproceedings{TC-GNN,
   title={TC-GNN: Accelerating Sparse Graph Neural Network Computation Via Dense Tensor Core on GPUs},
