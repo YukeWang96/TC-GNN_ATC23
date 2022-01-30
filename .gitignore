@@ -8,3 +8,4 @@ data/
 *dist
 *build
 tcgnn-ae-graphs
+*build*

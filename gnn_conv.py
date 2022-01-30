@@ -3,6 +3,7 @@ import torch
 import sys
 import math
 import time 
+from torch_sparse import spmm
 
 from tqdm.std import tqdm
 import TCGNN
@@ -174,6 +175,10 @@ class SAG(torch.nn.Module):
         self.blockPartition = blockPartition
         self.edgeToColumn = edgeToColumn
         self.edgeToRow = edgeToRow
+        
+        self.num_nodes = len(self.row_pointers) - 1
+        self.num_edges = column_index.size(1)
+        self.edge_val = [1] * self.num_edges
 
 
     def profile(self, X, num_rounds=1):
@@ -188,6 +193,15 @@ class SAG(torch.nn.Module):
         dur = time.perf_counter() - start
         # print("=> SAG profiling avg (ms): {:.3f}".format(dur*1e3/num_rounds))
         # print()
+        
+    def validate(self, X):
+        ref = spmm(torch.tensor(self.column_index,  dtype=torch.int64), \
+                                torch.FloatTensor(self.val), self.num_nodes, self.num_nodes, X)
+        out = TCGNNFunction_SAG.apply(X, self.row_pointers, self.column_index, \
+                            self.blockPartition, self.edgeToColumn, self.edgeToRow)
+        
+        print(ref)
+        print(out)
 
 class GCNConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):

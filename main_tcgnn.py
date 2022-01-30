@@ -68,7 +68,8 @@ if args.single_kernel:
     SAG_obj = SAG(row_pointers, column_index,\
                     blockPartition, edgeToColumn, edgeToRow)
     X = dataset.x
-    SAG_obj.profile(X)
+    # SAG_obj.profile(X)
+    SAG_obj.validate(X)
     exit(0)
 
 #########################################

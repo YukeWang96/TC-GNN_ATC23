@@ -7,7 +7,7 @@ hidden = [16]
 num_layers = [2]
 single_kernel = True
 kernel_profile = False
-sparsity = 1
+
 # model = 'gin'
 # hidden = [32]
 # num_layers = [4]
