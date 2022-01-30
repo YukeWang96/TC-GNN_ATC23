@@ -39,6 +39,7 @@ num_nodes = dataset.num_nodes
 num_edges = dataset.num_edges
 column_index =  dataset.column_index 
 row_pointers = dataset.row_pointers
+edge_index = dataset.edge_index
 
 #########################################
 ## Compute TC-GNN related graph MetaData.
@@ -69,7 +70,7 @@ if args.single_kernel:
                     blockPartition, edgeToColumn, edgeToRow)
     X = dataset.x
     # SAG_obj.profile(X)
-    SAG_obj.validate(X)
+    SAG_obj.validate(X, edge_index)
     exit(0)
 
 #########################################

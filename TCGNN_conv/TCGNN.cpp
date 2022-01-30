@@ -14,6 +14,13 @@ void fill_edgeToRow_cuda(int* edgeToRow, int *nodePointer, int num_nodes);
 void fill_window_cuda(int* edgeToColumn, int* blockPartition, int* nodePointer,
                       int* edgeList, int blockSize_h, int blockSize_w, int num_nodes);
 
+
+torch::Tensor SAG_cuda(
+    torch::Tensor input,
+    torch::Tensor row_pointers,
+    torch::Tensor column_index
+);
+
 std::vector<torch::Tensor> spmm_forward_cuda(
       torch::Tensor nodePointer,
     torch::Tensor edgeList,
@@ -55,6 +62,18 @@ std::vector<torch::Tensor> sddmm_forward_cuda(
 #define CHECK_CONTIGUOUS(x) TORCH_CHECK(x.is_contiguous(), #x " must be contiguous")
 #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
 
+
+torch::Tensor SAG(
+    torch::Tensor input,
+    torch::Tensor row_pointers,
+    torch::Tensor column_index) 
+{
+  CHECK_INPUT(input);
+  CHECK_INPUT(row_pointers);
+  CHECK_INPUT(column_index);
+
+  return SAG_cuda(input, row_pointers, column_index);
+}
 //////////////////////////////////////////
 //
 // SPMM Foward Pass (GCN, GraphSAGE)
@@ -255,6 +274,38 @@ void preprocess_gpu(torch::Tensor edgeList_tensor,
     printf("TC_Blocks:\t%d\nExp_Edges:\t%d\n", block_counter, block_counter * 8 * 16);
 }
 
+torch::Tensor SpMM_validate(
+    torch::Tensor input,
+    torch::Tensor row_pointers,
+    torch::Tensor column_index
+){  
+
+  torch::Device device(torch::kCPU);
+  torch::Tensor output_cpu = torch::zeros_like(input).to(device);
+  torch::Tensor input_cpu = input.to(device);
+  torch::Tensor row_pointers_cpu= row_pointers.to(device);
+  torch::Tensor column_index_cpu = column_index.to(device);
+
+  auto output_cpu_acc = output_cpu.accessor<float,2>();
+  auto input_cpu_acc = input_cpu.accessor<float,2>();
+  auto row_pointers_cpu_acc = row_pointers_cpu.accessor<int,1>();
+  auto column_index_cpu_acc = column_index_cpu.accessor<int,1>();
+
+  // Iterate all nodes. 
+  for (int s_nid = 0; s_nid < input_cpu.size(0); s_nid++){
+    int nb_begin = row_pointers_cpu_acc[s_nid];
+    int nb_end = row_pointers_cpu_acc[s_nid + 1];
+
+    for (int nb_idx = nb_begin; nb_idx < nb_end; nb_idx++){
+      int nid = column_index_cpu_acc[nb_idx];
+      for (int d = 0; d < input_cpu.size(1); d++){
+        output_cpu_acc[s_nid][d] +=input_cpu_acc[nid][d];
+      }
+    }
+  }
+  return output_cpu;
+}
+
 
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
@@ -262,7 +313,10 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   m.def("preprocess_gpu", &preprocess_gpu, "Preprocess Step (CUDA)");
 
   // forward computation
+  m.def("SAG", &SAG, "GNNAdvisor base Scatter-and-Gather Kernel (CUDA)");
   m.def("forward", &spmm_forward, "TC-GNN SPMM forward (CUDA)");
+  m.def("SpMM_validate", &SpMM_validate, "SpMM validate kernel on (CPU)");
+
   m.def("forward_ef", &sddmm_forward, "TC-GNN SDDMM forward (CUDA)");
   m.def("forward_AGNN", &spmm_forward_AGNN, "TC-GNN SPMM (AGNN) forward (CUDA)");
 

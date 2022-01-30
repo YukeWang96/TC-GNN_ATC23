@@ -17,22 +17,22 @@ dataset = [
         # ('tc_gnn_verify'	, 16	, 2),
         # ('tc_gnn_verify_2x'	, 16	, 2),
 
-        # ('citeseer'	        		, 3703	    , 6   ),  
-        # ('cora' 	        		, 1433	    , 7   ),  
-        # ('pubmed'	        		, 500	    , 3   ),      
-        # ('ppi'	            		, 50	    , 121 ),   
+        ('citeseer'	        		, 3703	    , 6   ),  
+        ('cora' 	        		, 1433	    , 7   ),  
+        ('pubmed'	        		, 500	    , 3   ),      
+        ('ppi'	            		, 50	    , 121 ),   
         
-        # ('PROTEINS_full'             , 29       , 2) ,   
-        # ('OVCAR-8H'                  , 66       , 2) , 
-        # ('Yeast'                     , 74       , 2) ,
-        # ('DD'                        , 89       , 2) ,
-        # ('SW-620H'                   , 66       , 2) ,
+        ('PROTEINS_full'             , 29       , 2) ,   
+        ('OVCAR-8H'                  , 66       , 2) , 
+        ('Yeast'                     , 74       , 2) ,
+        ('DD'                        , 89       , 2) ,
+        ('SW-620H'                   , 66       , 2) ,
 
         ( 'amazon0505'               , 96	  , 22),
-        # ( 'artist'                   , 100	  , 12),
-        # ( 'com-amazon'               , 96	  , 22),
-        # ( 'soc-BlogCatalog'	         , 128	  , 39),      
-        # ( 'amazon0601'  	         , 96	  , 22), 
+        ( 'artist'                   , 100	  , 12),
+        ( 'com-amazon'               , 96	  , 22),
+        ( 'soc-BlogCatalog'	         , 128	  , 39),      
+        ( 'amazon0601'  	         , 96	  , 22), 
 
         # ('YeastH'                    , 75       , 2) ,   
         # ( 'web-BerkStan'             , 100	  , 12),
@@ -55,7 +55,7 @@ for n_Layer in num_layers:
                                             --classes {} \
                                             --num_layers {} \
                                             --model {}"\
-                    .format(data, 1024, hid, c, n_Layer, model)
+                    .format(data, hid, hid, c, n_Layer, model)
             if single_kernel:
                 command += " --single_kernel"
             if kernel_profile:

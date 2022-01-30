@@ -130,6 +130,7 @@ class TCGNN_dataset(torch.nn.Module):
         scipy_coo = coo_matrix((val, self.edge_index), shape=(self.num_nodes, self.num_nodes))
         scipy_csr = scipy_coo.tocsr()
         build_csr = time.perf_counter() - start
+        self.edge_index = torch.tensor(self.edge_index).long().cuda()
 
         if self.verbose_flag:
             print("# Build CSR (s): {:.3f}".format(build_csr))
@@ -146,7 +147,8 @@ class TCGNN_dataset(torch.nn.Module):
         Generate node embedding for nodes.
         Called from __init__.
         '''
-        self.x = torch.randn(self.num_nodes, dim).cuda()
+        # self.x = torch.randn(self.num_nodes, dim).cuda()
+        self.x = torch.ones(self.num_nodes, dim).cuda()
     
     def init_labels(self, num_class):
         '''

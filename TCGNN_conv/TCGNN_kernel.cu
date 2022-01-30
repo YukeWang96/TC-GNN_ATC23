@@ -10,12 +10,19 @@
 #include <cuda_runtime.h>
 
 #include "config.h"
-// #define WPB 4 // --> 64 = 16 * 4
-// #define WPB 8 // --> 128 = 16 * 8
-#define WPB 16	// --> 256 = 16 * 16
-// #define WPB 32	// --> 512 = 32 * 16
+// #define WPB 4 // --> MAX_DIM: 64 = 16 * 4
+// #define WPB 8 // --> MAX_DIM: 128 = 16 * 8
+#define WPB 16	// --> 	MAX_DIM: 256 = 16 * 16
+// #define WPB 32	// --> MAX_DIM: 512 = 32 * 16
 
 __global__ void warmup(){}
+
+__device__ inline 
+void atomicAdd_F(float* address, float value){
+  float old = value;  
+  while ((old = atomicExch(address, atomicExch(address, 0.0f)+old))!=0.0f);
+}
+
 
 using namespace nvcuda;
 
@@ -121,6 +128,75 @@ void fill_window_cuda(	int* edgeToColumn,
 		printf("CUDA error: %s\n", cudaGetErrorString(error));
 		exit(-1);
 	}
+}
+
+template <typename scalar_t>
+__global__ void SAG_base_cuda_kernel(
+    torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> output,
+    torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> input,
+    torch::PackedTensorAccessor32<int,1,torch::RestrictPtrTraits> row_pointers, 
+    torch::PackedTensorAccessor32<int,1,torch::RestrictPtrTraits> column_index,
+    const int num_nodes, 
+    const int dim
+);
+
+torch::Tensor SAG_cuda(
+    torch::Tensor input,
+    torch::Tensor row_pointers,
+    torch::Tensor column_index
+){
+    // auto output_ref = torch::zeros_like(input);
+    auto output = torch::zeros_like(input);
+    const int num_nodes = output.size(0);
+    const int dim = output.size(1);
+
+    int block = 4 * 32;
+    int grid = (num_nodes * 32 + block - 1)/block;
+
+    SAG_base_cuda_kernel<float><<<grid, block>>>(
+                    output.packed_accessor32<float,2,torch::RestrictPtrTraits>(),
+                    input.packed_accessor32<float,2,torch::RestrictPtrTraits>(),
+                    row_pointers.packed_accessor32<int,1,torch::RestrictPtrTraits>(), 
+                    column_index.packed_accessor32<int,1,torch::RestrictPtrTraits>(),
+					num_nodes,
+					dim);
+
+    cudaDeviceSynchronize();
+    cudaError_t error = cudaGetLastError();
+    if(error != cudaSuccess){
+        printf("CUDA error @ SAG_base_cuda_kernel: %s\n", cudaGetErrorString(error));
+        exit(-1);
+    }
+    return output;
+}
+
+
+template <typename scalar_t>
+__global__ void SAG_base_cuda_kernel(
+    torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> output,
+    torch::PackedTensorAccessor32<scalar_t,2,torch::RestrictPtrTraits> input,
+    torch::PackedTensorAccessor32<int,1,torch::RestrictPtrTraits> row_pointers, 
+    torch::PackedTensorAccessor32<int,1,torch::RestrictPtrTraits> column_index,
+    const int num_nodes, 
+    const int dim
+) {
+
+    int tid =  blockIdx.x * blockDim.x + threadIdx.x;         // global thread-id
+    int warpId = tid / WARP_SIZE;                             // global warp-id (node-id)
+    int laneid = threadIdx.x % WARP_SIZE;                     // warp thread-id -- laneid
+
+    if (warpId < num_nodes){
+        int neighborBeg = row_pointers[warpId];        // partitioning pointer start
+        int neighborEnd = row_pointers[warpId + 1];    // part pointer end
+        // output the result to global memory from the shared memory
+        for (int nidx = neighborBeg; nidx < neighborEnd; nidx++){
+            int nid = column_index[nidx];
+            #pragma unroll
+            for (int d = laneid; d < dim; d += 32){
+                atomicAdd_F((float*)&output[warpId][d], input[nid][d]);
+            }
+        }
+    }
 }
 
 //////////////////////

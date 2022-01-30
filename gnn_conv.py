@@ -177,7 +177,7 @@ class SAG(torch.nn.Module):
         self.edgeToRow = edgeToRow
         
         self.num_nodes = len(self.row_pointers) - 1
-        self.num_edges = column_index.size(1)
+        self.num_edges = column_index.size(0)
         self.edge_val = [1] * self.num_edges
 
 
@@ -194,14 +194,21 @@ class SAG(torch.nn.Module):
         # print("=> SAG profiling avg (ms): {:.3f}".format(dur*1e3/num_rounds))
         # print()
         
-    def validate(self, X):
-        ref = spmm(torch.tensor(self.column_index,  dtype=torch.int64), \
-                                torch.FloatTensor(self.val), self.num_nodes, self.num_nodes, X)
+    def validate(self, X, edge_index):
+        # print(X)
+        # ref = spmm(edge_index.cpu(), torch.FloatTensor(self.edge_val).cpu(), self.num_nodes, self.num_nodes, X.cpu())
+        # ref = TCGNN.SpMM_validate(X, self.row_pointers, self.column_index)
+        ref = TCGNN.SAG(X, self.row_pointers, self.column_index)
         out = TCGNNFunction_SAG.apply(X, self.row_pointers, self.column_index, \
                             self.blockPartition, self.edgeToColumn, self.edgeToRow)
         
-        print(ref)
-        print(out)
+        # print("+++++++++++Reference++++++++++++")
+        # print(ref)
+        # print("===========Output===============")
+        # print(out)
+        status = torch.equal(ref, out)
+        print("SpMM Validation: ", status)
+        print("----------------------------------")
 
 class GCNConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):
