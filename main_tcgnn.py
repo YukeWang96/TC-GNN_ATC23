@@ -70,7 +70,7 @@ if args.single_kernel:
                     blockPartition, edgeToColumn, edgeToRow)
     X = dataset.x
     # SAG_obj.profile(X)
-    SAG_obj.validate(X, edge_index)
+    SAG_obj.validate(X)
     exit(0)
 
 #########################################
