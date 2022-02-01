@@ -15,17 +15,17 @@ dataset = [
 		# ('DD'                        , 89       , 2) ,
 		# ('YeastH'                    , 75       , 2) ,   
 
-		# ( 'amazon0505'               , 16	  , 22),
-		# ( 'artist'                   , 100	  , 12),
-		# ( 'com-amazon'               , 96	  , 22),
-		# ( 'soc-BlogCatalog'	         , 128	  , 39),      
-		# ( 'amazon0601'  	         , 96	  , 22), 
+		( 'amazon0505'               , 16	  , 22),
+		( 'artist'                   , 100	  , 12),
+		( 'com-amazon'               , 96	  , 22),
+		( 'soc-BlogCatalog'	         , 128	  , 39),      
+		( 'amazon0601'  	         , 96	  , 22), 
 ]
 
 
 for hid in hidden:
 	for data, d, c in dataset:
 		print("=> {}, hidden: {}".format(data, hid))
-		command = "python train.py --dataset {} --dim {} --n-hidden {} --num_classes {}".format(data, d, hid, c)		
+		command = "python train.py --dataset {} --dim {} --n-hidden {} --num_classes {}".format(data, hid, hid, c)		
 		os.system(command)
 		print()

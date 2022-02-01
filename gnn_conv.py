@@ -231,7 +231,7 @@ class SAG(torch.nn.Module):
         # print(X)
         # print(self.row_pointers)
         # print(self.column_index)
-        ref = TCGNN.cusparse_spmm(X, self.row_pointers, self.column_index)[0]        
+        # ref = TCGNN.cusparse_spmm(X, self.row_pointers, self.column_index)[0]        
         out = TCGNNFunction_SAG.apply(X, self.row_pointers, self.column_index, \
                             self.blockPartition, self.edgeToColumn, self.edgeToRow)
         
@@ -239,10 +239,10 @@ class SAG(torch.nn.Module):
         # print(ref)
         # print("===========Output===============")
         # print(out)
-        status = torch.equal(ref, out)
-        print("SpMM Validation: ", status)
-        print("----------------------------------")
-        exit(0)
+        # status = torch.equal(ref, out)
+        # print("SpMM Validation: ", status)
+        # print("----------------------------------")
+        # exit(0)
         
 class GCNConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):

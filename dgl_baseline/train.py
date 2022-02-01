@@ -19,7 +19,7 @@ parser.add_argument("--num_classes", type=int, default=22, help="num_classes")
 parser.add_argument("--n-epochs", type=int, default=1, help="number of training epochs")
 parser.add_argument("--n-hidden", type=int, default=16, help="number of hidden gcn units")
 parser.add_argument("--n-layers", type=int, default=4, help="number of layers")
-parser.add_argument("--model", type=str, default='agnn', choices=['gcn', 'agnn'], help="type of model")
+parser.add_argument("--model", type=str, default='gcn', choices=['gcn', 'agnn'], help="type of model")
 args = parser.parse_args()
 print(args)
 
@@ -57,19 +57,19 @@ def main(args):
     loss_fcn = torch.nn.CrossEntropyLoss()
 
     # use optimizer
-    optimizer = torch.optim.Adam(model.parameters(),
-                                 lr=1e-2,
-                                 weight_decay=5e-4)
+    # optimizer = torch.optim.Adam(model.parameters(),
+    #                              lr=1e-2,
+    #                              weight_decay=5e-4)
 
     ##########################
     # Training GNN model.
     ##########################
     model = model.cuda()
-    model.train()
+    # model.train()
 
     # dry run.
     for _ in range(3):
-         model(features)
+        model(features)
     
     torch.cuda.synchronize() 
     t0 = time.perf_counter()
@@ -77,13 +77,13 @@ def main(args):
     for _ in tqdm(range(1, args.n_epochs + 1)):
         logits = model(features)
         loss = loss_fcn(logits[:], labels[:])
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+        # optimizer.zero_grad()
+        # loss.backward()
+        # optimizer.step()
 
     torch.cuda.synchronize() 
     dur = time.perf_counter() - t0
-    print("Time(ms) {:.3f}". format(dur*1e3/args.n_epochs))
+    print("Time (ms) {:.3f}". format(dur*1e3/args.n_epochs))
 
 if __name__ == '__main__':
     main(args)

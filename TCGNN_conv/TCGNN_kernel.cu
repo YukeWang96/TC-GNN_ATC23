@@ -362,9 +362,9 @@ std::vector<torch::Tensor> cusparse_spmm_forward_cuda(
 	cudaEventRecord(stop, 0);
 	cudaEventSynchronize(stop);
 	float gflop = 2*num_edges*embedding_dim/1e6;
-	// printf("gflop: %.3f, embedding_dim: %d\n", gflop, embedding_dim);
 	float milliseconds;
 	cudaEventElapsedTime(&milliseconds, start, stop);
+	// printf("gflop: %.3f, embedding_dim: %d\n", gflop, embedding_dim);
 	printf("cuSPARSE cusparseSpMM -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
 	printf("================================\n");
 	#endif
@@ -416,57 +416,48 @@ std::vector<torch::Tensor> spmm_forward_cuda(
 	const int dynamic_shared_size = dimTileNum * BLK_W * BLK_H * sizeof(float); // dynamic shared memory.
 
 	#define PROFILE 10
-
 	#ifdef PROFILE
-
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);
     cudaEventCreate(&stop);
-
 	for (int i=0; i<PROFILE; i++) {
         warmup<<<1,1>>>();
     }
 
 	cudaEventRecord(start, 0);
-	
 	for (int i=0; i<PROFILE; i++) 
 	#endif 
 
-		spmm_forward_cuda_kernel<<<grid, block, dynamic_shared_size>>>(
-																		nodePointer.data<int>(), 
-																		edgeList.data<int>(),
-																		blockPartition.data<int>(), 
-																		edgeToColumn.data<int>(), 
-																		edgeToRow.data<int>(), 
-																		num_nodes,
-																		num_edges,
-																		embedding_dim,
-																		input.data<float>(), 
-																		output.data<float>()
-																	);
+	spmm_forward_cuda_kernel<<<grid, block, dynamic_shared_size>>>(
+																	nodePointer.data<int>(), 
+																	edgeList.data<int>(),
+																	blockPartition.data<int>(), 
+																	edgeToColumn.data<int>(), 
+																	edgeToRow.data<int>(), 
+																	num_nodes,
+																	num_edges,
+																	embedding_dim,
+																	input.data<float>(), 
+																	output.data<float>()
+																);
 
 	#ifdef PROFILE
 	cudaEventRecord(stop, 0);
 	cudaEventSynchronize(stop);
-	float gflop = 2*num_edges/1e6*embedding_dim;
-	// printf("embedding_dim: %d\n", embedding_dim);
-	printf("gflop: %.3f, embedding_dim: %d\n", gflop, embedding_dim);
-
 	float milliseconds;
 	cudaEventElapsedTime(&milliseconds, start, stop);
-	printf("TC-GNN -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
-	printf("================================\n");
+
+	float gflop = 2*num_edges/1e6*embedding_dim;
+	// printf("gflop: %.3f, embedding_dim: %d\n", gflop, embedding_dim);
+	printf("TC-GNN @ spmm_forward_cuda_kernel -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
+	// printf("================================\n");
 	#endif
 
-    // check for error
     cudaError_t error = cudaGetLastError();
-    if(error != cudaSuccess)
-    {
-        // print the CUDA error message and exit
+    if(error != cudaSuccess){
         printf("CUDA error: %s\n", cudaGetErrorString(error));
         exit(-1);
     }
-    
     return {output};
 }
 
