@@ -1,8 +1,5 @@
 running clean
 removing 'build/temp.linux-x86_64-3.6' (and everything under it)
-removing 'build/lib.linux-x86_64-3.6' (and everything under it)
-removing 'build/bdist.linux-x86_64' (and everything under it)
-removing 'build'
 running install
 running bdist_egg
 running egg_info
@@ -15,7 +12,6 @@ installing library code to build/bdist.linux-x86_64/egg
 running install_lib
 running build_ext
 building 'TCGNN' extension
-creating /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/build
 creating /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/build/temp.linux-x86_64-3.6
 Emitting ninja build file /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/build/temp.linux-x86_64-3.6/build.ninja...
 Compiling objects...
@@ -63,11 +59,11 @@ In file included from /usr/local/cuda-11.6/include/thrust/system/cuda/detail/uti
 /usr/local/cuda-11.6/include/cub/detail/device_synchronize.cuh:33: warning: ignoring #pragma nv_exec_check_disable  [-Wunknown-pragmas]
    33 | #pragma nv_exec_check_disable
       | 
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:212: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
-  212 |     #pragma omp parallel for
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:253: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+  253 |     #pragma omp parallel for
       | 
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:218: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
-  218 |     #pragma omp parallel for reduction(+:block_counter)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:259: warning: ignoring #pragma omp parallel [-Wunknown-pragmas]
+  259 |     #pragma omp parallel for reduction(+:block_counter)
       | 
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/DeviceType.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/Device.h:3,
@@ -83,8 +79,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
 /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp: In function ‘at::Tensor SAG(at::Tensor, at::Tensor, at::Tensor)’:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -92,14 +88,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:71:3: note: in expansion of macro ‘CHECK_INPUT’
-   71 |   CHECK_INPUT(input);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:84:3: note: in expansion of macro ‘CHECK_INPUT’
+   84 |   CHECK_INPUT(input);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -129,8 +125,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -138,14 +134,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:72:3: note: in expansion of macro ‘CHECK_INPUT’
-   72 |   CHECK_INPUT(row_pointers);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:85:3: note: in expansion of macro ‘CHECK_INPUT’
+   85 |   CHECK_INPUT(row_pointers);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -175,8 +171,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -184,14 +180,291 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:73:3: note: in expansion of macro ‘CHECK_INPUT’
-   73 |   CHECK_INPUT(column_index);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:86:3: note: in expansion of macro ‘CHECK_INPUT’
+   86 |   CHECK_INPUT(column_index);
+      |   ^~~~~~~~~~~
+In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/ATen.h:9,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/types.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader_options.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/base.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/stateful.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
+                 from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/core/TensorBody.h:303:30: note: declared here
+  303 |   DeprecatedTypeProperties & type() const {
+      |                              ^~~~
+In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/DeviceType.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/Device.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/Allocator.h:6,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/ATen.h:7,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/types.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader_options.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/base.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/stateful.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
+                 from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp: In function ‘std::vector<at::Tensor> cusparse_spmm_forward(at::Tensor, at::Tensor, at::Tensor, at::Tensor, at::Tensor, at::Tensor)’:
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+      |                                          ^
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
+  173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
+      |                                                                 ^~~~
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
+  362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
+      |       ^~~~~~~~~~~~~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+      |                       ^~~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+      |                        ^~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:102:3: note: in expansion of macro ‘CHECK_INPUT’
+  102 |   CHECK_INPUT(input);
+      |   ^~~~~~~~~~~
+In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/ATen.h:9,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/types.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader_options.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/base.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/stateful.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
+                 from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/core/TensorBody.h:303:30: note: declared here
+  303 |   DeprecatedTypeProperties & type() const {
+      |                              ^~~~
+In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/DeviceType.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/Device.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/Allocator.h:6,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/ATen.h:7,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/types.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader_options.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/base.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/stateful.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
+                 from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+      |                                          ^
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
+  173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
+      |                                                                 ^~~~
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
+  362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
+      |       ^~~~~~~~~~~~~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+      |                       ^~~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+      |                        ^~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:103:3: note: in expansion of macro ‘CHECK_INPUT’
+  103 |   CHECK_INPUT(nodePointer);
+      |   ^~~~~~~~~~~
+In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/ATen.h:9,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/types.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader_options.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/base.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/stateful.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
+                 from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/core/TensorBody.h:303:30: note: declared here
+  303 |   DeprecatedTypeProperties & type() const {
+      |                              ^~~~
+In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/DeviceType.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/Device.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/Allocator.h:6,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/ATen.h:7,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/types.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader_options.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/base.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/stateful.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
+                 from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+      |                                          ^
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
+  173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
+      |                                                                 ^~~~
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
+  362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
+      |       ^~~~~~~~~~~~~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+      |                       ^~~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+      |                        ^~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:104:3: note: in expansion of macro ‘CHECK_INPUT’
+  104 |   CHECK_INPUT(edgeList);
+      |   ^~~~~~~~~~~
+In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/ATen.h:9,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/types.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader_options.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/base.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/stateful.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
+                 from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/core/TensorBody.h:303:30: note: declared here
+  303 |   DeprecatedTypeProperties & type() const {
+      |                              ^~~~
+In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/DeviceType.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/Device.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/Allocator.h:6,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/ATen.h:7,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/types.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader_options.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/base.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/stateful.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
+                 from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+      |                                          ^
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
+  173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
+      |                                                                 ^~~~
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
+  362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
+      |       ^~~~~~~~~~~~~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+      |                       ^~~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+      |                        ^~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:105:3: note: in expansion of macro ‘CHECK_INPUT’
+  105 |   CHECK_INPUT(blockPartition);
+      |   ^~~~~~~~~~~
+In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/ATen.h:9,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/types.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader_options.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/base.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/stateful.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
+                 from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/core/TensorBody.h:303:30: note: declared here
+  303 |   DeprecatedTypeProperties & type() const {
+      |                              ^~~~
+In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/DeviceType.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/Device.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/Allocator.h:6,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/ATen.h:7,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/types.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader_options.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/base.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/stateful.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
+                 from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+      |                                          ^
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
+  173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
+      |                                                                 ^~~~
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
+  362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
+      |       ^~~~~~~~~~~~~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+      |                       ^~~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+      |                        ^~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:106:3: note: in expansion of macro ‘CHECK_INPUT’
+  106 |   CHECK_INPUT(edgeToColumn);
+      |   ^~~~~~~~~~~
+In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/ATen.h:9,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/types.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader_options.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/base.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/stateful.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
+                 from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/core/TensorBody.h:303:30: note: declared here
+  303 |   DeprecatedTypeProperties & type() const {
+      |                              ^~~~
+In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/DeviceType.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/Device.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/core/Allocator.h:6,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/ATen.h:7,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/types.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader_options.h:4,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/base.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader/stateful.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data/dataloader.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/data.h:3,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
+                 from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
+                 from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+      |                                          ^
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
+  173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
+      |                                                                 ^~~~
+/home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
+  362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
+      |       ^~~~~~~~~~~~~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+      |                       ^~~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+      |                        ^~~~~~~~~~
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:107:3: note: in expansion of macro ‘CHECK_INPUT’
+  107 |   CHECK_INPUT(edgeToRow);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -222,8 +495,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
 /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp: In function ‘std::vector<at::Tensor> spmm_forward(at::Tensor, at::Tensor, at::Tensor, at::Tensor, at::Tensor, at::Tensor)’:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -231,14 +504,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:90:3: note: in expansion of macro ‘CHECK_INPUT’
-   90 |   CHECK_INPUT(input);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:131:3: note: in expansion of macro ‘CHECK_INPUT’
+  131 |   CHECK_INPUT(input);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -268,8 +541,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -277,14 +550,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:91:3: note: in expansion of macro ‘CHECK_INPUT’
-   91 |   CHECK_INPUT(nodePointer);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:132:3: note: in expansion of macro ‘CHECK_INPUT’
+  132 |   CHECK_INPUT(nodePointer);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -314,8 +587,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -323,14 +596,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:92:3: note: in expansion of macro ‘CHECK_INPUT’
-   92 |   CHECK_INPUT(edgeList);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:133:3: note: in expansion of macro ‘CHECK_INPUT’
+  133 |   CHECK_INPUT(edgeList);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -360,8 +633,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -369,14 +642,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:93:3: note: in expansion of macro ‘CHECK_INPUT’
-   93 |   CHECK_INPUT(blockPartition);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:134:3: note: in expansion of macro ‘CHECK_INPUT’
+  134 |   CHECK_INPUT(blockPartition);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -406,8 +679,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -415,14 +688,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:94:3: note: in expansion of macro ‘CHECK_INPUT’
-   94 |   CHECK_INPUT(edgeToColumn);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:135:3: note: in expansion of macro ‘CHECK_INPUT’
+  135 |   CHECK_INPUT(edgeToColumn);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -452,8 +725,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -461,14 +734,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:95:3: note: in expansion of macro ‘CHECK_INPUT’
-   95 |   CHECK_INPUT(edgeToRow);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:136:3: note: in expansion of macro ‘CHECK_INPUT’
+  136 |   CHECK_INPUT(edgeToRow);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -499,8 +772,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
 /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp: In function ‘std::vector<at::Tensor> spmm_forward_AGNN(at::Tensor, at::Tensor, at::Tensor, at::Tensor, at::Tensor, at::Tensor, at::Tensor)’:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -508,14 +781,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:121:3: note: in expansion of macro ‘CHECK_INPUT’
-  121 |   CHECK_INPUT(input);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:162:3: note: in expansion of macro ‘CHECK_INPUT’
+  162 |   CHECK_INPUT(input);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -545,8 +818,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -554,14 +827,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:122:3: note: in expansion of macro ‘CHECK_INPUT’
-  122 |   CHECK_INPUT(nodePointer);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:163:3: note: in expansion of macro ‘CHECK_INPUT’
+  163 |   CHECK_INPUT(nodePointer);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -591,8 +864,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -600,14 +873,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:123:3: note: in expansion of macro ‘CHECK_INPUT’
-  123 |   CHECK_INPUT(edgeList);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:164:3: note: in expansion of macro ‘CHECK_INPUT’
+  164 |   CHECK_INPUT(edgeList);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -637,8 +910,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -646,14 +919,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:124:3: note: in expansion of macro ‘CHECK_INPUT’
-  124 |   CHECK_INPUT(edgeAttention);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:165:3: note: in expansion of macro ‘CHECK_INPUT’
+  165 |   CHECK_INPUT(edgeAttention);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -683,8 +956,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -692,14 +965,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:125:3: note: in expansion of macro ‘CHECK_INPUT’
-  125 |   CHECK_INPUT(blockPartition);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:166:3: note: in expansion of macro ‘CHECK_INPUT’
+  166 |   CHECK_INPUT(blockPartition);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -729,8 +1002,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -738,14 +1011,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:126:3: note: in expansion of macro ‘CHECK_INPUT’
-  126 |   CHECK_INPUT(edgeToColumn);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:167:3: note: in expansion of macro ‘CHECK_INPUT’
+  167 |   CHECK_INPUT(edgeToColumn);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -775,8 +1048,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -784,14 +1057,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:127:3: note: in expansion of macro ‘CHECK_INPUT’
-  127 |   CHECK_INPUT(edgeToRow);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:168:3: note: in expansion of macro ‘CHECK_INPUT’
+  168 |   CHECK_INPUT(edgeToRow);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -822,8 +1095,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
 /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp: In function ‘std::vector<at::Tensor> sddmm_forward(at::Tensor, at::Tensor, at::Tensor, at::Tensor, at::Tensor, at::Tensor)’:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -831,14 +1104,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:153:3: note: in expansion of macro ‘CHECK_INPUT’
-  153 |   CHECK_INPUT(input);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:194:3: note: in expansion of macro ‘CHECK_INPUT’
+  194 |   CHECK_INPUT(input);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -868,8 +1141,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -877,14 +1150,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:154:3: note: in expansion of macro ‘CHECK_INPUT’
-  154 |   CHECK_INPUT(nodePointer);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:195:3: note: in expansion of macro ‘CHECK_INPUT’
+  195 |   CHECK_INPUT(nodePointer);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -914,8 +1187,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -923,14 +1196,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:155:3: note: in expansion of macro ‘CHECK_INPUT’
-  155 |   CHECK_INPUT(edgeList);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:196:3: note: in expansion of macro ‘CHECK_INPUT’
+  196 |   CHECK_INPUT(edgeList);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -960,8 +1233,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -969,14 +1242,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:156:3: note: in expansion of macro ‘CHECK_INPUT’
-  156 |   CHECK_INPUT(blockPartition);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:197:3: note: in expansion of macro ‘CHECK_INPUT’
+  197 |   CHECK_INPUT(blockPartition);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -1006,8 +1279,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -1015,14 +1288,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:157:3: note: in expansion of macro ‘CHECK_INPUT’
-  157 |   CHECK_INPUT(edgeToColumn);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:198:3: note: in expansion of macro ‘CHECK_INPUT’
+  198 |   CHECK_INPUT(edgeToColumn);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -1052,8 +1325,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/csrc/api/include/torch/all.h:8,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/torch/extension.h:4,
                  from /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:1:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:42: warning: ‘at::DeprecatedTypeProperties& at::Tensor::type() const’ is deprecated: Tensor.type() is deprecated. Instead use Tensor.options(), which in many cases (e.g. in a constructor) is a drop-in replacement. If you were using data from type(), that is now available from Tensor itself, so instead of tensor.type().scalar_type(), use tensor.scalar_type() instead and instead of tensor.type().backend() use tensor.device(). [-Wdeprecated-declarations]
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                                          ^
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/macros/Macros.h:173:65: note: in definition of macro ‘C10_UNLIKELY’
   173 | #define C10_UNLIKELY(expr)  (__builtin_expect(static_cast<bool>(expr), 0))
@@ -1061,14 +1334,14 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/c10/util/Exception.h:362:7: note: in expansion of macro ‘C10_UNLIKELY_OR_CONST’
   362 |   if (C10_UNLIKELY_OR_CONST(!(cond))) {                                 \
       |       ^~~~~~~~~~~~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:61:23: note: in expansion of macro ‘TORCH_CHECK’
-   61 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:74:23: note: in expansion of macro ‘TORCH_CHECK’
+   74 | #define CHECK_CUDA(x) TORCH_CHECK(x.type().is_cuda(), #x " must be a CUDA tensor")
       |                       ^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:63:24: note: in expansion of macro ‘CHECK_CUDA’
-   63 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:76:24: note: in expansion of macro ‘CHECK_CUDA’
+   76 | #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
       |                        ^~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:158:3: note: in expansion of macro ‘CHECK_INPUT’
-  158 |   CHECK_INPUT(edgeToRow);
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:199:3: note: in expansion of macro ‘CHECK_INPUT’
+  199 |   CHECK_INPUT(edgeToRow);
       |   ^~~~~~~~~~~
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -1086,27 +1359,27 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
   303 |   DeprecatedTypeProperties & type() const {
       |                              ^~~~
 /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp: In function ‘std::map<unsigned int, unsigned int> inplace_deduplication(unsigned int*, unsigned int)’:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:180:16: warning: comparison of integer expressions of different signedness: ‘int’ and ‘unsigned int’ [-Wsign-compare]
-  180 |     while (cur < length){
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:221:16: warning: comparison of integer expressions of different signedness: ‘int’ and ‘unsigned int’ [-Wsign-compare]
+  221 |     while (cur < length){
       |            ~~~~^~~~~~~~
 /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp: In function ‘void preprocess(at::Tensor, at::Tensor, int, int, int, at::Tensor, at::Tensor, at::Tensor)’:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:213:32: warning: comparison of integer expressions of different signedness: ‘unsigned int’ and ‘int’ [-Wsign-compare]
-  213 |     for (unsigned nid = 0; nid < num_nodes; nid++){
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:254:32: warning: comparison of integer expressions of different signedness: ‘unsigned int’ and ‘int’ [-Wsign-compare]
+  254 |     for (unsigned nid = 0; nid < num_nodes; nid++){
       |                            ~~~~^~~~~~~~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:214:51: warning: comparison of integer expressions of different signedness: ‘unsigned int’ and ‘int’ [-Wsign-compare]
-  214 |         for (unsigned eid = nodePointer[nid]; eid < nodePointer[nid+1]; eid++)
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:219:34: warning: comparison of integer expressions of different signedness: ‘unsigned int’ and ‘int’ [-Wsign-compare]
-  219 |     for (unsigned iter = 0; iter < num_nodes + 1; iter +=  blockSize_h){
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:255:51: warning: comparison of integer expressions of different signedness: ‘unsigned int’ and ‘int’ [-Wsign-compare]
+  255 |         for (unsigned eid = nodePointer[nid]; eid < nodePointer[nid+1]; eid++)
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:260:34: warning: comparison of integer expressions of different signedness: ‘unsigned int’ and ‘int’ [-Wsign-compare]
+  260 |     for (unsigned iter = 0; iter < num_nodes + 1; iter +=  blockSize_h){
       |                             ~~~~~^~~~~~~~~~~~~~~
 /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:11:25: warning: comparison of integer expressions of different signedness: ‘unsigned int’ and ‘int’ [-Wsign-compare]
    11 | #define min(x, y) (((x) < (y))? (x) : (y))
       |                     ~~~~^~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:222:42: note: in expansion of macro ‘min’
-  222 |         unsigned block_end = nodePointer[min(iter + blockSize_h, num_nodes)];
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:263:42: note: in expansion of macro ‘min’
+  263 |         unsigned block_end = nodePointer[min(iter + blockSize_h, num_nodes)];
       |                                          ^~~
 /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp: In function ‘void preprocess_gpu(at::Tensor, at::Tensor, int, int, int, at::Tensor, at::Tensor, at::Tensor)’:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:260:47: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
-  260 |     auto edgeList = edgeList_tensor.data<int>();
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:301:47: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
+  301 |     auto edgeList = edgeList_tensor.data<int>();
       |                                               ^
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -1123,8 +1396,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/core/TensorBody.h:398:7: note: declared here
   398 |   T * data() const {
       |       ^~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:261:53: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
-  261 |     auto nodePointer = nodePointer_tensor.data<int>();
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:302:53: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
+  302 |     auto nodePointer = nodePointer_tensor.data<int>();
       |                                                     ^
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -1141,8 +1414,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/core/TensorBody.h:398:7: note: declared here
   398 |   T * data() const {
       |       ^~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:264:59: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
-  264 |     auto blockPartition = blockPartition_tensor.data<int>();
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:305:59: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
+  305 |     auto blockPartition = blockPartition_tensor.data<int>();
       |                                                           ^
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -1159,8 +1432,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/core/TensorBody.h:398:7: note: declared here
   398 |   T * data() const {
       |       ^~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:265:55: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
-  265 |     auto edgeToColumn = edgeToColumn_tensor.data<int>();
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:306:55: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
+  306 |     auto edgeToColumn = edgeToColumn_tensor.data<int>();
       |                                                       ^
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -1177,8 +1450,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/core/TensorBody.h:398:7: note: declared here
   398 |   T * data() const {
       |       ^~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:266:49: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
-  266 |     auto edgeToRow = edgeToRow_tensor.data<int>();
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:307:49: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
+  307 |     auto edgeToRow = edgeToRow_tensor.data<int>();
       |                                                 ^
 In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/Context.h:4,
@@ -1204,11 +1477,15 @@ In file included from /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-package
 
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/core/builtin_function.h(117): warning #20236-D: pragma "diag_default" is deprecated, use "nv_diag_default" instead
 
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN_kernel.cu(66): warning #177-D: variable "lanid" was declared but never referenced
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN_kernel.cu(91): warning #177-D: variable "lanid" was declared but never referenced
 
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN_kernel.cu(70): warning #177-D: variable "num_window_edges" was declared but never referenced
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN_kernel.cu(95): warning #177-D: variable "num_window_edges" was declared but never referenced
 
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN_kernel.cu(732): warning #177-D: variable "verify_A" was declared but never referenced
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN_kernel.cu(300): warning #177-D: variable "B_size" was declared but never referenced
+
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN_kernel.cu(301): warning #177-D: variable "C_size" was declared but never referenced
+
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN_kernel.cu(882): warning #177-D: variable "verify_A" was declared but never referenced
 
 /home/yuke/anaconda3/envs/tcgnn/lib/python3.6/site-packages/torch/include/ATen/core/builtin_function.h(110): warning #20236-D: pragma "diag_suppress" is deprecated, use "nv_diag_suppress" instead
 

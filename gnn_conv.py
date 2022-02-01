@@ -3,10 +3,12 @@ import torch
 import sys
 import math
 import time 
-from torch_sparse import spmm
+# from torch_sparse import spmm
 
 from tqdm.std import tqdm
 import TCGNN
+# import cupyx
+# import cupy
 
 n_heads = 8
 n_output = 8
@@ -198,18 +200,50 @@ class SAG(torch.nn.Module):
         # print(X)
         # ref = spmm(edge_index.cpu(), torch.FloatTensor(self.edge_val).cpu(), self.num_nodes, self.num_nodes, X.cpu())
         # ref = TCGNN.SpMM_validate(X, self.row_pointers, self.column_index)
-        ref = TCGNN.SAG(X, self.row_pointers, self.column_index)
-        out = TCGNNFunction_SAG.apply(X, self.row_pointers, self.column_index, \
-                            self.blockPartition, self.edgeToColumn, self.edgeToRow)
+        # ref = TCGNN.SAG(X, self.row_pointers, self.column_index)
+        
+        '''
+        from torch.utils.dlpack import to_dlpack
+        # from torch.utils.dlpack import from_dlpack
+        import numpy as np
+        # row_pointers = cupy.fromDlpack(to_dlpack(self.row_pointers))
+        # column_index = cupy.fromDlpack(to_dlpack(self.column_index))
+
+        row_pointers = cupy.array(np.array(self.row_pointers.cpu().numpy()))
+        column_index = cupy.array(np.array(self.column_index.cpu().numpy()))
+        num_edges = len(column_index)
+        num_nodes = len(row_pointers) - 1
+        data = cupy.array(np.ones(num_edges))
+        # data = np.array(data)
+        x_cupy = cupy.fromDlpack(to_dlpack(X))
+
+        print(row_pointers)
+        print(column_index)
+        print(data)
+        
+        # print(x_cupy)
+        # exit()
+        
+        from cupyx.scipy import sparse
+        adj_mat = cupyx.scipy.sparse.csr_matrix((data, column_index, row_pointers), shape=(num_nodes, num_nodes))
+        ref = cupy.cusparse.csrmm2(adj_mat, x_cupy, alpha=1, transa=False, transb=False)
+        '''
+        # print(X)
+        # print(self.row_pointers)
+        # print(self.column_index)
+        ref = TCGNN.cusparse_spmm(X, self.row_pointers, self.column_index)        
+        # out = TCGNNFunction_SAG.apply(X, self.row_pointers, self.column_index, \
+        #                     self.blockPartition, self.edgeToColumn, self.edgeToRow)
         
         # print("+++++++++++Reference++++++++++++")
-        # print(ref)
+        print(ref)
         # print("===========Output===============")
         # print(out)
-        status = torch.equal(ref, out)
-        print("SpMM Validation: ", status)
+        # status = torch.equal(ref, out)
+        # print("SpMM Validation: ", status)
         print("----------------------------------")
-
+        exit(0)
+        
 class GCNConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):
         super(GCNConv, self).__init__()

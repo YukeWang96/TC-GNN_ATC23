@@ -9,11 +9,36 @@
 #include <mma.h>
 #include <cuda_runtime.h>
 
+#include <cuda_runtime_api.h> // cudaMalloc, cudaMemcpy, etc.
+#include <cusparse.h>         // cusparseSpMM
+
+
 #include "config.h"
 // #define WPB 4 // --> MAX_DIM: 64 = 16 * 4
 // #define WPB 8 // --> MAX_DIM: 128 = 16 * 8
 #define WPB 16	// --> 	MAX_DIM: 256 = 16 * 16
 // #define WPB 32	// --> MAX_DIM: 512 = 32 * 16
+
+#define CHECK_CUDA(func)                                                       \
+{                                                                              \
+    cudaError_t status = (func);                                               \
+    if (status != cudaSuccess) {                                               \
+        printf("CUDA API failed at line %d with error: %s (%d)\n",             \
+               __LINE__, cudaGetErrorString(status), status);                  \
+        return EXIT_FAILURE;                                                   \
+    }                                                                          \
+}
+
+#define CHECK_CUSPARSE(func)                                                   \
+{                                                                              \
+    cusparseStatus_t status = (func);                                          \
+    if (status != CUSPARSE_STATUS_SUCCESS) {                                   \
+        printf("CUSPARSE API failed at line %d with error: %s (%d)\n",         \
+               __LINE__, cusparseGetErrorString(status), status);              \
+        return EXIT_FAILURE;                                                   \
+    }                                                                          \
+}
+
 
 __global__ void warmup(){}
 
@@ -247,6 +272,121 @@ __global__ void sddmm_forward_cuda_kernel(
 	float *__restrict__ in_mat,					// input feature matrix.
 	float *edgeFeature							// aggreAGNNed output feature matrix.
 );
+
+
+
+std::vector<torch::Tensor> cusparse_spmm_forward_cuda(
+    torch::Tensor nodePointer,
+    torch::Tensor edgeList,
+              int num_nodes,
+              int num_edges,
+              int embedding_dim,
+    torch::Tensor input
+) 
+{
+	auto adj_val = torch::ones_like(edgeList).to(torch::kFloat);
+    auto output = torch::zeros_like(input);
+
+    int   A_num_rows      = num_nodes;
+    int   A_num_cols      = num_nodes;
+    int   A_nnz           = num_edges;
+    int   B_num_rows      = A_num_cols;
+    int   B_num_cols      = embedding_dim;
+    int   ldb             = B_num_rows;
+    int   ldc             = A_num_rows;
+    int   B_size          = ldb * B_num_cols;
+    int   C_size          = ldc * B_num_cols;
+
+    float alpha           = 1.0f;
+    float beta            = 0.0f;
+
+	int   *dA_csrOffsets = nodePointer.data<int>(); 
+	int   *dA_columns = edgeList.data<int>();
+    float *dA_values = adj_val.data<float>();
+	float *dB = input.data<float>(); 
+	float *dC = output.data<float>();
+
+	cusparseHandle_t     handle = NULL;
+    cusparseSpMatDescr_t matA;
+    cusparseDnMatDescr_t matB, matC;
+    void*                dBuffer    = NULL;
+    size_t               bufferSize = 0;
+
+	// CHECK_CUSPARSE( cusparseCreate(&handle) )
+	cusparseCreate(&handle);
+    // Create sparse matrix A in CSR format
+    cusparseCreateCsr(&matA, A_num_rows, A_num_cols, A_nnz,
+										dA_csrOffsets, dA_columns, dA_values,
+										CUSPARSE_INDEX_32I, CUSPARSE_INDEX_32I,
+										CUSPARSE_INDEX_BASE_ZERO, CUDA_R_32F);
+
+	// Create dense matrix B
+	cusparseCreateDnMat(&matB, A_num_cols, B_num_cols, B_num_cols, dB,
+		CUDA_R_32F, CUSPARSE_ORDER_ROW);	
+
+	// Create dense matrix C
+	 cusparseCreateDnMat(&matC, A_num_rows, B_num_cols, B_num_cols, dC,
+			CUDA_R_32F, CUSPARSE_ORDER_ROW);
+
+    // allocate an external buffer if needed
+     cusparseSpMM_bufferSize(
+		handle,
+		CUSPARSE_OPERATION_NON_TRANSPOSE,
+		CUSPARSE_OPERATION_NON_TRANSPOSE,
+		&alpha, matA, matB, &beta, matC, CUDA_R_32F,
+		CUSPARSE_SPMM_ALG_DEFAULT, &bufferSize);
+
+	cudaMalloc(&dBuffer, bufferSize);
+
+	#define PROFILE 10
+	#ifdef PROFILE
+	cudaEvent_t start, stop;
+	cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+	// dry run and warm up.
+	for (int i=0; i<PROFILE; i++) {
+        warmup<<<1,1>>>();
+    }
+
+	cudaEventRecord(start, 0);
+	for (int i=0; i<PROFILE; i++) 
+	#endif 
+    // execute SpMM
+    cusparseSpMM(handle,
+		CUSPARSE_OPERATION_NON_TRANSPOSE,
+		CUSPARSE_OPERATION_NON_TRANSPOSE,
+		&alpha, matA, matB, &beta, matC, CUDA_R_32F,
+		CUSPARSE_SPMM_ALG_DEFAULT, dBuffer);
+
+	#ifdef PROFILE
+	cudaEventRecord(stop, 0);
+	cudaEventSynchronize(stop);
+	float gflop = 2*num_edges*embedding_dim/1e6;
+	// printf("gflop: %.3f, embedding_dim: %d\n", gflop, embedding_dim);
+	float milliseconds;
+	cudaEventElapsedTime(&milliseconds, start, stop);
+	printf("TC-GNN -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
+	printf("================================\n");
+	#endif
+
+	// destroy matrix/vector descriptors
+	cusparseDestroySpMat(matA);
+	cusparseDestroyDnMat(matB);
+	cusparseDestroyDnMat(matC);
+	cusparseDestroy(handle);
+
+    // check for error
+    cudaError_t error = cudaGetLastError();
+    if(error != cudaSuccess){
+        // print the CUDA error message and exit
+        printf("CUDA error: %s\n", cudaGetErrorString(error));
+        exit(-1);
+    }
+    
+    return {output};
+}
+
+
 
 ////////////////////////////////////////////
 //

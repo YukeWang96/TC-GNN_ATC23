@@ -21,6 +21,16 @@ torch::Tensor SAG_cuda(
     torch::Tensor column_index
 );
 
+
+std::vector<torch::Tensor> cusparse_spmm_forward_cuda(
+      torch::Tensor nodePointer,
+    torch::Tensor edgeList,
+              int num_nodes,
+              int num_edges,
+              int embedding_dim,
+    torch::Tensor input
+  );
+
 std::vector<torch::Tensor> spmm_forward_cuda(
       torch::Tensor nodePointer,
     torch::Tensor edgeList,
@@ -74,10 +84,31 @@ torch::Tensor SAG(
 
   return SAG_cuda(input, row_pointers, column_index);
 }
+
 //////////////////////////////////////////
-//
+// cuSPSPMM Foward Pass (GCN, GraphSAGE)
+////////////////////////////////////////////
+std::vector<torch::Tensor> cusparse_spmm_forward(
+    torch::Tensor input,
+    torch::Tensor nodePointer,
+    torch::Tensor edgeList
+) {
+  CHECK_INPUT(input);
+  CHECK_INPUT(nodePointer);
+  CHECK_INPUT(edgeList);
+
+  int num_nodes = nodePointer.size(0) - 1;
+  int num_edges = edgeList.size(0);
+  int embedding_dim = input.size(1);
+
+  return cusparse_spmm_forward_cuda(nodePointer, edgeList, \
+                                    num_nodes, num_edges, embedding_dim, \
+                                    input);
+}
+
+
+//////////////////////////////////////////
 // SPMM Foward Pass (GCN, GraphSAGE)
-//
 ////////////////////////////////////////////
 std::vector<torch::Tensor> spmm_forward(
     torch::Tensor input,
@@ -315,6 +346,8 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   // forward computation
   m.def("SAG", &SAG, "GNNAdvisor base Scatter-and-Gather Kernel (CUDA)");
   m.def("forward", &spmm_forward, "TC-GNN SPMM forward (CUDA)");
+  m.def("cusparse_spmm", &cusparse_spmm_forward, "GNNAdvisor base Scatter-and-Gather Kernel (CUDA)");
+
   m.def("SpMM_validate", &SpMM_validate, "SpMM validate kernel on (CPU)");
 
   m.def("forward_ef", &sddmm_forward, "TC-GNN SDDMM forward (CUDA)");

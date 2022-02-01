@@ -34,4 +34,5 @@ class GCN(nn.Module):
         h = features
         for i, layer in enumerate(self.layers):
             h = layer(self.g, h)
+            exit(0)
         return h
