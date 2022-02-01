@@ -231,16 +231,16 @@ class SAG(torch.nn.Module):
         # print(X)
         # print(self.row_pointers)
         # print(self.column_index)
-        ref = TCGNN.cusparse_spmm(X, self.row_pointers, self.column_index)        
-        # out = TCGNNFunction_SAG.apply(X, self.row_pointers, self.column_index, \
-        #                     self.blockPartition, self.edgeToColumn, self.edgeToRow)
+        ref = TCGNN.cusparse_spmm(X, self.row_pointers, self.column_index)[0]        
+        out = TCGNNFunction_SAG.apply(X, self.row_pointers, self.column_index, \
+                            self.blockPartition, self.edgeToColumn, self.edgeToRow)
         
         # print("+++++++++++Reference++++++++++++")
-        print(ref)
+        # print(ref)
         # print("===========Output===============")
         # print(out)
-        # status = torch.equal(ref, out)
-        # print("SpMM Validation: ", status)
+        status = torch.equal(ref, out)
+        print("SpMM Validation: ", status)
         print("----------------------------------")
         exit(0)
         

@@ -365,7 +365,7 @@ std::vector<torch::Tensor> cusparse_spmm_forward_cuda(
 	// printf("gflop: %.3f, embedding_dim: %d\n", gflop, embedding_dim);
 	float milliseconds;
 	cudaEventElapsedTime(&milliseconds, start, stop);
-	printf("TC-GNN -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
+	printf("cuSPARSE cusparseSpMM -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
 	printf("================================\n");
 	#endif
 
