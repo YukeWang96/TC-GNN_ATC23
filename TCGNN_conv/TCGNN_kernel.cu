@@ -274,7 +274,7 @@ __global__ void sddmm_forward_cuda_kernel(
 );
 
 
-
+// cusparse SPMM
 std::vector<torch::Tensor> cusparse_spmm_forward_cuda(
     torch::Tensor nodePointer,
     torch::Tensor edgeList,
@@ -379,13 +379,119 @@ std::vector<torch::Tensor> cusparse_spmm_forward_cuda(
     cudaError_t error = cudaGetLastError();
     if(error != cudaSuccess){
         // print the CUDA error message and exit
-        printf("CUDA error: %s\n", cudaGetErrorString(error));
+        printf("CUDA error @cusparse_spmm_forward_cuda: %s\n", cudaGetErrorString(error));
         exit(-1);
     }
     
     return {output};
 }
 
+// cusparse SDDMM
+std::vector<torch::Tensor> cusparse_sddmm_forward_cuda(
+    torch::Tensor nodePointer,
+    torch::Tensor edgeList,
+              int num_nodes,
+              int num_edges,
+              int embedding_dim,
+    torch::Tensor input
+) 
+{
+	auto output = torch::ones_like(edgeList).to(torch::kFloat);
+
+    int   A_num_rows      = num_nodes;
+    int   A_num_cols      = num_nodes;
+    int   B_num_rows      = A_num_cols;
+    int   B_num_cols      = A_num_rows;
+    int   C_nnz           = num_edges;
+
+    int   lda             = A_num_cols;	// row major.
+    int   ldb             = A_num_cols; // column major. 
+
+	int   A_size          = lda * A_num_rows;
+    int   B_size          = ldb * B_num_cols;
+
+    float alpha           = 1.0f;
+    float beta            = 0.0f;
+
+    int  *dC_offsets = nodePointer.data<int>();
+	int  *dC_columns = edgeList.data<int>();
+    float *dC_values = output.data<float>(); 
+	float *dA = input.data<float>();
+	float *dB = input.data<float>(); 
+
+    cusparseHandle_t     handle = NULL;
+    cusparseDnMatDescr_t matA, matB;
+    cusparseSpMatDescr_t matC;
+    void*                dBuffer    = NULL;
+    size_t               bufferSize = 0;
+
+    cusparseCreate(&handle);
+    // Create dense matrix A
+    cusparseCreateDnMat(&matA, A_num_rows, A_num_cols, lda, dA,
+                                        CUDA_R_32F, CUSPARSE_ORDER_ROW);
+    // Create dense matrix B
+    cusparseCreateDnMat(&matB, B_num_rows, B_num_cols, ldb, dB,
+						CUDA_R_32F, CUSPARSE_ORDER_COL);
+	// Create sparse matrix C in CSR format
+    cusparseCreateCsr(&matC, A_num_rows, B_num_cols, C_nnz,
+                    	dC_offsets, dC_columns, dC_values,
+                    	CUSPARSE_INDEX_32I, CUSPARSE_INDEX_32I,
+                        CUSPARSE_INDEX_BASE_ZERO, CUDA_R_32F);
+    // allocate an external buffer if needed
+    cusparseSDDMM_bufferSize(handle,
+							CUSPARSE_OPERATION_NON_TRANSPOSE,
+							CUSPARSE_OPERATION_NON_TRANSPOSE,
+							&alpha, matA, matB, &beta, matC, CUDA_R_32F,
+							CUSPARSE_SDDMM_ALG_DEFAULT, &bufferSize);
+    cudaMalloc(&dBuffer, bufferSize); 
+
+	#define PROFILE 10
+	#ifdef PROFILE
+	cudaEvent_t start, stop;
+	cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+	// dry run and warm up.
+	for (int i=0; i<PROFILE; i++) {
+        warmup<<<1,1>>>();
+    }
+
+	cudaEventRecord(start, 0);
+	for (int i=0; i<PROFILE; i++) 
+	#endif 
+    // execute SDDMM
+    cusparseSDDMM(handle,
+		CUSPARSE_OPERATION_NON_TRANSPOSE,
+		CUSPARSE_OPERATION_NON_TRANSPOSE,
+		&alpha, matA, matB, &beta, matC, CUDA_R_32F,
+		CUSPARSE_SDDMM_ALG_DEFAULT, dBuffer);
+
+	#ifdef PROFILE
+	cudaEventRecord(stop, 0);
+	cudaEventSynchronize(stop);
+	float gflop = 2*num_edges*embedding_dim/1e6;
+	float milliseconds;
+	cudaEventElapsedTime(&milliseconds, start, stop);
+	// printf("gflop: %.3f, embedding_dim: %d\n", gflop, embedding_dim);
+	printf("cuSPARSE SDDMM -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
+	printf("================================\n");
+	#endif
+
+	// destroy matrix/vector descriptors
+    cusparseDestroyDnMat(matA);
+    cusparseDestroyDnMat(matB);
+    cusparseDestroySpMat(matC);
+    cusparseDestroy(handle);
+
+    // check for error
+    cudaError_t error = cudaGetLastError();
+    if(error != cudaSuccess){
+        // print the CUDA error message and exit
+        printf("CUDA error @cusparse_sddmm_forward_cuda: %s\n", cudaGetErrorString(error));
+        exit(-1);
+    }
+    
+    return {output};
+}
 
 
 ////////////////////////////////////////////

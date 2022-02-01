@@ -1,14 +1,9 @@
 #!/usr/bin/env python3
 import torch
-import sys
 import math
 import time 
-# from torch_sparse import spmm
-
 from tqdm.std import tqdm
 import TCGNN
-# import cupyx
-# import cupy
 
 n_heads = 8
 n_output = 8
