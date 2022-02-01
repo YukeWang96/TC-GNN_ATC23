@@ -155,10 +155,6 @@ class TCGNNFunction_AGNN(torch.autograd.Function):
 
         return d_input, d_weights, d_attention_w, None, None, None, None, None
 
-
-
-
-
 ###################################
 # Definition of each conv layers
 ###################################
@@ -191,8 +187,8 @@ class SAG(torch.nn.Module):
         # print("=> SAG profiling avg (ms): {:.3f}".format(dur*1e3/num_rounds))
         # print()
         
-    def validate(self, X):
-        # ref = TCGNN.cusparse_spmm(X, self.row_pointers, self.column_index)[0]        
+    def validate_spmm(self, X):
+        ref = TCGNN.cusparse_spmm(X, self.row_pointers, self.column_index)[0]        
         out = TCGNNFunction_SAG.apply(X, self.row_pointers, self.column_index, \
                             self.blockPartition, self.edgeToColumn, self.edgeToRow)
         
@@ -200,10 +196,23 @@ class SAG(torch.nn.Module):
         # print(ref)
         # print("===========Output===============")
         # print(out)
-        # status = torch.equal(ref, out)
-        # print("SpMM Validation: ", status)
+        status = torch.equal(ref, out)
+        print("SpMM Validation: ", status)
         # print("----------------------------------")
         # exit(0)
+        
+    def validate_sddmm(self, X):
+        ref = TCGNN.cusparse_sddmm(X, self.row_pointers, self.column_index)[0]        
+        out = TCGNN.forward_ef(X, self.row_pointers, self.column_index, \
+                                self.blockPartition, self.edgeToColumn, self.edgeToRow)[0]
+
+        # out = TCGNNFunction_SAG.apply(X, self.row_pointers, self.column_index, \
+        #                     self.blockPartition, self.edgeToColumn, self.edgeToRow)
+        
+        print(ref)
+        print(out)
+        # status = torch.equal(ref, out)
+        # print("SDDMM Validation: ", status)
         
 class GCNConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):
