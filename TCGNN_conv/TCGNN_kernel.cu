@@ -365,8 +365,7 @@ std::vector<torch::Tensor> cusparse_spmm_forward_cuda(
 	float milliseconds;
 	cudaEventElapsedTime(&milliseconds, start, stop);
 	// printf("gflop: %.3f, embedding_dim: %d\n", gflop, embedding_dim);
-	printf("cuSPARSE cusparseSpMM -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
-	printf("================================\n");
+	printf("cuSPARSE SpMM -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
 	#endif
 
 	// destroy matrix/vector descriptors
@@ -473,7 +472,6 @@ std::vector<torch::Tensor> cusparse_sddmm_forward_cuda(
 	cudaEventElapsedTime(&milliseconds, start, stop);
 	// printf("gflop: %.3f, embedding_dim: %d\n", gflop, embedding_dim);
 	printf("cuSPARSE SDDMM -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
-	printf("================================\n");
 	#endif
 
 	// destroy matrix/vector descriptors
@@ -650,6 +648,18 @@ std::vector<torch::Tensor> sddmm_forward_cuda(
 	dim3 block(WARP_SIZE, 1, 1);
     // printf("at sddmm_forward_cuda\n");
 
+	#define PROFILE 10
+	#ifdef PROFILE
+	cudaEvent_t start, stop;
+	cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+	for (int i=0; i<PROFILE; i++) {
+        warmup<<<1,1>>>();
+    }
+
+	cudaEventRecord(start, 0);
+	for (int i=0; i<PROFILE; i++) 
+	#endif 
     sddmm_forward_cuda_kernel<<< grid, block>>>(
                                                 nodePointer.data<int>(), 
                                                 edgeList.data<int>(),
@@ -663,11 +673,21 @@ std::vector<torch::Tensor> sddmm_forward_cuda(
                                                 output.data<float>()
                                                 );
 
+	#ifdef PROFILE
+	cudaEventRecord(stop, 0);
+	cudaEventSynchronize(stop);
+	float gflop = 2*num_edges*embedding_dim/1e6;
+	float milliseconds;
+	cudaEventElapsedTime(&milliseconds, start, stop);
+	// printf("gflop: %.3f, embedding_dim: %d\n", gflop, embedding_dim);
+	printf("TC-GNN SDDMM -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
+	#endif
+
     // check for error
     cudaError_t error = cudaGetLastError();
     if(error != cudaSuccess) {
         // print the CUDA error message and exit
-        printf("CUDA error: %s\n", cudaGetErrorString(error));
+        printf("CUDA error @TC-GNN SDDMM: %s\n", cudaGetErrorString(error));
         exit(-1);
     }
     
