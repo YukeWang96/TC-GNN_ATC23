@@ -743,7 +743,7 @@ __global__ void spmm_forward_cuda_kernel(
 		if (tid < BLK_W){
 			sparse_AToX_index[tid] = numNodes + 1;
 		}
-		// __syncthreads();
+		__syncthreads();
 
 		// Init sparse_A with zero values.
 		#pragma unroll
@@ -764,7 +764,7 @@ __global__ void spmm_forward_cuda_kernel(
 		// Initialize sparse_A by using BLK_H (16) threads from the warp-0.
 		// currently fetch all neighbors of the current nodes.
 		// then to see whether it can fit into current TC_block frame of column.	
-		#pragma unroll
+		// #pragma unroll
 		for (unsigned eIdx = eIdx_start + tid; eIdx < eIdx_end; eIdx += threadPerBlock){
 			unsigned col = edgeToColumn[eIdx];
 			if (i * BLK_W <= col && col < (i + 1) * BLK_W){		// if the edge in the current TC_block frame of column.
@@ -810,6 +810,7 @@ __global__ void spmm_forward_cuda_kernel(
 			for (unsigned t = 0; t < b_frag.num_elements; t++) {
 				b_frag.x[t] =  wmma::__float_to_tf32(b_frag.x[t]);
 			}
+
 			// Perform the matrix multiplication.
 			wmma::mma_sync(acc_frag, a_frag, b_frag, acc_frag);
 		}
