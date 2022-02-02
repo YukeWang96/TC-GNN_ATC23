@@ -198,21 +198,15 @@ class SAG(torch.nn.Module):
         # print(out)
         status = torch.equal(ref, out)
         print("SpMM Validation: ", status)
-        # print("----------------------------------")
-        # exit(0)
         
     def validate_sddmm(self, X):
         ref = TCGNN.cusparse_sddmm(X, self.row_pointers, self.column_index)[0]        
         out = TCGNN.forward_ef(X, self.row_pointers, self.column_index, \
                                 self.blockPartition, self.edgeToColumn, self.edgeToRow)[0]
-
-        # out = TCGNNFunction_SAG.apply(X, self.row_pointers, self.column_index, \
-        #                     self.blockPartition, self.edgeToColumn, self.edgeToRow)
-        
-        print(ref)
-        print(out)
-        # status = torch.equal(ref, out)
-        # print("SDDMM Validation: ", status)
+        # print(ref)
+        # print(out)
+        status = torch.equal(ref, out)
+        print("SDDMM Validation: ", status)
         
 class GCNConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):

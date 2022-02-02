@@ -399,7 +399,7 @@ std::vector<torch::Tensor> cusparse_sddmm_forward_cuda(
 	auto output = torch::ones_like(edgeList).to(torch::kFloat);
 
     int   A_num_rows      = num_nodes;
-    int   A_num_cols      = num_nodes;
+    int   A_num_cols      = embedding_dim;
     int   B_num_rows      = A_num_cols;
     int   B_num_cols      = A_num_rows;
     int   C_nnz           = num_edges;
@@ -407,8 +407,8 @@ std::vector<torch::Tensor> cusparse_sddmm_forward_cuda(
     int   lda             = A_num_cols;	// row major.
     int   ldb             = A_num_cols; // column major. 
 
-	int   A_size          = lda * A_num_rows;
-    int   B_size          = ldb * B_num_cols;
+	int   A_size          = A_num_rows * lda; // row major.
+    int   B_size          = ldb * B_num_cols; // column major. 
 
     float alpha           = 1.0f;
     float beta            = 0.0f;
