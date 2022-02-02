@@ -14,10 +14,6 @@
 
 
 #include "config.h"
-// #define WPB 4 // --> MAX_DIM: 64 = 16 * 4
-// #define WPB 8 // --> MAX_DIM: 128 = 16 * 8
-#define WPB 16	// --> 	MAX_DIM: 256 = 16 * 16
-// #define WPB 32	// --> MAX_DIM: 512 = 32 * 16
 
 #define CHECK_CUDA(func)                                                       \
 {                                                                              \
@@ -365,7 +361,7 @@ std::vector<torch::Tensor> cusparse_spmm_forward_cuda(
 	float milliseconds;
 	cudaEventElapsedTime(&milliseconds, start, stop);
 	// printf("gflop: %.3f, embedding_dim: %d\n", gflop, embedding_dim);
-	printf("cuSPARSE SpMM -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
+	printf("cuSPARSE SpMM \t\t\t\t Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
 	#endif
 
 	// destroy matrix/vector descriptors
@@ -471,7 +467,7 @@ std::vector<torch::Tensor> cusparse_sddmm_forward_cuda(
 	float milliseconds;
 	cudaEventElapsedTime(&milliseconds, start, stop);
 	// printf("gflop: %.3f, embedding_dim: %d\n", gflop, embedding_dim);
-	printf("cuSPARSE SDDMM -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
+	printf("cuSPARSE SDDMM \t\t\t\t  Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
 	#endif
 
 	// destroy matrix/vector descriptors
@@ -553,13 +549,13 @@ std::vector<torch::Tensor> spmm_forward_cuda(
 
 	float gflop = 2*num_edges/1e6*embedding_dim;
 	// printf("gflop: %.3f, embedding_dim: %d\n", gflop, embedding_dim);
-	printf("TC-GNN @ spmm_forward_cuda_kernel -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
+	printf("TC-GNN SpMM \t\t\t\t Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
 	// printf("================================\n");
 	#endif
 
     cudaError_t error = cudaGetLastError();
     if(error != cudaSuccess){
-        printf("CUDA error: %s\n", cudaGetErrorString(error));
+        printf("CUDA error @ spmm_forward_cuda_kernel: %s\n", cudaGetErrorString(error));
         exit(-1);
     }
     return {output};
@@ -680,7 +676,7 @@ std::vector<torch::Tensor> sddmm_forward_cuda(
 	float milliseconds;
 	cudaEventElapsedTime(&milliseconds, start, stop);
 	// printf("gflop: %.3f, embedding_dim: %d\n", gflop, embedding_dim);
-	printf("TC-GNN SDDMM -- Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
+	printf("TC-GNN SDDMM \t\t\t\t Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
 	#endif
 
     // check for error
@@ -801,8 +797,7 @@ __global__ void spmm_forward_cuda_kernel(
 
 		__syncthreads();
 
-		if (wid < dimTileNum)
-		{
+		if (wid < dimTileNum){
 			wmma::load_matrix_sync(a_frag, sparse_A, BLK_W);
 			wmma::load_matrix_sync(b_frag, dense_X + wid * BLK_W * BLK_H, BLK_W);
 

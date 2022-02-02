@@ -67,8 +67,8 @@ if args.single_kernel:
                     blockPartition, edgeToColumn, edgeToRow)
     X = dataset.x
     # SAG_obj.profile(X)
-    # SAG_obj.validate_spmm(X)
-    SAG_obj.validate_sddmm(X)
+    SAG_obj.validate_spmm(X)
+    # SAG_obj.validate_sddmm(X)
     print("========================")
     exit(0)
 
