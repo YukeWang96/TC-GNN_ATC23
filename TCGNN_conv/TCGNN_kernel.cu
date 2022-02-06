@@ -347,6 +347,7 @@ std::vector<torch::Tensor> cusparse_spmm_forward_cuda(
 	cudaEventRecord(start, 0);
 	for (int i=0; i<PROFILE; i++) 
 	#endif 
+
     // execute SpMM
     cusparseSpMM(handle,
 		CUSPARSE_OPERATION_NON_TRANSPOSE,
@@ -440,7 +441,7 @@ std::vector<torch::Tensor> cusparse_sddmm_forward_cuda(
 							CUSPARSE_SDDMM_ALG_DEFAULT, &bufferSize);
     cudaMalloc(&dBuffer, bufferSize); 
 
-	#define PROFILE 10
+	// #define PROFILE 10
 	#ifdef PROFILE
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);
@@ -508,6 +509,11 @@ std::vector<torch::Tensor> spmm_forward_cuda(
     auto output = torch::zeros_like(input);
     const int num_row_windows = blockPartition.size(0);
     const int WARPperBlock = WPB;
+
+    // int dev = 0;
+    // cudaDeviceProp deviceProp;
+    // cudaGetDeviceProperties(&deviceProp, dev);
+    // cudaFuncSetAttribute(spmm_forward_cuda_kernel, cudaFuncAttributePreferredSharedMemoryCarveout, MAX_SHARED_MEM);
 
     dim3 grid(num_row_windows, 1, 1);
     dim3 block(WARP_SIZE, WARPperBlock, 1);
@@ -644,7 +650,7 @@ std::vector<torch::Tensor> sddmm_forward_cuda(
 	dim3 block(WARP_SIZE, 1, 1);
     // printf("at sddmm_forward_cuda\n");
 
-	#define PROFILE 10
+	// #define PROFILE 10
 	#ifdef PROFILE
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);
@@ -728,6 +734,11 @@ __global__ void spmm_forward_cuda_kernel(
 
 	__shared__ float sparse_A[BLK_H * BLK_W];					// row-major sparse matrix shared memory store.
 	__shared__ int sparse_AToX_index[BLK_W];					// TC_block col to dense_tile row.
+
+	// __shared__ int edgeToColumn_cache[MAX_EDGE];
+	// __shared__ int edgeList_cache[MAX_EDGE];
+	// __shared__ int edgeToRow_cache[MAX_EDGE];
+
 	// __shared__ float dense_X[dimTileNum * BLK_W * BLK_H];	// column-major dense tile [dimTileNum, BLK_W, BLK_H]
 	extern __shared__ float dense_X[];
 
@@ -736,6 +747,14 @@ __global__ void spmm_forward_cuda_kernel(
 	wmma::fragment<wmma::accumulator, BLK_H, BLK_H, BLK_W, float> acc_frag;
 	wmma::fill_fragment(acc_frag, 0.0f);
 
+	// caching the edge information to shared memory
+	// for (unsigned eIdx = eIdx_start + tid; eIdx < eIdx_end; eIdx += threadPerBlock){
+	// 		int offset = eIdx - eIdx_start; // cache offset at memory
+	// 		edgeToColumn_cache[offset] = edgeToColumn_cache[eIdx];
+	// 		edgeList_cache[offset] = edgeToColumn[eIdx];
+	// 		edgeToRow_cache[offset] = edgeToRow[eIdx];
+	// }
+
 	// Processing TC_blocks along the column dimension of Sparse A.
 	for (unsigned i = 0; i < num_TC_blocks; i++){
 
@@ -743,7 +762,6 @@ __global__ void spmm_forward_cuda_kernel(
 		if (tid < BLK_W){
 			sparse_AToX_index[tid] = numNodes + 1;
 		}
-		__syncthreads();
 
 		// Init sparse_A with zero values.
 		#pragma unroll
@@ -765,14 +783,27 @@ __global__ void spmm_forward_cuda_kernel(
 		// currently fetch all neighbors of the current nodes.
 		// then to see whether it can fit into current TC_block frame of column.	
 		// #pragma unroll
-		for (unsigned eIdx = eIdx_start + tid; eIdx < eIdx_end; eIdx += threadPerBlock){
-			unsigned col = edgeToColumn[eIdx];
-			if (i * BLK_W <= col && col < (i + 1) * BLK_W){		// if the edge in the current TC_block frame of column.
-				unsigned row_local = edgeToRow[eIdx] % BLK_H;
-				unsigned col_local = col % BLK_W;
-				sparse_A[row_local * BLK_W + col_local] = 1;    // set the edge of the sparse_A.
-				sparse_AToX_index[col_local] = edgeList[eIdx];  // sparse_A colId --> rowId of dense_X.
-			}		
+		// for (unsigned eIdx = eIdx_start + tid; eIdx < eIdx_end; eIdx += threadPerBlock){
+		// 	// int offset = eIdx - eIdx_start;
+		// 	unsigned col = edgeToColumn[eIdx];
+		// 	// unsigned col = edgeToColumn_cache[offset];
+		// 	if (i * BLK_W <= col && col < (i + 1) * BLK_W){		// if the edge in the current TC_block frame of column.
+		// 		unsigned row_local = edgeToRow[eIdx] % BLK_H;
+		// 		// unsigned row_local = edgeToRow_cache[offset] % BLK_H;
+		// 		unsigned col_local = col % BLK_W;
+		// 		sparse_A[row_local * BLK_W + col_local] = 1;   				// set the edge of the sparse_A.
+		// 		sparse_AToX_index[col_local] = edgeList[eIdx]; 		 	// sparse_A colId --> rowId of dense_X.
+		// 		// sparse_AToX_index[col_local] = edgeList_cache[offset]; 	 	// sparse_A colId --> rowId of dense_X
+		// 	}		
+		// }
+
+		for (unsigned idx = tid; idx < BLK_W * BLK_H; idx += threadPerBlock){
+			sparse_A[idx] = edgeList[idx] > 0? 1: 0;
+		}
+	
+
+		for (unsigned idx = tid; idx < BLK_W; idx += threadPerBlock){
+			sparse_AToX_index[idx] = edgeList[idx] > 0? 1: 0;
 		}
 
 		__syncthreads();

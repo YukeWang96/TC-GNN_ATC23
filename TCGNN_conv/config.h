@@ -7,6 +7,8 @@
 // for half
 // #define BLK_H 16 
 // #define BLK_W 16
+// #define MAX_EDGE 10
+// #define MAX_SHARED_MEM 49*1e3
 
 #define WARP_SIZE 32
 // #define WPB 1 		// --> MAX_DIM:	16 = 16 * 1

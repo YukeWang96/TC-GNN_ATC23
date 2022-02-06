@@ -25,10 +25,10 @@ dataset = [
         # ('SW-620H'                   , 66       , 2) ,
 
         ( 'amazon0505'               , 96	  , 22),
-        ( 'artist'                   , 100	  , 12),
-        ( 'com-amazon'               , 96	  , 22),
-        ( 'soc-BlogCatalog'	         , 128	  , 39),      
-        ( 'amazon0601'  	         , 96	  , 22), 
+        # ( 'artist'                   , 100	  , 12),
+        # ( 'com-amazon'               , 96	  , 22),
+        # ( 'soc-BlogCatalog'	         , 128	  , 39),      
+        # ( 'amazon0601'  	         , 96	  , 22), 
 
         # ('YeastH'                    , 75       , 2) ,   
         # ( 'web-BerkStan'             , 100	  , 12),
@@ -44,7 +44,7 @@ for n_Layer in num_layers:
     for hid in hidden:
         for data, d, c in dataset:
             print("=> {}, hiddn: {}".format(data, hid))
-            command = "python main_tcgnn.py --dataset {} \
+            command = "/home/yuke/anaconda3/envs/tcgnn-new/bin/python main_tcgnn.py --dataset {} \
                                             --dim {} \
                                             --hidden {} \
                                             --classes {} \
@@ -54,6 +54,7 @@ for n_Layer in num_layers:
             if single_kernel:
                 command += " --single_kernel"
             if kernel_profile:
-                command = "sudo ncu --set detailed --section SpeedOfLight_RooflineChart " + command
+                command = "sudo /usr/local/cuda-11.6/bin/ncu --set full -k regex:\"cusparseSpMM|spmm\" " + command + "| tee profile.log"
+                # command = "sudo ncu --set detailed --section SpeedOfLight_RooflineChart " + command
             # command = "sudo ncu --csv --set full python main_gcn.py --dataset {0} --dim {1} --hidden {2} --classes {3} --num_layers {4} --model {5} | tee prof_{0}.csv".format(data, d, hid, c, n_Layer, model)		
             os.system(command)
