@@ -1541,20 +1541,20 @@ In file included from /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-pac
       |                            ~~~~^~~~~~~~~~~
 /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:297:51: warning: comparison of integer expressions of different signedness: ‘unsigned int’ and ‘int’ [-Wsign-compare]
   297 |         for (unsigned eid = nodePointer[nid]; eid < nodePointer[nid+1]; eid++)
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:302:34: warning: comparison of integer expressions of different signedness: ‘unsigned int’ and ‘int’ [-Wsign-compare]
-  302 |     for (unsigned iter = 0; iter < num_nodes + 1; iter +=  blockSize_h){
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:303:34: warning: comparison of integer expressions of different signedness: ‘unsigned int’ and ‘int’ [-Wsign-compare]
+  303 |     for (unsigned iter = 0; iter < num_nodes + 1; iter +=  blockSize_h){
       |                             ~~~~~^~~~~~~~~~~~~~~
 /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:11:25: warning: comparison of integer expressions of different signedness: ‘unsigned int’ and ‘int’ [-Wsign-compare]
    11 | #define min(x, y) (((x) < (y))? (x) : (y))
       |                     ~~~~^~~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:305:42: note: in expansion of macro ‘min’
-  305 |         unsigned block_end = nodePointer[min(iter + blockSize_h, num_nodes)];
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:306:42: note: in expansion of macro ‘min’
+  306 |         unsigned block_end = nodePointer[min(iter + blockSize_h, num_nodes)];
       |                                          ^~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:334:40: warning: comparison of integer expressions of different signedness: ‘unsigned int’ and ‘int’ [-Wsign-compare]
-  334 |             for (unsigned bid = 0; bid < blockPartition[windowId]; bid++){
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:336:40: warning: comparison of integer expressions of different signedness: ‘unsigned int’ and ‘int’ [-Wsign-compare]
+  336 |             for (unsigned bid = 0; bid < blockPartition[windowId]; bid++){
 /home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp: In function ‘void preprocess_gpu(at::Tensor, at::Tensor, int, int, int, at::Tensor, at::Tensor, at::Tensor)’:
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:389:47: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
-  389 |     auto edgeList = edgeList_tensor.data<int>();
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:392:47: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
+  392 |     auto edgeList = edgeList_tensor.data<int>();
       |                                               ^
 In file included from /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-packages/torch/include/ATen/Context.h:4,
@@ -1571,8 +1571,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-pac
 /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-packages/torch/include/ATen/core/TensorBody.h:216:7: note: declared here
   216 |   T * data() const {
       |       ^~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:390:53: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
-  390 |     auto nodePointer = nodePointer_tensor.data<int>();
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:393:53: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
+  393 |     auto nodePointer = nodePointer_tensor.data<int>();
       |                                                     ^
 In file included from /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-packages/torch/include/ATen/Context.h:4,
@@ -1589,8 +1589,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-pac
 /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-packages/torch/include/ATen/core/TensorBody.h:216:7: note: declared here
   216 |   T * data() const {
       |       ^~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:393:59: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
-  393 |     auto blockPartition = blockPartition_tensor.data<int>();
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:396:59: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
+  396 |     auto blockPartition = blockPartition_tensor.data<int>();
       |                                                           ^
 In file included from /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-packages/torch/include/ATen/Context.h:4,
@@ -1607,8 +1607,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-pac
 /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-packages/torch/include/ATen/core/TensorBody.h:216:7: note: declared here
   216 |   T * data() const {
       |       ^~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:394:55: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
-  394 |     auto edgeToColumn = edgeToColumn_tensor.data<int>();
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:397:55: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
+  397 |     auto edgeToColumn = edgeToColumn_tensor.data<int>();
       |                                                       ^
 In file included from /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-packages/torch/include/ATen/Context.h:4,
@@ -1625,8 +1625,8 @@ In file included from /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-pac
 /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-packages/torch/include/ATen/core/TensorBody.h:216:7: note: declared here
   216 |   T * data() const {
       |       ^~~~
-/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:395:49: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
-  395 |     auto edgeToRow = edgeToRow_tensor.data<int>();
+/home/ssd2T_1/yuke/TCGNN-Pytorch/TCGNN_conv/TCGNN.cpp:398:49: warning: ‘T* at::Tensor::data() const [with T = int]’ is deprecated: Tensor.data<T>() is deprecated. Please use Tensor.data_ptr<T>() instead. [-Wdeprecated-declarations]
+  398 |     auto edgeToRow = edgeToRow_tensor.data<int>();
       |                                                 ^
 In file included from /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-packages/torch/include/ATen/Tensor.h:3,
                  from /home/yuke/anaconda3/envs/tcgnn-new/lib/python3.7/site-packages/torch/include/ATen/Context.h:4,

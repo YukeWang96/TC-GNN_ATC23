@@ -298,6 +298,7 @@ preprocess(torch::Tensor edgeList_tensor,
             edgeToRow[eid] = nid;
     }
 
+    unsigned max_row_edges = 0;
     // #pragma omp parallel for reduction(+:block_counter)
     for (unsigned iter = 0; iter < num_nodes + 1; iter +=  blockSize_h){
         unsigned windowId = iter / blockSize_h;
@@ -328,6 +329,7 @@ preprocess(torch::Tensor edgeList_tensor,
             edgeToColumn[e_index] = clean_edges2col[eid];
         }
 
+        max_row_edges = max_row_edges < (block_end - block_start)? (block_end - block_start): max_row_edges;
         // initialize the dense block at TC block of each row window.
         for (unsigned eIdx = block_start; eIdx < block_end; eIdx++){
           unsigned col = edgeToColumn[eIdx];
@@ -370,7 +372,7 @@ preprocess(torch::Tensor edgeList_tensor,
     // torch::Tensor row_sparse_AToX_index_idx_t = torch::from_blob(row_sparse_AToX_index_idx.data(), row_sparse_AToX_index_idx.size()).to(torch::kInt).clone();
     // torch::Tensor row_sparse_AToX_index_t = torch::from_blob(row_sparse_AToX_index.data(), row_sparse_AToX_index.size()).to(torch::kInt).clone();
 
-    printf("TC_Blocks:\t%d\nExp_Edges:\t%d\n", block_counter, block_counter * 8 * 16);
+    printf("TC_Blocks:\t%d\nExp_Edges:\t%d\nmax_row_edges:\t%d\n", block_counter, block_counter * 8 * 16, max_row_edges);
     return {row_window_idx_t, row_window_t, row_sparse_AToX_index_idx_t, row_sparse_AToX_index_t};
 }
 
