@@ -8,6 +8,7 @@
 // #define BLK_H 16 
 // #define BLK_W 16
 
+#define MAX_EDGES 400
 #define WARP_SIZE 32
 // #define WPB 1 		// --> MAX_DIM:	16 = 16 * 1
 // #define WPB 2 	// --> MAX_DIM: 32 = 16 * 2

@@ -3,7 +3,7 @@ import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
 model = 'gcn'
-hidden = [16]
+hidden = [64]
 num_layers = [2]
 single_kernel = True
 kernel_profile = False
@@ -13,23 +13,23 @@ kernel_profile = False
 # num_layers = [4]
 
 dataset = [
-        # ('citeseer'	        		, 3703	    , 6   ),  
-        # ('cora' 	        		, 1433	    , 7   ),  
-        # ('pubmed'	        		, 500	    , 3   ),      
-        # ('ppi'	            		, 50	    , 121 ),   
+        ('citeseer'	        		, 3703	    , 6   ),  
+        ('cora' 	        		, 1433	    , 7   ),  
+        ('pubmed'	        		, 500	    , 3   ),      
         
-        # ('PROTEINS_full'             , 29       , 2) ,   
-        # ('OVCAR-8H'                  , 66       , 2) , 
-        # ('Yeast'                     , 74       , 2) ,
-        # ('DD'                        , 89       , 2) ,
-        # ('SW-620H'                   , 66       , 2) ,
+        ('PROTEINS_full'             , 29       , 2) ,   
+        ('OVCAR-8H'                  , 66       , 2) , 
+        ('Yeast'                     , 74       , 2) ,
+        ('DD'                        , 89       , 2) ,
+        ('SW-620H'                   , 66       , 2) ,
+        
+        ( 'com-amazon'               , 96	  , 22),
+        ( 'amazon0601'  	         , 96	  , 22), 
 
         # ( 'amazon0505'               , 96	  , 22),
         # ( 'artist'                   , 100	  , 12),
-        # ( 'com-amazon'               , 96	  , 22),
+        # ('ppi'	            		, 50	    , 121 ),   
         # ( 'soc-BlogCatalog'	         , 128	  , 39),      
-        # ( 'amazon0601'  	         , 96	  , 22), 
-
         # ('YeastH'                    , 75       , 2) ,   
         # ( 'web-BerkStan'             , 100	  , 12),
         # ( 'wiki-topcats'             , 300	  , 12),
@@ -37,7 +37,7 @@ dataset = [
         # ( 'wiki-topcats'             , 300	  , 12),
         # ( 'Reddit'                   , 602      , 41),
         # ( 'enwiki-2013'	           , 100	  , 12),      
-        ( 'amazon_also_bought'       , 96       , 22),
+        # ( 'amazon_also_bought'       , 96       , 22),
 ]
 
 for n_Layer in num_layers:

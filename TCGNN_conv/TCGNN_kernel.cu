@@ -513,7 +513,7 @@ std::vector<torch::Tensor> spmm_forward_cuda(
     dim3 block(WARP_SIZE, WARPperBlock, 1);
 	
     const int dimTileNum = (embedding_dim + BLK_H - 1) / BLK_H;
-	const int dynamic_shared_size = dimTileNum * BLK_W * BLK_H * sizeof(float); // dynamic shared memory.
+	const int dynamic_shared_size = (dimTileNum * BLK_W * BLK_H + MAX_EDGES * 3)* sizeof(float); // dynamic shared memory.
 
 	#define PROFILE 10
 	#ifdef PROFILE
@@ -528,6 +528,7 @@ std::vector<torch::Tensor> spmm_forward_cuda(
 	for (int i=0; i<PROFILE; i++) 
 	#endif 
 
+	// cudaFuncSetAttribute(spmm_forward_cuda_kernel, cudaFuncAttributePreferredSharedMemoryCarveout, 60);
 	spmm_forward_cuda_kernel<<<grid, block, dynamic_shared_size>>>(
 																	nodePointer.data<int>(), 
 																	edgeList.data<int>(),
@@ -729,13 +730,16 @@ __global__ void spmm_forward_cuda_kernel(
 	__shared__ float sparse_A[BLK_H * BLK_W];					// row-major sparse matrix shared memory store.
 	__shared__ int sparse_AToX_index[BLK_W];					// TC_block col to dense_tile row.
 
-	__shared__ unsigned edgeToColumn_s[200];					// TC_block col to dense_tile row.
-	__shared__ unsigned edgeToRow_s[200];					// TC_block col to dense_tile row.
-	__shared__ unsigned edgeList_s[200];					// TC_block col to dense_tile row.
-
+	// __shared__ unsigned edgeToColumn_s[200];					// TC_block col to dense_tile row.
+	// __shared__ unsigned edgeToRow_s[200];					// TC_block col to dense_tile row.
+	// __shared__ unsigned edgeList_s[200];					// TC_block col to dense_tile row.
 
 	// __shared__ float dense_X[dimTileNum * BLK_W * BLK_H];	// column-major dense tile [dimTileNum, BLK_W, BLK_H]
 	extern __shared__ float dense_X[];
+	unsigned *edgeToColumn_s = (unsigned*)&dense_X[dimTileNum * BLK_W * BLK_H];
+	unsigned *edgeToRow_s = (unsigned*)&edgeToColumn_s[MAX_EDGES];
+	unsigned *edgeList_s = (unsigned*)&edgeToRow_s[MAX_EDGES];
+
 
 	wmma::fragment<wmma::matrix_a, BLK_H, BLK_H, BLK_W, wmma::precision::tf32, wmma::row_major> a_frag;
 	wmma::fragment<wmma::matrix_b, BLK_H, BLK_H, BLK_W, wmma::precision::tf32, wmma::col_major> b_frag;
