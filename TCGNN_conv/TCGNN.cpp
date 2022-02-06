@@ -37,6 +37,10 @@ std::vector<torch::Tensor> spmm_forward_cuda(
     torch::Tensor blockPartition, 
     torch::Tensor edgeToColumn,
     torch::Tensor edgeToRow,
+    torch::Tensor row_window_idx,
+    torch::Tensor row_window, 
+    torch::Tensor row_sparse_AToX_index_idx, 
+    torch::Tensor row_sparse_AToX_index,
               int num_nodes,
               int num_edges,
               int embedding_dim,
@@ -126,7 +130,11 @@ std::vector<torch::Tensor> spmm_forward(
     torch::Tensor edgeList,
     torch::Tensor blockPartition, 
     torch::Tensor edgeToColumn,
-    torch::Tensor edgeToRow
+    torch::Tensor edgeToRow,
+    torch::Tensor row_window_idx,
+    torch::Tensor row_window, 
+    torch::Tensor row_sparse_AToX_index_idx, 
+    torch::Tensor row_sparse_AToX_index
 ) {
   CHECK_INPUT(input);
   CHECK_INPUT(nodePointer);
@@ -135,12 +143,18 @@ std::vector<torch::Tensor> spmm_forward(
   CHECK_INPUT(edgeToColumn);
   CHECK_INPUT(edgeToRow);
 
+  CHECK_INPUT(row_window_idx);
+  CHECK_INPUT(row_window);
+  CHECK_INPUT(row_sparse_AToX_index_idx);
+  CHECK_INPUT(row_sparse_AToX_index);
+
   int num_nodes = nodePointer.size(0) - 1;
   int num_edges = edgeList.size(0);
   int embedding_dim = input.size(1);
 
   return spmm_forward_cuda(nodePointer, edgeList, 
                             blockPartition, edgeToColumn, edgeToRow, 
+                            row_window_idx, row_window, row_sparse_AToX_index_idx, row_sparse_AToX_index,
                             num_nodes, num_edges, embedding_dim,
                             input);
 }
@@ -251,7 +265,8 @@ std::map<unsigned, unsigned> inplace_deduplication(unsigned* array, unsigned len
     return nb2col;
 }
 
-void preprocess(torch::Tensor edgeList_tensor, 
+std::vector <torch::Tensor> 
+preprocess(torch::Tensor edgeList_tensor, 
                 torch::Tensor nodePointer_tensor, 
                 int num_nodes, 
                 int blockSize_h,
@@ -271,6 +286,11 @@ void preprocess(torch::Tensor edgeList_tensor,
     auto edgeToRow = edgeToRow_tensor.accessor<int, 1>();
 
     unsigned block_counter = 0;
+    
+    std::vector<int> row_window_idx; 
+    std::vector<int> row_window;
+    std::vector<int> row_sparse_AToX_index_idx;
+    std::vector<int> row_sparse_AToX_index;
 
     #pragma omp parallel for 
     for (unsigned nid = 0; nid < num_nodes; nid++){
@@ -278,7 +298,7 @@ void preprocess(torch::Tensor edgeList_tensor,
             edgeToRow[eid] = nid;
     }
 
-    #pragma omp parallel for reduction(+:block_counter)
+    // #pragma omp parallel for reduction(+:block_counter)
     for (unsigned iter = 0; iter < num_nodes + 1; iter +=  blockSize_h){
         unsigned windowId = iter / blockSize_h;
         unsigned block_start = nodePointer[iter];
@@ -298,13 +318,60 @@ void preprocess(torch::Tensor edgeList_tensor,
         blockPartition[windowId] = (clean_edges2col.size() + blockSize_w - 1) /blockSize_w;
         block_counter += blockPartition[windowId];
 
+        // init the number of dense block and column to index at memory.
+        std::vector<int> block(blockPartition[windowId] * blockSize_h * blockSize_w, 0);
+        std::vector<int> sparse_AToX_index(blockPartition[windowId] * blockSize_w, -1);
+
         // scan the array and generate edge to column mapping. --> edge_id to compressed_column_id of TC_block.
         for (unsigned e_index = block_start; e_index < block_end; e_index++){
             unsigned eid = edgeList[e_index];
             edgeToColumn[e_index] = clean_edges2col[eid];
         }
+
+        // initialize the dense block at TC block of each row window.
+        for (unsigned eIdx = block_start; eIdx < block_end; eIdx++){
+          unsigned col = edgeToColumn[eIdx];
+            for (unsigned bid = 0; bid < blockPartition[windowId]; bid++){
+              if (bid * blockSize_w <= col && col < (bid + 1) * blockSize_w){		// if the edge in the current TC_block frame of column.
+                unsigned row_local = edgeToRow[eIdx] % blockSize_h;
+                unsigned col_local = col % blockSize_w;
+                block[bid * blockSize_h * blockSize_w + row_local * blockSize_w + col_local] = 1;   				// set the edge of the sparse_A.
+                // printf("hello\n");
+                if (sparse_AToX_index[bid * blockSize_w + col_local] != -1) continue;
+                sparse_AToX_index[bid * blockSize_w + col_local] = edgeList[eIdx]; 		 	// sparse_A colId --> rowId of dense_X.
+              }		
+            }
+        }
+
+        row_window_idx.push_back(row_window.size());
+        row_sparse_AToX_index_idx.push_back(row_sparse_AToX_index.size());
+        
+        row_window.insert(row_window.end(), block.begin(), block.end());
+        row_sparse_AToX_index.insert(row_sparse_AToX_index.end(), sparse_AToX_index.begin(), sparse_AToX_index.end());
     }
+
+    row_window_idx.push_back(row_window.size());
+    row_sparse_AToX_index_idx.push_back(row_sparse_AToX_index.size());
+    // for (int i = 0; i < 10; i++)
+    //   printf("row_window_idx[%d], %d\n", i, row_window_idx[i]);
+
+    torch::Tensor row_window_idx_t = torch::zeros(row_window_idx.size()).to(torch::kInt);
+    torch::Tensor row_window_t = torch::zeros(row_window.size()).to(torch::kInt);
+    torch::Tensor row_sparse_AToX_index_idx_t = torch::zeros(row_sparse_AToX_index_idx.size()).to(torch::kInt);
+    torch::Tensor row_sparse_AToX_index_t = torch::zeros(row_sparse_AToX_index.size()).to(torch::kInt);
+
+    memcpy(row_window_idx_t.data_ptr(), &row_window_idx[0], row_window_idx.size() * sizeof(int));
+    memcpy(row_window_t.data_ptr(), &row_window[0], row_window.size() * sizeof(int));
+    memcpy(row_sparse_AToX_index_idx_t.data_ptr(), &row_sparse_AToX_index_idx[0], row_sparse_AToX_index_idx.size() * sizeof(int));
+    memcpy(row_sparse_AToX_index_t.data_ptr(), &row_sparse_AToX_index[0], row_sparse_AToX_index.size() * sizeof(int));
+
+    // torch::Tensor row_window_idx_t = torch::from_blob(row_window_idx.data(), row_window_idx.size()).to(torch::kInt).clone();
+    // torch::Tensor row_window_t = torch::from_blob(row_window.data(), row_window.size()).to(torch::kInt).clone();
+    // torch::Tensor row_sparse_AToX_index_idx_t = torch::from_blob(row_sparse_AToX_index_idx.data(), row_sparse_AToX_index_idx.size()).to(torch::kInt).clone();
+    // torch::Tensor row_sparse_AToX_index_t = torch::from_blob(row_sparse_AToX_index.data(), row_sparse_AToX_index.size()).to(torch::kInt).clone();
+
     printf("TC_Blocks:\t%d\nExp_Edges:\t%d\n", block_counter, block_counter * 8 * 16);
+    return {row_window_idx_t, row_window_t, row_sparse_AToX_index_idx_t, row_sparse_AToX_index_t};
 }
 
 

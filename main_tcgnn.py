@@ -48,8 +48,9 @@ blockPartition = torch.zeros(num_row_windows, dtype=torch.int)
 
 # preprocessing for generating meta-information
 start = time.perf_counter()
-TCGNN.preprocess(column_index, row_pointers, num_nodes,  \
-                BLK_H,	BLK_W, blockPartition, edgeToColumn, edgeToRow)
+row_window_idx, row_window, \
+    row_sparse_AToX_index_idx, row_sparse_AToX_index = TCGNN.preprocess(column_index, row_pointers, num_nodes,  \
+                                                        BLK_H,	BLK_W, blockPartition, edgeToColumn, edgeToRow)
 build_neighbor_parts = time.perf_counter() - start
 print("Prep. (ms):\t{:.3f}".format(build_neighbor_parts*1e3))
 
@@ -59,12 +60,29 @@ blockPartition = blockPartition.cuda()
 edgeToColumn = edgeToColumn.cuda()
 edgeToRow = edgeToRow.cuda()
 
+
+# print(row_window.size())
+# print(row_window)
+# print(torch.sum(row_window))
+
+# print(row_window_idx)
+# print(row_window)
+# print(torch.sum(row_window))
+# print(row_sparse_AToX_index_idx)
+# print(row_sparse_AToX_index[:100])
+# exit()
+row_window_idx = row_window_idx.cuda()
+row_window =  row_window.float().cuda()
+row_sparse_AToX_index_idx = row_sparse_AToX_index_idx.cuda()
+row_sparse_AToX_index = row_sparse_AToX_index.cuda()
 #########################################
 ## Single Satter-And-Gather (SAG) Profiling.
 #########################################
 if args.single_kernel:
     SAG_obj = SAG(row_pointers, column_index,\
-                    blockPartition, edgeToColumn, edgeToRow)
+                    blockPartition, edgeToColumn, edgeToRow,
+                    row_window_idx, row_window, row_sparse_AToX_index_idx, row_sparse_AToX_index
+                    )
     X = dataset.x
     # SAG_obj.profile(X)
     SAG_obj.validate_spmm(X)

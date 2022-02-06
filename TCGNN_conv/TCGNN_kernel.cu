@@ -229,6 +229,10 @@ __global__ void spmm_forward_cuda_kernel(
 	const int *__restrict__ blockPartition, 	// number of TC_blocks (16x8) in each row_window.
 	const int *__restrict__ edgeToColumn, 		// eid -> col within each row_window.
 	const int *__restrict__ edgeToRow, 		    // eid -> col within each row_window.
+	const int *__restrict__ row_window_idx,					// edge list.
+	const float *__restrict__ row_window, 					// number of TC_blocks (16x8) in each row_window.
+	const int *__restrict__ row_sparse_AToX_index_idx, 		// eid -> col within each row_window.
+	const int *__restrict__ row_sparse_AToX_index, 		    // eid -> col within each row_window.
 	const int numNodes,
 	const int numEdges,
 	const int embedding_dim,				    // embedding dimension.
@@ -500,6 +504,10 @@ std::vector<torch::Tensor> spmm_forward_cuda(
     torch::Tensor blockPartition, 
     torch::Tensor edgeToColumn,
     torch::Tensor edgeToRow,
+	torch::Tensor row_window_idx,
+    torch::Tensor row_window, 
+    torch::Tensor row_sparse_AToX_index_idx, 
+    torch::Tensor row_sparse_AToX_index,
               int num_nodes,
               int num_edges,
               int embedding_dim,
@@ -540,6 +548,10 @@ std::vector<torch::Tensor> spmm_forward_cuda(
 																	blockPartition.data<int>(), 
 																	edgeToColumn.data<int>(), 
 																	edgeToRow.data<int>(), 
+																	row_window_idx.data<int>(),
+																	row_window.data<float>(), 
+																	row_sparse_AToX_index_idx.data<int>(), 
+																	row_sparse_AToX_index.data<int>(),
 																	num_nodes,
 																	num_edges,
 																	embedding_dim,
@@ -709,6 +721,10 @@ __global__ void spmm_forward_cuda_kernel(
 	const int *__restrict__ blockPartition, 	// number of TC_blocks (16x8) in each row_window.
 	const int *__restrict__ edgeToColumn, 		// eid -> col within each row_window.
 	const int *__restrict__ edgeToRow, 		    // eid -> col within each row_window.
+	const int *__restrict__ row_window_idx,					// edge list.
+	const float *__restrict__ row_window, 					// number of TC_blocks (16x8) in each row_window.
+	const int *__restrict__ row_sparse_AToX_index_idx, 		// eid -> col within each row_window.
+	const int *__restrict__ row_sparse_AToX_index, 		    // eid -> col within each row_window.
 	const int numNodes,
 	const int numEdges,
 	const int embedding_dim,				    // embedding dimension.
@@ -732,12 +748,12 @@ __global__ void spmm_forward_cuda_kernel(
 	const unsigned num_TC_blocks = blockPartition[bid]; 			// number of TC_blocks of the current row_window.
 	const unsigned dense_bound = numNodes * embedding_dim;
 
+	const unsigned row_window_idx_start = row_window_idx[bid];
+	const unsigned row_sparse_AToX_index_idx_start = row_sparse_AToX_index_idx[bid];
+
+
 	__shared__ float sparse_A[BLK_H * BLK_W];					// row-major sparse matrix shared memory store.
 	__shared__ int sparse_AToX_index[BLK_W];					// TC_block col to dense_tile row.
-
-	// __shared__ int edgeToColumn_cache[MAX_EDGE];
-	// __shared__ int edgeList_cache[MAX_EDGE];
-	// __shared__ int edgeToRow_cache[MAX_EDGE];
 
 	// __shared__ float dense_X[dimTileNum * BLK_W * BLK_H];	// column-major dense tile [dimTileNum, BLK_W, BLK_H]
 	extern __shared__ float dense_X[];
@@ -747,14 +763,6 @@ __global__ void spmm_forward_cuda_kernel(
 	wmma::fragment<wmma::accumulator, BLK_H, BLK_H, BLK_W, float> acc_frag;
 	wmma::fill_fragment(acc_frag, 0.0f);
 
-	// caching the edge information to shared memory
-	// for (unsigned eIdx = eIdx_start + tid; eIdx < eIdx_end; eIdx += threadPerBlock){
-	// 		int offset = eIdx - eIdx_start; // cache offset at memory
-	// 		edgeToColumn_cache[offset] = edgeToColumn_cache[eIdx];
-	// 		edgeList_cache[offset] = edgeToColumn[eIdx];
-	// 		edgeToRow_cache[offset] = edgeToRow[eIdx];
-	// }
-
 	// Processing TC_blocks along the column dimension of Sparse A.
 	for (unsigned i = 0; i < num_TC_blocks; i++){
 
@@ -763,11 +771,14 @@ __global__ void spmm_forward_cuda_kernel(
 			sparse_AToX_index[tid] = numNodes + 1;
 		}
 
+		unsigned sparse_offset = row_window_idx_start + i * BLK_W * BLK_H;
 		// Init sparse_A with zero values.
 		#pragma unroll
 		for (unsigned idx = tid; idx < BLK_W * BLK_H; idx += threadPerBlock){
 			sparse_A[idx] = 0;
+			sparse_A[idx] = row_window[sparse_offset + idx];
 		}
+
 
 		// Init dense_X with zero values.
 		#pragma unroll
@@ -777,7 +788,7 @@ __global__ void spmm_forward_cuda_kernel(
 			dense_X[idx] = 0;
 		}
 
-		__syncthreads();
+		// __syncthreads();
 
 		// Initialize sparse_A by using BLK_H (16) threads from the warp-0.
 		// currently fetch all neighbors of the current nodes.
@@ -797,13 +808,19 @@ __global__ void spmm_forward_cuda_kernel(
 		// 	}		
 		// }
 
-		for (unsigned idx = tid; idx < BLK_W * BLK_H; idx += threadPerBlock){
-			sparse_A[idx] = edgeList[idx] > 0? 1: 0;
-		}
+		// unsigned sparse_offset = row_window_idx_start + i * BLK_W * BLK_H;
+		// for (unsigned idx = tid; idx < BLK_W * BLK_H; idx += threadPerBlock){
+		// 	// sparse_A[idx] = edgeList[idx] > 0? 1: 0;
+		// 	sparse_A[idx] = row_window[sparse_offset + idx];
+		// 	// printf("sparse_A[%d]: %.3f\n", idx, sparse_A[idx]);
+		// }
 	
-
+		unsigned map_offset = row_sparse_AToX_index_idx_start + i * BLK_W;
+		#pragma unroll
 		for (unsigned idx = tid; idx < BLK_W; idx += threadPerBlock){
-			sparse_AToX_index[idx] = edgeList[idx] > 0? 1: 0;
+			// sparse_AToX_index[idx] = edgeList[idx] > 0? 1: 0;
+			sparse_AToX_index[idx] = row_sparse_AToX_index[map_offset + idx];
+			// printf("sparse_AToX_index[%d]: %.3f\n", idx, sparse_AToX_index[idx]);
 		}
 
 		__syncthreads();
