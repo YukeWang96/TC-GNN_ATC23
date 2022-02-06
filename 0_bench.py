@@ -24,11 +24,11 @@ dataset = [
         # ('DD'                        , 89       , 2) ,
         # ('SW-620H'                   , 66       , 2) ,
 
-        ( 'amazon0505'               , 96	  , 22),
-        ( 'artist'                   , 100	  , 12),
-        ( 'com-amazon'               , 96	  , 22),
-        ( 'soc-BlogCatalog'	         , 128	  , 39),      
-        ( 'amazon0601'  	         , 96	  , 22), 
+        # ( 'amazon0505'               , 96	  , 22),
+        # ( 'artist'                   , 100	  , 12),
+        # ( 'com-amazon'               , 96	  , 22),
+        # ( 'soc-BlogCatalog'	         , 128	  , 39),      
+        # ( 'amazon0601'  	         , 96	  , 22), 
 
         # ('YeastH'                    , 75       , 2) ,   
         # ( 'web-BerkStan'             , 100	  , 12),
@@ -37,7 +37,7 @@ dataset = [
         # ( 'wiki-topcats'             , 300	  , 12),
         # ( 'Reddit'                   , 602      , 41),
         # ( 'enwiki-2013'	           , 100	  , 12),      
-        # ( 'amazon_also_bought'       , 96       , 22),
+        ( 'amazon_also_bought'       , 96       , 22),
 ]
 
 for n_Layer in num_layers:

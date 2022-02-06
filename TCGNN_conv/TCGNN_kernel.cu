@@ -728,6 +728,12 @@ __global__ void spmm_forward_cuda_kernel(
 
 	__shared__ float sparse_A[BLK_H * BLK_W];					// row-major sparse matrix shared memory store.
 	__shared__ int sparse_AToX_index[BLK_W];					// TC_block col to dense_tile row.
+
+	__shared__ unsigned edgeToColumn_s[200];					// TC_block col to dense_tile row.
+	__shared__ unsigned edgeToRow_s[200];					// TC_block col to dense_tile row.
+	__shared__ unsigned edgeList_s[200];					// TC_block col to dense_tile row.
+
+
 	// __shared__ float dense_X[dimTileNum * BLK_W * BLK_H];	// column-major dense tile [dimTileNum, BLK_W, BLK_H]
 	extern __shared__ float dense_X[];
 
@@ -735,6 +741,14 @@ __global__ void spmm_forward_cuda_kernel(
 	wmma::fragment<wmma::matrix_b, BLK_H, BLK_H, BLK_W, wmma::precision::tf32, wmma::col_major> b_frag;
 	wmma::fragment<wmma::accumulator, BLK_H, BLK_H, BLK_W, float> acc_frag;
 	wmma::fill_fragment(acc_frag, 0.0f);
+
+
+	for (unsigned eIdx = eIdx_start + tid; eIdx < eIdx_end; eIdx += threadPerBlock){
+			unsigned offset = eIdx - eIdx_start;
+			edgeToColumn_s[offset] = edgeToColumn[eIdx];
+			edgeToRow_s[offset] = edgeToRow[eIdx];	
+			edgeList_s[offset] = edgeList[eIdx];	
+	}
 
 	// Processing TC_blocks along the column dimension of Sparse A.
 	for (unsigned i = 0; i < num_TC_blocks; i++){
@@ -766,12 +780,16 @@ __global__ void spmm_forward_cuda_kernel(
 		// then to see whether it can fit into current TC_block frame of column.	
 		// #pragma unroll
 		for (unsigned eIdx = eIdx_start + tid; eIdx < eIdx_end; eIdx += threadPerBlock){
-			unsigned col = edgeToColumn[eIdx];
+			unsigned offset = eIdx - eIdx_start;
+			unsigned col = edgeToColumn_s[offset];
+			// unsigned col = edgeToColumn[eIdx];
 			if (i * BLK_W <= col && col < (i + 1) * BLK_W){		// if the edge in the current TC_block frame of column.
-				unsigned row_local = edgeToRow[eIdx] % BLK_H;
+				unsigned row_local = edgeToRow_s[offset] % BLK_H;
+				// unsigned row_local = edgeToRow[eIdx] % BLK_H;
 				unsigned col_local = col % BLK_W;
 				sparse_A[row_local * BLK_W + col_local] = 1;    // set the edge of the sparse_A.
-				sparse_AToX_index[col_local] = edgeList[eIdx];  // sparse_A colId --> rowId of dense_X.
+				sparse_AToX_index[col_local] = edgeList_s[offset];  // sparse_A colId --> rowId of dense_X.
+				// sparse_AToX_index[col_local] = edgeList[eIdx];  // sparse_A colId --> rowId of dense_X.
 			}		
 		}
 
