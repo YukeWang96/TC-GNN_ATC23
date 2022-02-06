@@ -278,7 +278,9 @@ void preprocess(torch::Tensor edgeList_tensor,
             edgeToRow[eid] = nid;
     }
 
-    #pragma omp parallel for reduction(+:block_counter)
+
+    unsigned max_row_edges = 0;
+    #pragma omp parallel for reduction(+:block_counter) reduction(max:max_row_edges)
     for (unsigned iter = 0; iter < num_nodes + 1; iter +=  blockSize_h){
         unsigned windowId = iter / blockSize_h;
         unsigned block_start = nodePointer[iter];
@@ -298,13 +300,14 @@ void preprocess(torch::Tensor edgeList_tensor,
         blockPartition[windowId] = (clean_edges2col.size() + blockSize_w - 1) /blockSize_w;
         block_counter += blockPartition[windowId];
 
+        max_row_edges = max_row_edges < (block_end - block_start)? (block_end - block_start): max_row_edges;
         // scan the array and generate edge to column mapping. --> edge_id to compressed_column_id of TC_block.
         for (unsigned e_index = block_start; e_index < block_end; e_index++){
             unsigned eid = edgeList[e_index];
             edgeToColumn[e_index] = clean_edges2col[eid];
         }
     }
-    printf("TC_Blocks:\t%d\nExp_Edges:\t%d\n", block_counter, block_counter * 8 * 16);
+    printf("TC_Blocks:\t%d\nExp_Edges:\t%d\n>>MAX_row_edges:\t%d\n", block_counter, block_counter * 8 * 16, max_row_edges);
 }
 
 
