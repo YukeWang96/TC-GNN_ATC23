@@ -1,0 +1,55 @@
+TC_Blocks:	12867
+Exp_Edges:	1646976
+>>MAX_row_edges:	130
+Namespace(classes=2, dataset='PROTEINS_full', dim=16, epochs=10, hidden=16, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+Prep. (ms):	18.847
+cuSPARSE SPMM (ms):	3.039
+TCGNN SPMM (ms):	0.044
+dgl.op SPMM (ms):	0.088
+SpMM Validation:  True
+========================
+TC_Blocks:	408653
+Exp_Edges:	52307584
+>>MAX_row_edges:	64
+Namespace(classes=2, dataset='OVCAR-8H', dim=16, epochs=10, hidden=16, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+Prep. (ms):	439.206
+cuSPARSE SPMM (ms):	4.072
+TCGNN SPMM (ms):	1.018
+dgl.op SPMM (ms):	1.295
+SpMM Validation:  True
+========================
+TC_Blocks:	340051
+Exp_Edges:	43526528
+>>MAX_row_edges:	62
+Namespace(classes=2, dataset='Yeast', dim=16, epochs=10, hidden=16, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+Prep. (ms):	378.007
+cuSPARSE SPMM (ms):	3.691
+TCGNN SPMM (ms):	0.862
+dgl.op SPMM (ms):	1.183
+SpMM Validation:  True
+========================
+TC_Blocks:	130006
+Exp_Edges:	16640768
+>>MAX_row_edges:	173
+Namespace(classes=2, dataset='DD', dim=16, epochs=10, hidden=16, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+Prep. (ms):	165.508
+cuSPARSE SPMM (ms):	3.185
+TCGNN SPMM (ms):	0.287
+dgl.op SPMM (ms):	0.454
+SpMM Validation:  True
+========================
+TC_Blocks:	408233
+Exp_Edges:	52253824
+>>MAX_row_edges:	64
+Namespace(classes=2, dataset='SW-620H', dim=16, epochs=10, hidden=16, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+Prep. (ms):	438.283
+cuSPARSE SPMM (ms):	3.753
+TCGNN SPMM (ms):	1.018
+dgl.op SPMM (ms):	1.291
+SpMM Validation:  True
+========================
+=> PROTEINS_full, hiddn: 16
+=> OVCAR-8H, hiddn: 16
+=> Yeast, hiddn: 16
+=> DD, hiddn: 16
+=> SW-620H, hiddn: 16

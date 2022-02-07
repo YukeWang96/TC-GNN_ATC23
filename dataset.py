@@ -6,6 +6,7 @@ import time
 
 from config import *
 from scipy.sparse import *
+import dgl
 
 class TCGNN_dataset(torch.nn.Module):
     """
@@ -44,6 +45,7 @@ class TCGNN_dataset(torch.nn.Module):
         self.train_mask = torch.BoolTensor(self.train_mask).cuda()
         self.val_mask = torch.BoolTensor(self.val_mask).cuda()
         self.test_mask = torch.BoolTensor(self.test_mask).cuda()
+        self.g = None
 
     def init_edges(self, path):
 
@@ -59,7 +61,7 @@ class TCGNN_dataset(torch.nn.Module):
                 dst_li.append(dst)
                 cnt += 1
             self.edge_index = np.stack([src_li, dst_li])
-
+            self.g = dgl.graph(self.edge_index)
         else:
             # loading from a txt graph file
             if self.load_from_txt:
@@ -96,6 +98,8 @@ class TCGNN_dataset(torch.nn.Module):
                 self.num_nodes = graph_obj['num_nodes']
                 self.num_edges = len(src_li)
                 self.edge_index = np.stack([src_li, dst_li])
+                # print(self.g)
+
                 dur = time.perf_counter() - start
                 if self.verbose_flag:
                     print("# Loading (npz)(s): {:.3f}".format(dur))

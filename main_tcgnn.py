@@ -67,8 +67,9 @@ if args.single_kernel:
                     blockPartition, edgeToColumn, edgeToRow)
     X = dataset.x
     # SAG_obj.profile(X)
-    SAG_obj.validate_spmm(X)
-    # SAG_obj.validate_sddmm(X)
+    dgl_graph = dgl.graph((dataset.edge_index[0].tolist(), dataset.edge_index[1].tolist())).to('cuda:0')
+    SAG_obj.validate_spmm(X, dgl_graph)
+    # SAG_obj.validate_sddmm(X, dgl_graph)
     print("========================")
     exit(0)
 

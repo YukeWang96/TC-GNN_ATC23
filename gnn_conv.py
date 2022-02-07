@@ -4,6 +4,8 @@ import math
 import time 
 from tqdm.std import tqdm
 import TCGNN
+import dgl.ops as F
+import time
 
 n_heads = 8
 n_output = 8
@@ -187,25 +189,61 @@ class SAG(torch.nn.Module):
         # print("=> SAG profiling avg (ms): {:.3f}".format(dur*1e3/num_rounds))
         # print()
         
-    def validate_spmm(self, X):
-        ref = TCGNN.cusparse_spmm(X, self.row_pointers, self.column_index)[0]        
-        out = TCGNNFunction_SAG.apply(X, self.row_pointers, self.column_index, \
-                            self.blockPartition, self.edgeToColumn, self.edgeToRow)
+    def validate_spmm(self, X, dgl_graph=None):
         
+        profile_count = 100
+        start = time.perf_counter()
+        for i in range(profile_count):
+            ref = TCGNN.cusparse_spmm(X, self.row_pointers, self.column_index)[0]        
+        torch.cuda.synchronize()
+        dur = time.perf_counter() - start
+        print("cuSPARSE SPMM (ms):\t{:.3f}".format(dur/profile_count*1e3))
+        
+        start = time.perf_counter()
+        for i in range(profile_count):
+            out = TCGNN.forward(X, self.row_pointers, self.column_index, \
+                                self.blockPartition, self.edgeToColumn, self.edgeToRow)[0]
+        torch.cuda.synchronize()
+        dur = time.perf_counter() - start
+        print("TCGNN SPMM (ms):\t{:.3f}".format(dur/profile_count*1e3))
+        
+        start = time.perf_counter()
+        for i in range(profile_count):
+            dgl_ref = F.copy_u_sum(dgl_graph, X)
+        torch.cuda.synchronize()
+        dur = time.perf_counter() - start
+        print("dgl.op SPMM (ms):\t{:.3f}".format(dur/profile_count*1e3))
+        # print(dgl_ref)
         # print("+++++++++++Reference++++++++++++")
         # print(ref)
         # print("===========Output===============")
         # print(out)
-        status = torch.equal(ref, out)
+        status = torch.equal(dgl_ref, out) and torch.equal(dgl_ref, ref)
         print("SpMM Validation: ", status)
         
-    def validate_sddmm(self, X):
-        ref = TCGNN.cusparse_sddmm(X, self.row_pointers, self.column_index)[0]        
+    def validate_sddmm(self, X, dgl_graph=None):
+        
+        profile_count = 100
+        start = time.perf_counter()
         out = TCGNN.forward_ef(X, self.row_pointers, self.column_index, \
                                 self.blockPartition, self.edgeToColumn, self.edgeToRow)[0]
-        # print(ref)
+        torch.cuda.synchronize()
+        dur = time.perf_counter() - start
+        print("TC-GNN SDDMM (ms):\t{:.3f}".format(dur/profile_count*1e3))
+        
+        start = time.perf_counter()
+        for i in range(profile_count):
+            dgl_ref = F.u_dot_v(dgl_graph, X, X)
+        torch.cuda.synchronize()
+        dur = time.perf_counter() - start
+        print("dgl.op SDDMM (ms):\t{:.3f}".format(dur/profile_count*1e3))
+        
+        # print("+++++++++++Reference++++++++++++")
+        # print(dgl_ref.squeeze())
+        # print("===========Output===============")
         # print(out)
-        status = torch.equal(ref, out)
+        # ans = torch.sum(dgl_ref.squeeze() - out)
+        status = torch.equal(dgl_ref.squeeze(), out)
         print("SDDMM Validation: ", status)
         
 class GCNConv(torch.nn.Module):

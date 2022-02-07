@@ -334,7 +334,7 @@ std::vector<torch::Tensor> cusparse_spmm_forward_cuda(
 
 	cudaMalloc(&dBuffer, bufferSize);
 
-	#define PROFILE 10
+	// #define PROFILE 10
 	#ifdef PROFILE
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);
@@ -440,7 +440,7 @@ std::vector<torch::Tensor> cusparse_sddmm_forward_cuda(
 							CUSPARSE_SDDMM_ALG_DEFAULT, &bufferSize);
     cudaMalloc(&dBuffer, bufferSize); 
 
-	#define PROFILE 10
+	// #define PROFILE 10
 	#ifdef PROFILE
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);
@@ -467,7 +467,7 @@ std::vector<torch::Tensor> cusparse_sddmm_forward_cuda(
 	float milliseconds;
 	cudaEventElapsedTime(&milliseconds, start, stop);
 	// printf("gflop: %.3f, embedding_dim: %d\n", gflop, embedding_dim);
-	printf("cuSPARSE SDDMM \t\t Time (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
+	printf("cuSPARSE SDDMM\t\tTime (ms): %.3f, GFLOPs: %.3f\n", milliseconds/PROFILE, gflop/(milliseconds/PROFILE));
 	#endif
 
 	// destroy matrix/vector descriptors
@@ -515,7 +515,7 @@ std::vector<torch::Tensor> spmm_forward_cuda(
     const int dimTileNum = (embedding_dim + BLK_H - 1) / BLK_H;
 	const int dynamic_shared_size = (dimTileNum * BLK_W * BLK_H + MAX_EDGES * 3)* sizeof(float); // dynamic shared memory.
 
-	#define PROFILE 10
+	// #define PROFILE 10
 	#ifdef PROFILE
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);
@@ -645,7 +645,7 @@ std::vector<torch::Tensor> sddmm_forward_cuda(
 	dim3 block(WARP_SIZE, 1, 1);
     // printf("at sddmm_forward_cuda\n");
 
-	#define PROFILE 10
+	// #define PROFILE 10
 	#ifdef PROFILE
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);

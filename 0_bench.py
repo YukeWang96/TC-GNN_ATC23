@@ -3,7 +3,7 @@ import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
 model = 'gcn'
-hidden = [64]
+hidden = [16]
 num_layers = [2]
 single_kernel = True
 kernel_profile = False
@@ -13,9 +13,9 @@ kernel_profile = False
 # num_layers = [4]
 
 dataset = [
-        ('citeseer'	        		, 3703	    , 6   ),  
-        ('cora' 	        		, 1433	    , 7   ),  
-        ('pubmed'	        		, 500	    , 3   ),      
+        # ('citeseer'	        		, 3703	    , 6   ),  
+        # ('cora' 	        		, 1433	    , 7   ),  
+        # ('pubmed'	        		, 500	    , 3   ),      
         
         ('PROTEINS_full'             , 29       , 2) ,   
         ('OVCAR-8H'                  , 66       , 2) , 
@@ -23,8 +23,8 @@ dataset = [
         ('DD'                        , 89       , 2) ,
         ('SW-620H'                   , 66       , 2) ,
         
-        ( 'com-amazon'               , 96	  , 22),
-        ( 'amazon0601'  	         , 96	  , 22), 
+        # ( 'com-amazon'               , 96	  , 22),
+        # ( 'amazon0601'  	         , 96	  , 22), 
 
         # ( 'amazon0505'               , 96	  , 22),
         # ( 'artist'                   , 100	  , 12),
