@@ -23,11 +23,16 @@ dataset = [
         # ('DD'                        , 89       , 2) ,
         # ('SW-620H'                   , 66       , 2) ,
             
-        ( 'amazon0505'                  , 96	  , 22),
-        ( 'artist'                      , 100   , 12),
-        ( 'com-amazon'                  , 96	  , 22),
-        ( 'soc-BlogCatalog'	            , 128   , 39), 
-        ( 'amazon0601'  	              , 96	  , 22), 
+        # ( 'amazon0505'                  , 96	  , 22),
+        # ( 'artist'                      , 100   , 12),
+        # ( 'com-amazon'                  , 96	  , 22),
+        # ( 'soc-BlogCatalog'	            , 128   , 39), 
+        # ( 'amazon0601'  	              , 96	  , 22),
+        
+        ( 'ogbn-products'  	            , 96	, 22), 
+      	( 'ogbn-proteins'  	            , 96	, 22), 
+        ( 'reddit'  	                  , 96	, 22), 
+        ( 'enwiki-2013'  	              , 96	, 22),  
     
         # ( 'com-amazon'               , 96	  , 22),
         # ( 'amazon0601'  	         , 96	  , 22), 

@@ -238,7 +238,6 @@ class SAG(torch.nn.Module):
         torch.cuda.synchronize()
         dur = time.perf_counter() - start
         print("dgl.op SDDMM (ms):\t{:.3f}".format(dur/profile_count*1e3))
-        
         # print("+++++++++++Reference++++++++++++")
         # print(dgl_ref.squeeze())
         # print("===========Output===============")
