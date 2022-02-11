@@ -12,8 +12,9 @@
 #include <cuda_runtime_api.h> // cudaMalloc, cudaMemcpy, etc.
 #include <cusparse.h>         // cusparseSpMM
 
-
 #include "config.h"
+
+using namespace nvcuda;
 
 #define CHECK_CUDA(func)                                                       \
 {                                                                              \
@@ -35,7 +36,6 @@
     }                                                                          \
 }
 
-
 __global__ void warmup(){}
 
 __device__ inline 
@@ -43,10 +43,6 @@ void atomicAdd_F(float* address, float value){
   float old = value;  
   while ((old = atomicExch(address, atomicExch(address, 0.0f)+old))!=0.0f);
 }
-
-
-using namespace nvcuda;
-
 ////////////////////
 // each warp fill neighbor for one nodes
 // warp -- all neighbors of a node
