@@ -192,12 +192,13 @@ class SAG(torch.nn.Module):
     def validate_spmm(self, X, dgl_graph=None):
         
         profile_count = 100
+        OPS = 2 * self.column_index.size(-1) * X.size(1)
         start = time.perf_counter()
         for i in range(profile_count):
             ref = TCGNN.cusparse_spmm(X, self.row_pointers, self.column_index)[0]        
         torch.cuda.synchronize()
         dur = time.perf_counter() - start
-        print("cuSPARSE SPMM (ms):\t{:.3f}".format(dur/profile_count*1e3))
+        print("cuSPARSE SPMM (ms):\t{:.3f}, GLFOPS:\t{:.3f}".format(dur/profile_count*1e3, profile_count*OPS/(dur)/1e9))
         
         start = time.perf_counter()
         for i in range(profile_count):
@@ -205,14 +206,14 @@ class SAG(torch.nn.Module):
                                 self.blockPartition, self.edgeToColumn, self.edgeToRow)[0]
         torch.cuda.synchronize()
         dur = time.perf_counter() - start
-        print("TCGNN SPMM (ms):\t{:.3f}".format(dur/profile_count*1e3))
+        print("TCGNN SPMM (ms):\t{:.3f}, GLFOPS:\t{:.3f}".format(dur/profile_count*1e3, profile_count*OPS/(dur)/1e9))
         
         start = time.perf_counter()
         for i in range(profile_count):
             dgl_ref = F.copy_u_sum(dgl_graph, X)
         torch.cuda.synchronize()
         dur = time.perf_counter() - start
-        print("dgl.op SPMM (ms):\t{:.3f}".format(dur/profile_count*1e3))
+        print("dgl.op SPMM (ms):\t{:.3f}, GLFOPS:\t{:.3f}".format(dur/profile_count*1e3, profile_count*OPS/(dur)/1e9))
         # print(dgl_ref)
         # print("+++++++++++Reference++++++++++++")
         # print(ref)
@@ -246,6 +247,20 @@ class SAG(torch.nn.Module):
         status = torch.equal(dgl_ref.squeeze(), out)
         print("SDDMM Validation: ", status)
         
+        
+    def profile_cusparse_spmm(self, X, dgl_graph=None):
+        ref = TCGNN.cusparse_spmm(X, self.row_pointers, self.column_index)[0]        
+       
+    def profile_dgl_spmm(self, X, dgl_graph=None):
+        OPS = 2 * self.column_index.size(-1) * X.size(1)
+        profile_count = 100
+        start = time.perf_counter()
+        for i in range(profile_count):
+            dgl_ref = F.u_dot_v(dgl_graph, X, X)
+        torch.cuda.synchronize()
+        dur = time.perf_counter() - start
+        print("dgl.op SPMM (ms):\t{:.3f}, GLFOPS:\t{:.3f}".format(dur/profile_count*1e3, profile_count*OPS/(dur)/1e9))
+             
 class GCNConv(torch.nn.Module):
     def __init__(self, input_dim, output_dim):
         super(GCNConv, self).__init__()

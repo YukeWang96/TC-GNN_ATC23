@@ -3,7 +3,7 @@ import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
 model = 'gcn'
-hidden = [16]
+hidden = [32]
 num_layers = [2]
 single_kernel = True
 kernel_profile = False
@@ -17,12 +17,18 @@ dataset = [
         # ('cora' 	        		, 1433	    , 7   ),  
         # ('pubmed'	        		, 500	    , 3   ),      
         
-        ('PROTEINS_full'             , 29       , 2) ,   
-        ('OVCAR-8H'                  , 66       , 2) , 
-        ('Yeast'                     , 74       , 2) ,
-        ('DD'                        , 89       , 2) ,
-        ('SW-620H'                   , 66       , 2) ,
-        
+        # ('PROTEINS_full'             , 29       , 2) ,   
+        # ('OVCAR-8H'                  , 66       , 2) , 
+        # ('Yeast'                     , 74       , 2) ,
+        # ('DD'                        , 89       , 2) ,
+        # ('SW-620H'                   , 66       , 2) ,
+            
+        ( 'amazon0505'                  , 96	  , 22),
+        ( 'artist'                      , 100   , 12),
+        ( 'com-amazon'                  , 96	  , 22),
+        ( 'soc-BlogCatalog'	            , 128   , 39), 
+        ( 'amazon0601'  	              , 96	  , 22), 
+    
         # ( 'com-amazon'               , 96	  , 22),
         # ( 'amazon0601'  	         , 96	  , 22), 
 

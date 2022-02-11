@@ -330,7 +330,7 @@ std::vector<torch::Tensor> cusparse_spmm_forward_cuda(
 
 	cudaMalloc(&dBuffer, bufferSize);
 
-	// #define PROFILE 10
+	// #define PROFILE 100
 	#ifdef PROFILE
 	cudaEvent_t start, stop;
 	cudaEventCreate(&start);
