@@ -248,7 +248,7 @@ class SAG(torch.nn.Module):
         
         
     def profile_cusparse_spmm(self, X, dgl_graph=None):
-        ref = TCGNN.cusparse_spmm(X, self.row_pointers, self.column_index)[0]        
+        ref = TCGNN.cusparse_spmm(X, self.row_pointers.cuda(), self.column_index.cuda())[0]        
        
     def profile_dgl_spmm(self, X, dgl_graph=None):
         OPS = 2 * self.column_index.size(-1) * X.size(1)

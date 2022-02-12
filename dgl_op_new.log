@@ -1,0 +1,68 @@
+Namespace(classes=6, dataset='citeseer', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	0.054, GLFOPS:	11.009
+========================
+Namespace(classes=7, dataset='cora', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	0.055, GLFOPS:	12.173
+========================
+Namespace(classes=3, dataset='pubmed', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	0.054, GLFOPS:	117.450
+========================
+Namespace(classes=2, dataset='PROTEINS_full', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	0.062, GLFOPS:	167.689
+========================
+Namespace(classes=2, dataset='OVCAR-8H', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	1.333, GLFOPS:	189.500
+========================
+Namespace(classes=2, dataset='Yeast', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	1.223, GLFOPS:	190.360
+========================
+Namespace(classes=2, dataset='DD', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	0.559, GLFOPS:	193.124
+========================
+Namespace(classes=2, dataset='SW-620H', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	1.332, GLFOPS:	189.468
+========================
+Namespace(classes=22, dataset='amazon0505', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	1.655, GLFOPS:	188.717
+========================
+Namespace(classes=12, dataset='artist', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	0.528, GLFOPS:	198.751
+========================
+Namespace(classes=22, dataset='com-amazon', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	0.656, GLFOPS:	180.601
+========================
+Namespace(classes=39, dataset='soc-BlogCatalog', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	0.682, GLFOPS:	196.423
+========================
+Namespace(classes=22, dataset='amazon0601', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	1.808, GLFOPS:	193.879
+========================
+Namespace(classes=22, dataset='ogbn-products', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	43.618, GLFOPS:	181.531
+========================
+Namespace(classes=22, dataset='ogbn-proteins', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	24.557, GLFOPS:	206.204
+========================
+Namespace(classes=22, dataset='reddit', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	38.767, GLFOPS:	189.220
+========================
+Namespace(classes=22, dataset='enwiki-2013', dim=32, epochs=10, hidden=32, model='gcn', num_layers=2, single_kernel=True, sparsity=1)
+dgl.op SPMM (ms):	65.895, GLFOPS:	178.592
+========================
+=> citeseer, hiddn: 32
+=> cora, hiddn: 32
+=> pubmed, hiddn: 32
+=> PROTEINS_full, hiddn: 32
+=> OVCAR-8H, hiddn: 32
+=> Yeast, hiddn: 32
+=> DD, hiddn: 32
+=> SW-620H, hiddn: 32
+=> amazon0505, hiddn: 32
+=> artist, hiddn: 32
+=> com-amazon, hiddn: 32
+=> soc-BlogCatalog, hiddn: 32
+=> amazon0601, hiddn: 32
+=> ogbn-products, hiddn: 32
+=> ogbn-proteins, hiddn: 32
+=> reddit, hiddn: 32
+=> enwiki-2013, hiddn: 32

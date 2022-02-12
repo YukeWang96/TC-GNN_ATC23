@@ -47,18 +47,18 @@ edgeToColumn = torch.zeros(num_edges, dtype=torch.int)
 edgeToRow = torch.zeros(num_edges, dtype=torch.int)
 blockPartition = torch.zeros(num_row_windows, dtype=torch.int)
 
-# preprocessing for generating meta-information
-start = time.perf_counter()
-TCGNN.preprocess(column_index, row_pointers, num_nodes,  \
-                BLK_H,	BLK_W, blockPartition, edgeToColumn, edgeToRow)
-build_neighbor_parts = time.perf_counter() - start
-print("Prep. (ms):\t{:.3f}".format(build_neighbor_parts*1e3))
+# # preprocessing for generating meta-information
+# start = time.perf_counter()
+# TCGNN.preprocess(column_index, row_pointers, num_nodes,  \
+#                 BLK_H,	BLK_W, blockPartition, edgeToColumn, edgeToRow)
+# build_neighbor_parts = time.perf_counter() - start
+# print("Prep. (ms):\t{:.3f}".format(build_neighbor_parts*1e3))
 
-column_index = column_index.cuda()
-row_pointers = row_pointers.cuda()
-blockPartition = blockPartition.cuda()
-edgeToColumn = edgeToColumn.cuda()
-edgeToRow = edgeToRow.cuda()
+# column_index = column_index.cuda()
+# row_pointers = row_pointers.cuda()
+# blockPartition = blockPartition.cuda()
+# edgeToColumn = edgeToColumn.cuda()
+# edgeToRow = edgeToRow.cuda()
 
 #########################################
 ## Single Satter-And-Gather (SAG) Profiling.
