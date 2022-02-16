@@ -74,7 +74,7 @@ to install the TCGNN_conv modules with Pytorch binding.
 
 
 ### Download graph datasets.
-Get the preprocessed datasets in `.npy` at [here](https://project-datasets.s3.us-west-2.amazonaws.com/tcgnn-ae-graphs.tar.gz), 
+Get the preprocessed datasets in `.npy` at [here](https://storage.googleapis.com/graph_dataset/tcgnn-ae-graphs.tar.gz), 
 then run
 ```
 tar -zxvf tcgnn-ae-graphs.tar.gz
