@@ -2,13 +2,13 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-# model = 'gcn'
-# hidden = [16]
-# num_layers = [2]
+model = 'gcn'
+hidden = [16]
+num_layers = [2]
 
-model = 'agnn'
-hidden = [32]
-num_layers = [4]
+# model = 'agnn'
+# hidden = [32]
+# num_layers = [4]
 
 dataset = [
 		# ('toy'	        , 3	    , 2   ),  
