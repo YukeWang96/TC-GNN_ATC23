@@ -1,4 +1,5 @@
-FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu18.04
+# FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu18.04
+FROM nvidia/cuda:11.6.0-cudnn8-devel-ubuntu18.04
 
 RUN apt-get update && apt-get install -y libboost-all-dev \
                                          libgoogle-perftools-dev
@@ -15,15 +16,12 @@ RUN wget \
     && bash Miniconda3-latest-Linux-x86_64.sh -b \
     && rm -f Miniconda3-latest-Linux-x86_64.sh 
 RUN conda --version
-RUN conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c conda-forge
-RUN conda install -c dglteam dgl-cuda11.0
-RUN pip install requests
 
-RUN pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-1.8.0+cu111.html \
-    pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-1.8.0+cu111.html  \
-    pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-1.8.0+cu111.html \
-    pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.8.0+cu111.html \
-    pip install torch-geometric
+
+RUN conda install pytorch torchvision torchaudio pytorch-cuda=11.6 -c pytorch -c nvidia
+RUN conda install -c dglteam dgl-cuda11.6
+RUN conda install pyg -c pyg
+RUN pip install requests
 
 RUN conda init
 RUN /bin/bash -c "source root/.bashrc"
