@@ -1,5 +1,6 @@
 # FROM nvidia/cuda:11.2.2-cudnn8-devel-ubuntu18.04
 FROM nvidia/cuda:11.6.0-cudnn8-devel-ubuntu18.04
+# FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
 
 RUN apt-get update && apt-get install -y libboost-all-dev \
                                          libgoogle-perftools-dev
