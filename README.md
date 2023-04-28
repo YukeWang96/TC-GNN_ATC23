@@ -4,7 +4,7 @@
 ```
 @inproceedings{TC-GNN,
   title={TC-GNN: Accelerating Sparse Graph Neural Network Computation Via Dense Tensor Core on GPUs},
-  author={Yuke Wang and Zheng Wang and Boyuan Feng and Yufei Ding},
+  author={Yuke Wang and Zheng Wang and Boyuan Feng and Guyue Huang and Yufei Ding},
   booktitle={USENIX Annual Technical Conference},
   year={2023}
 }
