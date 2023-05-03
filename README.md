@@ -1,12 +1,13 @@
-# TC-GNN (Running Sparse GNN on Dense Tensor Core on Ampere GPU)
+# TC-GNN Artifact for USENIX ATC'23.
 
-+ **Cite this project and [paper](https://arxiv.org/abs/2112.02052).**
++ **Cite this project and [paper](https://arxiv.org/abs/2112.02052).** [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7893174.svg)](https://doi.org/10.5281/zenodo.7893174)
+
 ```
 @inproceedings{TC-GNN,
-  title={TC-GNN: Accelerating Sparse Graph Neural Network Computation Via Dense Tensor Core on GPUs},
-  author={Yuke Wang and Boyuan Feng and Yufei Ding},
-  booktitle={Arxiv},
-  year={2022}
+  title={TC-GNN: Bridging Sparse GNN Computation and Dense Tensor Cores on GPUs},
+  author={Yuke Wang and Boyuan Feng and Zheng Wang and Guyue Huang and Yufei Ding},
+  booktitle={USENIX Annual Technical Conference},
+  year={2023}
 }
 ```
 

@@ -24,6 +24,9 @@ RUN conda install -c dglteam dgl-cuda11.6
 RUN conda install pyg -c pyg
 RUN pip install requests
 
+RUN  apt-get update -y
+RUN apt-get install -y nsight-compute-2023.1.0
+
 RUN conda init
 RUN /bin/bash -c "source root/.bashrc"
 

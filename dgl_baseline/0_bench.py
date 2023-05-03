@@ -38,6 +38,8 @@ for hid in hidden:
 					--dim {} \
 					--n-hidden {} \
 					--n-layers {} \
-					--num_classes {}".format(data, model, d, hid, num_layers, c)		
+					--num_classes {}".format(data, model, d, hid, num_layers, c)	
+		command = "ncu --set full -k csrmm_alg2_kernel " + command
+		# command = "sudo ncu --csv --set full " + command 				
 		os.system(command)
 		print()
