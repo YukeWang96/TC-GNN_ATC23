@@ -8,6 +8,7 @@ import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 from tqdm import *
+import torch.cuda as cuda
 
 import TCGNN
 from dataset import *
@@ -142,7 +143,7 @@ elif args.model == "agnn":
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 model, dataset = Net().to(device), dataset.to(device)
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01, capturable=True)
 
 # Training 
 def train():
@@ -154,15 +155,27 @@ def train():
 
 if __name__ == "__main__":
 
+    s = torch.cuda.Stream()
+    s.wait_stream(torch.cuda.current_stream())
+    train()
+    torch.cuda.current_stream().wait_stream(s)
+    
+
+    g = torch.cuda.CUDAGraph()
+    with torch.cuda.graph(g):
+        train()
+
     # dry run.
     for epoch in range(1, 3):
-        train()
+       g.replay()
 
     torch.cuda.synchronize()
     start_train = time.perf_counter()
     
     for _ in tqdm(range(1, args.epochs + 1)):
-        train()
+        # train()
+        g.replay()
+
 
     torch.cuda.synchronize()
     train_time = time.perf_counter() - start_train
