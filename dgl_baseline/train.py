@@ -68,13 +68,13 @@ def main(args):
     model.train()
 
     model(features)
-    # # dry run.
-    # for _ in range(3):
-    #      model(features)
+    # dry run.
+    for _ in range(3):
+         model(features)
     
     torch.cuda.synchronize() 
 
-    exit(0)
+    # exit(0)
     t0 = time.perf_counter()
 
     for _ in tqdm(range(1, args.n_epochs + 1)):

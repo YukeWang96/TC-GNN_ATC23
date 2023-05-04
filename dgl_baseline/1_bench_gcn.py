@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
 import os
 
-# model = 'gcn'
-# hidden = [16]
-# num_layers = 2
-
-model = 'agnn'
-hidden = [32]
-num_layers = 4
+model = 'gcn'
+hidden = [16]
+num_layers = 2
 
 dataset = [
 		('citeseer'	        , 3703	    , 6   ),  
@@ -39,7 +35,7 @@ for hid in hidden:
 					--n-hidden {} \
 					--n-layers {} \
 					--num_classes {}".format(data, model, d, hid, num_layers, c)	
-		command = "ncu --set full -k csrmm_alg2_kernel " + command
+		# command = "ncu --set full -k csrmm_alg2_kernel " + command
 		# command = "sudo ncu --csv --set full " + command 				
 		os.system(command)
 		print()
