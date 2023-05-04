@@ -11,9 +11,6 @@ num_layers = [2]
 # num_layers = [4]
 
 dataset = [
-		# ('toy'	        , 3	    , 2   ),  
-		# ('tc_gnn_verify'	, 16	, 2),
-		# ('tc_gnn_verify_2x'	, 16	, 2),
 
 		('citeseer'	        		, 3703	    , 6   ),  
 		('cora' 	        		, 1433	    , 7   ),  
@@ -31,16 +28,6 @@ dataset = [
 		( 'com-amazon'               , 96	  , 22),
 		( 'soc-BlogCatalog'	         , 128	  , 39),      
 		( 'amazon0601'  	         , 96	  , 22), 
-
-		# ('SW-620H'                   , 66       , 2) ,
-		# ( 'web-BerkStan'             , 100	  , 12),
-	    # ( 'reddit'                   , 602    , 41),
-		# ( 'wiki-topcats'             , 300	  , 12),
-		# ( 'COLLAB'                   , 100      , 3) ,
-		# ( 'wiki-topcats'             , 300	  , 12),
-		# ( 'Reddit'                   , 602      , 41),
-		# ( 'enwiki-2013'	           , 100	  , 12),      
-		# ( 'amazon_also_bought'       , 96       , 22),
 ]
 
 for n_Layer in num_layers:

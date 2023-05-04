@@ -32,7 +32,7 @@ git clone git@github.com:YukeWang96/TCGNN-Pytorch.git
 
 ## Environment Setup.
 ### [**Method-1**] Install via Docker (Recommended).
-+ Go to `Docker/`
++ Go to `docker/`
 + Run `./build.sh`
 + Run `./launch.sh`
 
@@ -68,31 +68,34 @@ pip install torch-geometric
 ### Install **`TC-GNN`**.
 Go to `TCGNN_conv/`, then run
 ```
-./build.sh
+./0_build_tcgnn.sh
 ``` 
 to install the TCGNN_conv modules with Pytorch binding. 
 **Note that this step is required for both Docker and Conda setup.**
 
 
 ### Download graph datasets.
-Get the preprocessed datasets in `.npy` at [here](https://storage.googleapis.com/graph_dataset/tcgnn-ae-graphs.tar.gz), 
-then run
+Get the preprocessed datasets
 ```
 wget https://storage.googleapis.com/graph_dataset/tcgnn-ae-graphs.tar.gz
-tar -zxvf tcgnn-ae-graphs.tar.gz
+tar -zxvf tcgnn-ae-graphs.tar.gz && rm -rf tcgnn-ae-graphs.tar.gz
 ``` 
 
 ## Running **PyG** baseline.
-> +  Go to **`pyg_baseline/`** directory;
-> + Pass the `--model` parameter in `pyg_main.py` with `gcn` and `gin` to profile the example GCN and GIN model, respectively;
+> + Go to **`pyg_baseline/`** directory;
+> + `./0_run_pyg.sh`to run all pyg experiments.
+> + Check the results in `` and ``.
+<!-- > + Change `run_GCN=True` or  `run_GCN=False` in `0_bench.py` with `gcn` and `gin` to profile the example GCN and GIN model, respectively;
 > + `./0_bench.py| tee run_pyg.log` to run the script and the report 10 epoch runtime for all evaluated datasets. 
-> + `./1_log2csv.py` to convert the `run_pyg.log` to `run_pyg.csv` for ease of analysis.
+> + `./1_log2csv.py` to convert the `run_pyg.log` to `run_pyg.csv` for ease of analysis. -->
 
 ## Running **DGL** baseline.
-> +  Go to **`dgl_baseline/`** directory
-> +  Pass the `--model` parameter in `dgl_main.py` with `gcn` and  `gin` to profile the example GCN and GIN model, respectively;
+> +  Go to **`dgl_baseline/`** directory.
+> + `./0_run_dgl.sh`to run all dgl experiments.
+> + Check the results in `` and ``.
+<!-- > +  Pass the `--model` parameter in `dgl_main.py` with `gcn` and  `gin` to profile the example GCN and GIN model, respectively;
 > + `./0_bench.py| tee run_dgl.log` to run the script and the report 10 epoch runtime for all evaluated datasets. 
-> + `./1_log2csv.py` to convert the `run_dgl.log` to `run_dgl.csv` for ease of visualization.
+> + `./1_log2csv.py` to convert the `run_dgl.log` to `run_dgl.csv` for ease of visualization. -->
 
 ## Running **TC-GNN**.
 > +  Under the current project directory 

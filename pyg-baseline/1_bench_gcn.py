@@ -2,8 +2,7 @@
 import os
 os.environ["PYTHONWARNINGS"] = "ignore"
 
-# hidden = [16]
-hidden = [32]
+run_GCN = True
 
 dataset = [
         ('citeseer'	        , 3703	    , 6   ),  
@@ -17,16 +16,19 @@ dataset = [
         ('DD'                        , 89       , 2) ,
         ('YeastH'                    , 74       , 2) ,
 
-        ( 'amazon0505'               , 96	  , 22),
-        ( 'artist'                   , 100  , 12),
-        ( 'com-amazon'               , 96	  , 22),
-        ( 'soc-BlogCatalog'	         , 128  , 39), 
-        ( 'amazon0601'  	         , 96	  , 22), 
+        ( 'amazon0505'               , 96	, 22),
+        ( 'artist'                   , 100      , 12),
+        ( 'com-amazon'               , 96	, 22),
+        ( 'soc-BlogCatalog'	     , 128      , 39), 
+        ( 'amazon0601'  	     , 96	, 22), 
 ]
 
 
-for hid in hidden:
-    for data, d, c in dataset:
+for data, d, c in dataset:
+    if run_GCN:
         command = "python pyg_main.py --dataset {} \
-                --dim {} --hidden {} --classes {}".format(data, d, hid, c)		
-        os.system(command)
+                --dim {} --classes {} --run_GCN".format(data, d, c)		
+    else:
+        command = "python pyg_main.py --dataset {} \
+                --dim {} --classes {}".format(data, d, c)
+    os.system(command)

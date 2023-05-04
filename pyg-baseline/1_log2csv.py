@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import re
-import sys 
+import sys, os 
 
 if len(sys.argv) < 2:
     raise ValueError("Usage: ./1_log2csv.py result.log")
@@ -14,11 +14,14 @@ for line in fp:
         data = re.findall(r'dataset=.*?,', line)[0].split('=')[1].replace(",", "").replace('\'', "")
         print(data)
         dataset_li.append(data)
-    if "Train (ms):" in line:
-        time = line.split("Train (ms):")[1].rstrip("\n").lstrip()
+    if "(ms):" in line:
+        time = line.split("(ms):")[1].rstrip("\n").lstrip()
         print(time)
         time_li.append(time)
 fp.close()
+
+if not os.path.exists("logs"):
+    os.system("mkdir logs")
 
 fout = open(sys.argv[1].strip(".log")+".csv", 'w')
 fout.write("dataset,Avg.Epoch (ms)\n")
