@@ -20,7 +20,7 @@ class AGNN(nn.Module):
         )
 
         self.layers = nn.ModuleList(
-            [AGNNConv(init_beta, learn_beta) for _ in range(n_layers)]
+            [AGNNConv(init_beta, learn_beta, allow_zero_in_degree=True) for _ in range(n_layers)]
         )
 
         self.cls = nn.Sequential(
