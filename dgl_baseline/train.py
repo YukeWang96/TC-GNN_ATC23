@@ -16,7 +16,7 @@ register_data_args(parser)
 parser.add_argument("--gpu", type=int, default=0, help="gpu")
 parser.add_argument("--dim", type=int, default=96, help="dim")
 parser.add_argument("--num_classes", type=int, default=22, help="num_classes")
-parser.add_argument("--n-epochs", type=int, default=1, help="number of training epochs")
+parser.add_argument("--n-epochs", type=int, default=100, help="number of training epochs")
 parser.add_argument("--n-hidden", type=int, default=16, help="number of hidden gcn units")
 parser.add_argument("--n-layers", type=int, default=2, help="number of layers")
 parser.add_argument("--model", type=str, default='gcn', choices=['gcn', 'agnn'], help="type of model")
@@ -67,7 +67,6 @@ def main(args):
     model = model.cuda()
     model.train()
 
-    model(features)
     # dry run.
     for _ in range(3):
          model(features)
