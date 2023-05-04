@@ -20,7 +20,7 @@ parser.add_argument("--dim", type=int, default=96, help="input embedding dimensi
 parser.add_argument("--num_layers", type=int, default=2, help="num layers")
 parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
-parser.add_argument("--epochs", type=int, default=10, help="number of epoches")
+parser.add_argument("--epochs", type=int, default=200, help="number of epoches")
 parser.add_argument("--model", type=str, default='gcn', help='GNN model', choices=['gcn', 'gin', 'agnn'])
 
 parser.add_argument("--single_kernel", action='store_true', help="whether to profile a single SAG kernel")

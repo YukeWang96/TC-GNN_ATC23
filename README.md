@@ -117,6 +117,10 @@ tar -zxvf tcgnn-ae-graphs.tar.gz && rm -rf tcgnn-ae-graphs.tar.gz
 > + `./1_log2csv.py` to convert the `run_dgl.log` to `run_dgl.csv` for ease of visualization. -->
 
 ## Running **TC-GNN**.
-> +  Under the current project directory 
+> +  Go to project root directory.
+> + `./0_run_tcgnn.sh`to run all dgl experiments.
+> + Check the results in `1_bench_gcn.csv` and `1_bench_agnn.csv`.
+
+<!-- > +  Under the current project directory 
 > + `./0_bench.py| tee run_TCGNN.log` to run the script and the report 10 epoch runtime for all evaluated datasets. 
-> + `./1_log2csv.py` to convert the `run_TCGNN.log` to `run_TCGNN.csv` for ease of analysis.
+> + `./1_log2csv.py` to convert the `run_TCGNN.log` to `run_TCGNN.csv` for ease of analysis. -->
