@@ -110,7 +110,7 @@ tar -zxvf tcgnn-ae-graphs.tar.gz && rm -rf tcgnn-ae-graphs.tar.gz
 ## Running **DGL** baseline.
 > +  Go to **`dgl_baseline/`** directory.
 > + `./0_run_dgl.sh`to run all dgl experiments.
-> + Check the results in `` and ``, which are similar as below.
+> + Check the results in `1_bench_gcn.csv` and `1_bench_agnn.csv`.
 
 <!-- > +  Pass the `--model` parameter in `dgl_main.py` with `gcn` and  `gin` to profile the example GCN and GIN model, respectively;
 > + `./0_bench.py| tee run_dgl.log` to run the script and the report 10 epoch runtime for all evaluated datasets. 
