@@ -124,3 +124,24 @@ tar -zxvf tcgnn-ae-graphs.tar.gz && rm -rf tcgnn-ae-graphs.tar.gz
 <!-- > +  Under the current project directory 
 > + `./0_bench.py| tee run_TCGNN.log` to run the script and the report 10 epoch runtime for all evaluated datasets. 
 > + `./1_log2csv.py` to convert the `run_TCGNN.log` to `run_TCGNN.csv` for ease of analysis. -->
+
+## Reference.
++ [**Deep Graph Library**](https://github.com/dmlc/dgl) <br>
+Wang, Minjie, et al. 
+**Deep graph library: A graph-centric, highly-performant package for graph neural networks.**. *The International Conference on Learning Representations (ICLR), 2019.*
+
++ [**Pytorch Geometric**](https://github.com/rusty1s/pytorch_geometric) <br>
+Fey, Matthias, and Jan Eric Lenssen. 
+**Fast graph representation learning with PyTorch Geometric.** 
+*The International Conference on Learning Representations (ICLR), 2019.*
+
++ [**ASpT**](http://gitlab.hpcrl.cse.ohio-state.edu/chong/ppopp19_ae/-/blob/master/README.md) <br>
+Hong, Changwan, et al. 
+**Adaptive sparse tiling for sparse matrix multiplication.** *In Proceedings of the 24th Symposium on Principles and Practice of Parallel Programming (PPoPP), 2019*.
+
++ [**tSparse**](https://github.com/oresths/tSparse) <br>
+Zachariadis, O., et. al. 
+**Accelerating Sparse Matrix-Matrix Multiplication with GPU Tensor Cores** *Computers & Electrical Engineering (2020).
+
++ [**cuSPARSELt**](https://developer.nvidia.com/blog/exploiting-ampere-structured-sparsity-with-cusparselt/?ncid=so-twit-40939#cid=hpc06_so-twit_en-us)<br>
+NVIDIA. Exploiting NVIDIA Ampere Structured Sparsity with cuSPARSELt.
