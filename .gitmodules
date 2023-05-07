@@ -1,0 +1,9 @@
+[submodule "TCGNN-bSpmm"]
+	path = TCGNN-bSpmm
+	url = git@github.com:YukeWang96/TCGNN-bSpmm.git
+[submodule "TCGNN-tsparse"]
+	path = TCGNN-tsparse
+	url = git@github.com:YukeWang96/TCGNN-tsparse.git
+[submodule "TCGNN-trition"]
+	path = TCGNN-trition
+	url = git@github.com:YukeWang96/TCGNN-trition.git

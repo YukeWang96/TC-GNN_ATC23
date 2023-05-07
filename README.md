@@ -81,49 +81,52 @@ wget https://storage.googleapis.com/graph_dataset/tcgnn-ae-graphs.tar.gz
 tar -zxvf tcgnn-ae-graphs.tar.gz && rm -rf tcgnn-ae-graphs.tar.gz
 ``` 
 
-## Running **PyG** baseline.
-> + Go to **`pyg_baseline/`** directory;
-> + `./0_run_pyg.sh`to run all pyg experiments.
-> + Check the results in **`1_bench_gcn.csv`** and **`1_bench_agnn.csv`**, which are similar as below.
-
-| dataset         | Avg.Epoch (ms) |
-|:-----------------|----------------:|
-| citeseer        | 10.149         |
-| cora            | 9.964          |
-| pubmed          | 10.114         |
-| ppi             | 13.419         |
-| PROTEINS_full   | 10.908         |
-| OVCAR-8H        | 72.636         |
-| Yeast           | 66.644         |
-| DD              | 18.972         |
-| YeastH          | 118.047        |
-| amazon0505      | 29.731         |
-| artist          | 11.172         |
-| com-amazon      | 22.476         |
-| soc-BlogCatalog | 14.971         |
-| amazon0601      | 26.621         |
-
-<!-- > + Change `run_GCN=True` or  `run_GCN=False` in `0_bench.py` with `gcn` and `gin` to profile the example GCN and GIN model, respectively;
-> + `./0_bench.py| tee run_pyg.log` to run the script and the report 10 epoch runtime for all evaluated datasets. 
-> + `./1_log2csv.py` to convert the `run_pyg.log` to `run_pyg.csv` for ease of analysis. -->
-
-## Running **DGL** baseline.
+## Running **DGL** baseline (Fig-6a).
 > +  Go to **`dgl_baseline/`** directory.
 > + `./0_run_dgl.sh`to run all dgl experiments.
 > + Check the results in `1_bench_gcn.csv` and `1_bench_agnn.csv`.
 
-<!-- > +  Pass the `--model` parameter in `dgl_main.py` with `gcn` and  `gin` to profile the example GCN and GIN model, respectively;
-> + `./0_bench.py| tee run_dgl.log` to run the script and the report 10 epoch runtime for all evaluated datasets. 
-> + `./1_log2csv.py` to convert the `run_dgl.log` to `run_dgl.csv` for ease of visualization. -->
+## Running **PyG** baseline (Fig-6b).
+> + Go to **`pyg_baseline/`** directory;
+> + `./0_run_pyg.sh`to run all pyg experiments.
+> + Check the results in **`1_bench_gcn.csv`** and **`1_bench_agnn.csv`**, which are similar as below.
+
 
 ## Running **TC-GNN**.
 > +  Go to project root directory.
 > + `./0_run_tcgnn.sh`to run all dgl experiments.
 > + Check the results in `1_bench_gcn.csv` and `1_bench_agnn.csv`.
 
-<!-- > +  Under the current project directory 
-> + `./0_bench.py| tee run_TCGNN.log` to run the script and the report 10 epoch runtime for all evaluated datasets. 
-> + `./1_log2csv.py` to convert the `run_TCGNN.log` to `run_TCGNN.csv` for ease of analysis. -->
+## Dense Tile Reduction (Fig-7).
+```
+python 3_cnt_TC_blk_SDDMM.py
+python 3_cnt_TC_blk_SpMM.py
+```
++ Check the results in `3_cnt_TC_blk_SDDMM.csv` and `3_cnt_TC_blk_SDDMM.csv`.
+
+
+## cuSPARSE-bSpMM Baseline (Fig-6c) 
+```
+cd TCGNN-bSpmm/cusparse
+./0_run_bSpMM.sh
+```
++ Check the results in `1_run_bSpMM.csv`.
+
+
+## tSparse Baseline (Table-5, column-2).
+```
+cd TCGNN-tsparse/
+./0_run_tSparse.sh
+```
++ Check the results in `1_run_tSparse.csv`.
+
+## Triton Baseline (Table-5, column-3).
+```
+cd TCGNN-trition/python/bench
+./0_run_triton
+```
++ Check the results in `1_run_triton.csv`.
+
 
 ## Reference.
 + [**Deep Graph Library**](https://github.com/dmlc/dgl) <br>
