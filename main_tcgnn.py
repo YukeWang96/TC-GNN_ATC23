@@ -23,7 +23,6 @@ parser.add_argument("--hidden", type=int, default=16, help="hidden dimension")
 parser.add_argument("--classes", type=int, default=22, help="number of output classes")
 parser.add_argument("--epochs", type=int, default=200, help="number of epoches")
 parser.add_argument("--model", type=str, default='gcn', help='GNN model', choices=['gcn', 'gin', 'agnn'])
-
 parser.add_argument("--single_kernel", action='store_true', help="whether to profile a single SAG kernel")
 args = parser.parse_args()
 print(args)
@@ -32,10 +31,8 @@ print(args)
 ## Load Graph from files.
 #########################################
 dataset = args.dataset
-# path = osp.join("/home/yuke/.graphs/orig", dataset)
 path = osp.join("tcgnn-ae-graphs/", dataset + ".npz")
 dataset = TCGNN_dataset(path, args.dim, args.classes, load_from_txt=False)
-
 num_nodes = dataset.num_nodes
 num_edges = dataset.num_edges
 column_index =  dataset.column_index 

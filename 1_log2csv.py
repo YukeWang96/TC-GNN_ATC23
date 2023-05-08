@@ -14,8 +14,8 @@ for line in fp:
         data = re.findall(r'dataset=.*?,', line)[0].split('=')[1].replace(",", "").replace('\'', "")
         print(data)
         dataset_li.append(data)
-    if "Train (ms):" in line:
-        time = line.split("Train (ms):")[1].rstrip("\n").lstrip()
+    if "(ms):" in line and "Prep." not in line:
+        time = line.split("(ms):")[1].rstrip("\n").lstrip()
         print(time)
         time_li.append(time)
 fp.close()

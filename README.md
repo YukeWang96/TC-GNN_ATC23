@@ -127,6 +127,42 @@ cd TCGNN-trition/python/bench
 ```
 + Check the results in `1_run_triton.csv`.
 
+## Triton Baseline (Table-5, column-4).
+```
+./0_run_tcgnn_single_kernel.sh
+```
++ Check the results in `2_tcgnn_single_kernel.csv`.
+
+## Use TC-GNN as a Tool or Library for your project.
+
+Building a new design based on TC-GNN is simple, there are only several steps:
+
+
+### Register a new PyTorch Operator. 
++ Add a compilation entry in `TCGNN.cpp` under `TCGNN_conv/`. An example is shown below.
+
+https://github.com/YukeWang96/TC-GNN_ATC23/blob/0d40b53ccd232b396899e4bd56114e9754c9c145/TCGNN_conv/TCGNN.cpp#L63-L86
+
+https://github.com/YukeWang96/TC-GNN_ATC23/blob/0d40b53ccd232b396899e4bd56114e9754c9c145/TCGNN_conv/TCGNN.cpp#L265
+
+### Build the C++ design based on our existing examples 
++ Add the operator implementation in `TCGNN_kernel.cpp` file under `TCGNN_conv/`. An example is shown below.
+
+https://github.com/YukeWang96/TC-GNN_ATC23/blob/0d40b53ccd232b396899e4bd56114e9754c9c145/TCGNN_conv/TCGNN_kernel.cu#L175-L220
+
+### Build the CUDA kernel design based on our existing examples. 
++ Add a CUDA kernel design in `TCGNN_kernel.cuh`. An example is shown below.
+
+https://github.com/YukeWang96/TC-GNN_ATC23/blob/0d40b53ccd232b396899e4bd56114e9754c9c145/TCGNN_conv/TCGNN_kernel.cu#L336-L454
+
+
+### Launch the MGG docker and recompile, 
++ The compiled exectuable will be located under `build/`.
+```
+cd docker 
+./launch.sh
+./0_build_tcgnn.sh
+```
 
 ## Reference.
 + [**Deep Graph Library**](https://github.com/dmlc/dgl) <br>

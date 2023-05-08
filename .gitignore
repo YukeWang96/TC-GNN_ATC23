@@ -12,3 +12,4 @@ tcgnn-ae-graphs
 *.csv
 *.log
 *.err
+*.tar.gz
