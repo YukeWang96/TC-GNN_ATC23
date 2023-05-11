@@ -156,7 +156,7 @@ https://github.com/YukeWang96/TC-GNN_ATC23/blob/0d40b53ccd232b396899e4bd56114e97
 https://github.com/YukeWang96/TC-GNN_ATC23/blob/0d40b53ccd232b396899e4bd56114e9754c9c145/TCGNN_conv/TCGNN_kernel.cu#L336-L454
 
 
-### Launch the MGG docker and recompile, 
+### Launch the TCGNN docker and recompile, 
 + The compiled exectuable will be located under `build/`.
 ```
 cd docker 
