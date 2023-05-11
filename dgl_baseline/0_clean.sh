@@ -1,1 +1,1 @@
-rm *.err *.log
+rm *.err *.log *.csv
