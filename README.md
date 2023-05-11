@@ -81,21 +81,34 @@ wget https://storage.googleapis.com/graph_dataset/tcgnn-ae-graphs.tar.gz
 tar -zxvf tcgnn-ae-graphs.tar.gz && rm -rf tcgnn-ae-graphs.tar.gz
 ``` 
 
+
+## Running **TC-GNN** in end-to-end model.
+> +  Go to project root directory.
+> + `./0_run_tcgnn_model.sh`to run all TC-GNN experiments.
+> + Check the results in `1_bench_gcn.csv` and `1_bench_agnn.csv`.
+
 ## Running **DGL** baseline (Fig-6a).
 > +  Go to **`dgl_baseline/`** directory.
 > + `./0_run_dgl.sh`to run all dgl experiments.
-> + Check the results in `1_bench_gcn.csv` and `1_bench_agnn.csv`.
+> + Check the results in `Fig_6a_dgl_gcn.csv` and `Fig_6a_dgl_agnn.csv`.
 
 ## Running **PyG** baseline (Fig-6b).
 > + Go to **`pyg_baseline/`** directory;
 > + `./0_run_pyg.sh`to run all pyg experiments.
-> + Check the results in **`1_bench_gcn.csv`** and **`1_bench_agnn.csv`**, which are similar as below.
+> + Check the results in `Fig_6b_PyG_gcn.csv` and `Fig_6b_PyG_agnn.csv`.
 
-
-## Running **TC-GNN**.
+## Running **TC-GNN** in single-kernel comparison.
 > +  Go to project root directory.
-> + `./0_run_tcgnn.sh`to run all dgl experiments.
+> + `./0_run_tcgnn_single_kernel.sh`to run TC-GNN single kernel experiments.
 > + Check the results in `1_bench_gcn.csv` and `1_bench_agnn.csv`.
+
+## cuSPARSE-bSpMM Baseline (Fig-6c) 
+```
+cd TCGNN-bSpmm/cusparse
+./0_run_bSpMM.sh
+```
++ Check the results in `Fig_6c_cuSPARSE_bSpMM.csv`.
+
 
 ## Dense Tile Reduction (Fig-7).
 ```
@@ -104,26 +117,18 @@ python 3_cnt_TC_blk_SpMM.py
 ```
 + Check the results in `3_cnt_TC_blk_SDDMM.csv` and `3_cnt_TC_blk_SDDMM.csv`.
 
-
-## cuSPARSE-bSpMM Baseline (Fig-6c) 
-```
-cd TCGNN-bSpmm/cusparse
-./0_run_bSpMM.sh
-```
-+ Check the results in `1_run_bSpMM.csv`.
-
-
-## tSparse Baseline (Table-5, column-2).
+## tSparse Baseline (Table-5, column-2) (**running outside the docker**).
 ```
 cd TCGNN-tsparse/
 ./0_run_tSparse.sh
 ```
-+ Check the results in `1_run_tSparse.csv`.
++ Check the results in `Table_5_tSparse.csv`.
 
-## Triton Baseline (Table-5, column-3).
+## Triton Baseline (Table-5, column-3)  (**running outside the docker in a `triton` conda env**).
 ```
 cd TCGNN-trition/python/bench
-./0_run_triton
+conda activate triton
+./0_run_triton.sh
 ```
 + Check the results in `1_run_triton.csv`.
 
@@ -132,6 +137,7 @@ cd TCGNN-trition/python/bench
 ./0_run_tcgnn_single_kernel.sh
 ```
 + Check the results in `2_tcgnn_single_kernel.csv`.
+
 
 ## Use TC-GNN as a Tool or Library for your project.
 
