@@ -132,12 +132,6 @@ conda activate triton
 ```
 + Check the results in `1_run_triton.csv`.
 
-## Triton Baseline (Table-5, column-4).
-```
-./0_run_tcgnn_single_kernel.sh
-```
-+ Check the results in `2_tcgnn_single_kernel.csv`.
-
 
 ## Use TC-GNN as a Tool or Library for your project.
 
