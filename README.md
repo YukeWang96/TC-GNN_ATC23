@@ -13,7 +13,7 @@
 
 + **Clone this project**.
 ```
-git clone git@github.com:YukeWang96/TCGNN-Pytorch.git
+git clone --recursive git@github.com:YukeWang96/TCGNN-Pytorch.git
 ```
 
 + **OS & Compiler**: 
@@ -22,7 +22,7 @@ git clone git@github.com:YukeWang96/TCGNN-Pytorch.git
 > + `cmake >= 3.14`
 > + `CUDA >= 11.0` and `nvcc >= 11.0`
 
-## Files and Directories.
+## 1. Files and Directories.
 + `config.py`: the configuration file for the shape of a TC block.
 + `bench.py`: the benchmark file for invoking `main_tcgnn.py` for various datasets and models.
 + `main_tcgnn.py`: the main entry for running TC-GNN.
@@ -30,19 +30,19 @@ git clone git@github.com:YukeWang96/TCGNN-Pytorch.git
 + `proc_prof.py`: get the detailed GPU kernel metrics from the ncu csv output. 
 + `TCGNN_conv/`: the directory for core TC-GNN implementations, including `TCGNN_kernel.cu` and `TCGNN.cpp`.
 
-## Environment Setup.
-### [**Method-1**] Install via Docker (Recommended).
+## 2. Environment Setup.(Skip this if evaluation on provided server)
+### 2.1 [**Method-1**] Install via Docker (Recommended).
 + Go to `docker/`
 + Run `./build.sh`
 + Run `./launch.sh`
 
-### [**Method-2**] Install via Conda.
-+ Install **`conda`** on system **[Toturial](https://www.digitalocean.com/community/tutorials/how-to-install-anaconda-on-ubuntu-18-04-quickstart)**.
-+ Create a **`conda`** environment: 
+### 2.2 [**Method-2**] Install via Conda.
++ 2.2.1 Install **`conda`** on system **[Toturial](https://www.digitalocean.com/community/tutorials/how-to-install-anaconda-on-ubuntu-18-04-quickstart)**.
++ 2.2.2 Create a **`conda`** environment: 
 ```
 conda create -n env_name python=3.6
 ```
-+ Install **`Pytorch`**: 
++ 2.2.3 Install **`Pytorch`**: 
 ```
 conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c conda-forge
 ```
@@ -50,13 +50,13 @@ or using `pip` [**Note that make sure the `pip` you use is the `pip` from curren
 ```
 pip install torch==1.8.0+cu111 torchvision==0.9.0+cu111 torchaudio==0.8.0 -f https://download.pytorch.org/whl/torch_stable.html
 ```
-+ Install [**`Deep Graph Library (DGL)`**](https://github.com/dmlc/dgl).
++ 2.2.4 Install [**`Deep Graph Library (DGL)`**](https://github.com/dmlc/dgl).
 ```
 conda install -c dglteam dgl-cuda11.0
 pip install torch requests tqdm
 ```
 
-+ Install [**`Pytorch-Geometric (PyG)`**](https://github.com/rusty1s/pytorch_geometric).
++ 2.2.5 Install [**`Pytorch-Geometric (PyG)`**](https://github.com/rusty1s/pytorch_geometric).
 ```
 pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-1.8.0+cu111.html
 pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-1.8.0+cu111.html
@@ -65,7 +65,7 @@ pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.8.0+c
 pip install torch-geometric
 ```
 
-### Install **`TC-GNN`**.
+## 3. Install **`TC-GNN`**.
 Go to `TCGNN_conv/`, then run
 ```
 ./0_build_tcgnn.sh
@@ -74,7 +74,7 @@ to install the TCGNN_conv modules with Pytorch binding.
 **Note that this step is required for both Docker and Conda setup.**
 
 
-### Download graph datasets.
+## 4. Download graph datasets.
 Get the preprocessed datasets
 ```
 wget https://storage.googleapis.com/graph_dataset/tcgnn-ae-graphs.tar.gz
@@ -82,27 +82,27 @@ tar -zxvf tcgnn-ae-graphs.tar.gz && rm -rf tcgnn-ae-graphs.tar.gz
 ``` 
 
 
-## Running **TC-GNN** in end-to-end model.
+## 5. Running **TC-GNN** in end-to-end model.
 > +  Go to project root directory.
 > + `./0_run_tcgnn_model.sh`to run all TC-GNN experiments.
 > + Check the results in `1_bench_gcn.csv` and `1_bench_agnn.csv`.
 
-## Running **DGL** baseline (Fig-6a).
+## 6. Running **DGL** baseline (Fig-6a).
 > +  Go to **`dgl_baseline/`** directory.
 > + `./0_run_dgl.sh`to run all dgl experiments.
 > + Check the results in `Fig_6a_dgl_gcn.csv` and `Fig_6a_dgl_agnn.csv`.
 
-## Running **PyG** baseline (Fig-6b).
+## 7. Running **PyG** baseline (Fig-6b).
 > + Go to **`pyg_baseline/`** directory;
 > + `./0_run_pyg.sh`to run all pyg experiments.
 > + Check the results in `Fig_6b_PyG_gcn.csv` and `Fig_6b_PyG_agnn.csv`.
 
-## Running **TC-GNN** in single-kernel comparison.
+## 8. Running **TC-GNN** in single-kernel comparison.
 > +  Go to project root directory.
 > + `./0_run_tcgnn_single_kernel.sh`to run TC-GNN single kernel experiments.
 > + Check the results in `1_bench_gcn.csv` and `1_bench_agnn.csv`.
 
-## cuSPARSE-bSpMM Baseline (Fig-6c) 
+## 9. cuSPARSE-bSpMM Baseline (Fig-6c) 
 ```
 cd TCGNN-bSpmm/cusparse
 ./0_run_bSpMM.sh
@@ -110,21 +110,21 @@ cd TCGNN-bSpmm/cusparse
 + Check the results in `Fig_6c_cuSPARSE_bSpMM.csv`.
 
 
-## Dense Tile Reduction (Fig-7).
+## 10. Dense Tile Reduction (Fig-7).
 ```
 python 3_cnt_TC_blk_SDDMM.py
 python 3_cnt_TC_blk_SpMM.py
 ```
 + Check the results in `3_cnt_TC_blk_SDDMM.csv` and `3_cnt_TC_blk_SDDMM.csv`.
 
-## tSparse Baseline (Table-5, column-2) (**running outside the docker**).
+## 11. tSparse Baseline (Table-5, column-2) (**running outside the docker**).
 ```
 cd TCGNN-tsparse/
 ./0_run_tSparse.sh
 ```
 + Check the results in `Table_5_tSparse.csv`.
 
-## Triton Baseline (Table-5, column-3)  (**running outside the docker in a `triton` conda env**).
+## 12. Triton Baseline (Table-5, column-3)  (**running outside the docker in a `triton` conda env**).
 ```
 cd TCGNN-trition/python/bench
 conda activate triton
@@ -133,30 +133,30 @@ conda activate triton
 + Check the results in `1_run_triton.csv`.
 
 
-## Use TC-GNN as a Tool or Library for your project.
+## 13. Use TC-GNN as a Tool or Library for your project.
 
 Building a new design based on TC-GNN is simple, there are only several steps:
 
 
-### Register a new PyTorch Operator. 
+### 13.1 Register a new PyTorch Operator. 
 + Add a compilation entry in `TCGNN.cpp` under `TCGNN_conv/`. An example is shown below.
 
 https://github.com/YukeWang96/TC-GNN_ATC23/blob/0d40b53ccd232b396899e4bd56114e9754c9c145/TCGNN_conv/TCGNN.cpp#L63-L86
 
 https://github.com/YukeWang96/TC-GNN_ATC23/blob/0d40b53ccd232b396899e4bd56114e9754c9c145/TCGNN_conv/TCGNN.cpp#L265
 
-### Build the C++ design based on our existing examples 
+### 13.2 Build the C++ design based on our existing examples 
 + Add the operator implementation in `TCGNN_kernel.cpp` file under `TCGNN_conv/`. An example is shown below.
 
 https://github.com/YukeWang96/TC-GNN_ATC23/blob/0d40b53ccd232b396899e4bd56114e9754c9c145/TCGNN_conv/TCGNN_kernel.cu#L175-L220
 
-### Build the CUDA kernel design based on our existing examples. 
+### 13.3 Build the CUDA kernel design based on our existing examples. 
 + Add a CUDA kernel design in `TCGNN_kernel.cuh`. An example is shown below.
 
 https://github.com/YukeWang96/TC-GNN_ATC23/blob/0d40b53ccd232b396899e4bd56114e9754c9c145/TCGNN_conv/TCGNN_kernel.cu#L336-L454
 
 
-### Launch the TCGNN docker and recompile, 
+### 13.4 Launch the TCGNN docker and recompile, 
 + The compiled exectuable will be located under `build/`.
 ```
 cd docker 
