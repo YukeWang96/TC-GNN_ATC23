@@ -11,24 +11,17 @@
 }
 ```
 
-+ **Clone this project**.
+## 1. Clone this project.
 ```
 git clone --recursive git@github.com:YukeWang96/TCGNN-Pytorch.git
 ```
 
-+ **OS & Compiler**: 
++ **Requirements**: 
 > + `Ubuntu 16.04+`
 > + `gcc >= 7.5`
 > + `cmake >= 3.14`
 > + `CUDA >= 11.0` and `nvcc >= 11.0`
-
-## 1. Files and Directories.
-+ `config.py`: the configuration file for the shape of a TC block.
-+ `bench.py`: the benchmark file for invoking `main_tcgnn.py` for various datasets and models.
-+ `main_tcgnn.py`: the main entry for running TC-GNN.
-+ `count_TC_blocks.py`: counting the total number of TC blocks without sparse-graph translation.
-+ `proc_prof.py`: get the detailed GPU kernel metrics from the ncu csv output. 
-+ `TCGNN_conv/`: the directory for core TC-GNN implementations, including `TCGNN_kernel.cu` and `TCGNN.cpp`.
+> + NVIDIA GPU with `sm >= 80` (i.e., Ampere, like RTX3090).
 
 ## 2. Environment Setup.(Skip this if evaluation on provided server)
 ### 2.1 [**Method-1**] Install via Docker (Recommended).
