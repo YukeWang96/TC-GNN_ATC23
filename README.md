@@ -173,7 +173,7 @@ Hong, Changwan, et al.
 
 + [**tSparse**](https://github.com/oresths/tSparse) <br>
 Zachariadis, O., et. al. 
-**Accelerating Sparse Matrix-Matrix Multiplication with GPU Tensor Cores** *Computers & Electrical Engineering (2020).
+**Accelerating Sparse Matrix-Matrix Multiplication with GPU Tensor Cores** *Computers & Electrical Engineering (2020)*.
 
 + [**cuSPARSELt**](https://developer.nvidia.com/blog/exploiting-ampere-structured-sparsity-with-cusparselt/?ncid=so-twit-40939#cid=hpc06_so-twit_en-us)<br>
-NVIDIA. Exploiting NVIDIA Ampere Structured Sparsity with cuSPARSELt.
+NVIDIA. **Exploiting NVIDIA Ampere Structured Sparsity with cuSPARSELt**.
