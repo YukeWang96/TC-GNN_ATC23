@@ -10,6 +10,7 @@
   year={2023}
 }
 ```
++ TC-GNN has also been used by [TC_SPMM](https://github.com/uwsampl/SparseTIR/blob/main/examples/spmm/bench_tc_spmm.py)@[SparseTIR (ASPLOS'23)](https://github.com/uwsampl/SparseTIR), which is a part of [TVM project](https://github.com/apache/tvm).
 
 ## 1. Clone this project.
 ```
