@@ -152,26 +152,27 @@ def train():
 
 if __name__ == "__main__":
 
-    s = torch.cuda.Stream()
-    s.wait_stream(torch.cuda.current_stream())
-    train()
-    torch.cuda.current_stream().wait_stream(s)
+    # s = torch.cuda.Stream()
+    # s.wait_stream(torch.cuda.current_stream())
+    # train()
+    # torch.cuda.current_stream().wait_stream(s)
     
 
-    g = torch.cuda.CUDAGraph()
-    with torch.cuda.graph(g):
-        train()
+    # g = torch.cuda.CUDAGraph()
+    # with torch.cuda.graph(g):
+    #     train()
 
     # dry run.
-    for epoch in range(1, 3):
-       g.replay()
+    for epoch in range(1, 10):
+      train()
+      # g.replay()
 
     torch.cuda.synchronize()
     start_train = time.perf_counter()
     
     for _ in tqdm(range(1, args.epochs + 1)):
-        # train()
-        g.replay()
+        train()
+        # g.replay()
 
 
     torch.cuda.synchronize()
