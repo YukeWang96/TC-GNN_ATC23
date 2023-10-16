@@ -7,7 +7,7 @@ import time
 from tqdm.std import tqdm
 import TCGNN
 
-n_heads = 8
+n_heads = 1
 n_output = 8
 
 def gen_test_tensor(X_prime):
@@ -116,7 +116,7 @@ class TCGNNFunction_AGNN(torch.autograd.Function):
     @staticmethod
     def forward(ctx, X, weights, attention_w, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow):
 
-        ctx.save_for_backward(X, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
+        # ctx.save_for_backward(X, weights, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)
 
         # GEMM node update
         X_prime = torch.mm(X, weights)
@@ -149,7 +149,7 @@ class TCGNNFunction_AGNN(torch.autograd.Function):
         # attention weight back propaAGNNion.
         d_attention = TCGNN.forward_ef(d_output, row_pointers, column_index, blockPartition, edgeToColumn, edgeToRow)[0]
         # print(d_attention.size())
-        d_attention_exp = d_attention[None, :].expand(8, -1)
+        d_attention_exp = d_attention[None, :].expand(n_heads, -1)
         # print(d_attention_exp.size())
 
         d_attention_w = torch.mm(d_attention_exp, column_index[:, None].float()).transpose(0,1)
